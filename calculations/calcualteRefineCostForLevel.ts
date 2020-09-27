@@ -96,17 +96,20 @@ export const calculateRefineCostForLevel = ({
           : 0
 
         //  previousRefineResult.refineAttempts are calculated in the previous cost already
-        cost += (attemptsNeededToGetToOriginalLevelAgain / previousRefineResult.refineAttempts) * previousRefineResult.cost;
+        const previousRefineCostsMultiplier = (attemptsNeededToGetToOriginalLevelAgain / previousRefineResult.refineAttempts);
+
+        cost += previousRefineCostsMultiplier * previousRefineResult.cost;
         cost += extraPreviousItemsNeeded * totalRefineResultOfUsedPreviousRefine.cost;
 
         const previousRefineConsumedMaterials = previousRefineResult.consumedMaterials;
 
         consumedMaterials = {
-          bsb: (previousRefineConsumedMaterials.bsb || 0) * attemptsNeededToGetToOriginalLevelAgain,
+          bsb: (previousRefineConsumedMaterials.bsb || 0) * previousRefineCostsMultiplier,
+          //  TODO how should we calculate baseItemCount here?
           baseItemCount: extraPreviousItemsNeeded,
-          normalOre: (previousRefineConsumedMaterials.normalOre || 0) * attemptsNeededToGetToOriginalLevelAgain,
-          enrichedOre: (previousRefineConsumedMaterials.enrichedOre || 0) * attemptsNeededToGetToOriginalLevelAgain,
-          hdOre: refineAttempts + (previousRefineConsumedMaterials.hdOre || 0) * attemptsNeededToGetToOriginalLevelAgain,
+          normalOre: (previousRefineConsumedMaterials.normalOre || 0) * previousRefineCostsMultiplier,
+          enrichedOre: (previousRefineConsumedMaterials.enrichedOre || 0) * previousRefineCostsMultiplier,
+          hdOre: refineAttempts + (previousRefineConsumedMaterials.hdOre || 0) * previousRefineCostsMultiplier,
         };
       }
       else {
