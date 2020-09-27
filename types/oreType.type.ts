@@ -1,5 +1,5 @@
-export enum RefineMaterial {
+export enum OreType {
   Normal = 'normal',
-  HD = 'hd',
   Enriched = 'enriched',
+  HD = 'hd',
 }

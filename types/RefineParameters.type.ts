@@ -1,6 +1,6 @@
-import { RefineMaterial } from './refineMaterial.type';
+import { OreType } from './oreType.type';
 
 export type RefineParameters = {
-  readonly oreType: RefineMaterial;
+  readonly oreType: OreType;
   readonly useBsb: boolean;
 }

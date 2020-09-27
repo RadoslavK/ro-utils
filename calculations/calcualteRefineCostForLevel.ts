@@ -1,54 +1,88 @@
-import { RefineMaterial } from '../types/refineMaterial.type';
 import { RefineResult } from '../types/refineResult.type';
 import { TotalRefineResult } from '../types/totalRefineResult';
 import { RefineType } from '../types/refineType.type';
 import { refineCosts } from '../constants/refineCosts';
 import { refineChances } from '../constants/refineChances';
-import { Material } from '../types/material.type';
 import { bsbAmountsNeeded } from '../constants/bsbAmountsNeeded';
 import { ConsumedMaterials } from '../types/consumedMaterials.type';
-
-const Cost: Record<Material, number> & Record<RefineMaterial, number> = {
-  [RefineMaterial.Normal]: 5_000,
-  [RefineMaterial.Enriched]: 500_000 + 5_000,
-  [RefineMaterial.HD]: 1_000_000 + 500_000 + 5_000,
-  [Material.BSB_Shard]: 1_800_000,
-  [Material.BSB]: 1_800_000 * 2,
-}
+import { refineItemIds } from '../app/refine/components/Costs';
+import { OreType } from '../types/oreType.type';
 
 type Params = {
   readonly currentRefineLevel: number;
-  readonly oreType: RefineMaterial;
+  readonly itemCosts: Map<number, number>;
+  readonly oreType: OreType;
   readonly refineResults: Map<number, RefineResult>;
-  readonly totalRefineResults: Map<number, TotalRefineResult>;
   readonly refineType: RefineType;
+  readonly totalRefineResults: Map<number, TotalRefineResult>;
   readonly useBsb: boolean;
+}
+
+const getOreId = (oreType: OreType, refineType: RefineType): number => {
+  switch (oreType) {
+    case OreType.Normal:
+      switch (refineType) {
+        case RefineType.Armor:
+          return refineItemIds.Elunium;
+        case RefineType.Weapon1:
+          return refineItemIds.Phracon;
+        case RefineType.Weapon2:
+          return refineItemIds.Emveretarcon;
+        case RefineType.Weapon3:
+        case RefineType.Weapon4:
+          return refineItemIds.Oridecon;
+
+        default:
+          throw new Error(`Unknown refine type: ${refineType}`);
+
+      }
+
+    case OreType.Enriched:
+      return refineType === RefineType.Armor
+        ? refineItemIds.EnrichedElunium
+        : refineItemIds.EnrichedOridecon;
+
+    case OreType.HD:
+      return refineType === RefineType.Armor
+        ? refineItemIds.HDElunium
+        : refineItemIds.HDOridecon;
+
+    default:
+      throw new Error(`Unknown ore type: ${oreType}`);
+  }
 }
 
 export const calculateRefineCostForLevel = ({
   currentRefineLevel,
+  itemCosts,
   oreType,
   refineResults,
-  totalRefineResults,
   refineType,
+  totalRefineResults,
   useBsb,
 }: Params): RefineResult => {
   if (useBsb && currentRefineLevel < 7) {
     throw new Error('Can not use BSB below +7');
   }
 
-  if (oreType === RefineMaterial.HD && currentRefineLevel < 7) {
+  if (oreType === OreType.HD && currentRefineLevel < 7) {
     throw new Error('Can not use HD below +7');
   }
+
+  const oreId = getOreId(oreType, refineType);
 
   const targetLevel = currentRefineLevel + 1;
   const previousRefineResult = refineResults.get(currentRefineLevel)
   const allTotalRefineResults = totalRefineResults.get(currentRefineLevel);
   const totalRefineResult = allTotalRefineResults.refineParamsResults.get(allTotalRefineResults.usedRefineParamsId);
-  const oreCost = Cost[oreType];
+  const oreCost = itemCosts.get(oreId);
   const refineCost = refineCosts[refineType];
   const chance = refineChances[refineType][oreType][currentRefineLevel];
-  const bsbCost = Cost[Material.BSB];
+  const bsbCost = itemCosts.get(refineItemIds.BlacksmithBlessing);
+
+  if (oreCost === undefined) {
+    throw new Error(`Cost for item with it: ${oreId} is missing`);
+  }
 
   const refineAttempts = 100 / chance;
 
@@ -61,9 +95,9 @@ export const calculateRefineCostForLevel = ({
 
     const cost = (oreCost + refineCost + bsbAmount * bsbCost) * refineAttempts;
     const consumedMaterials: ConsumedMaterials = {
-      normalOre: oreType === RefineMaterial.Normal ? refineAttempts : 0,
-      enrichedOre: oreType === RefineMaterial.Enriched ? refineAttempts : 0,
-      hdOre: oreType === RefineMaterial.HD ? refineAttempts : 0,
+      normalOre: oreType === OreType.Normal ? refineAttempts : 0,
+      enrichedOre: oreType === OreType.Enriched ? refineAttempts : 0,
+      hdOre: oreType === OreType.HD ? refineAttempts : 0,
       bsb: bsbAmount * refineAttempts,
     };
 
@@ -76,12 +110,10 @@ export const calculateRefineCostForLevel = ({
   }
 
   switch (oreType) {
-    case RefineMaterial.HD: {
+    case OreType.HD: {
       let cost = (oreCost + refineCost) * refineAttempts;
       // 1 less than average attempts per success
       const downgradedTimes = refineAttempts - 1;
-
-      const log = (currentRefineLevel === 8);
 
       let consumedMaterials: ConsumedMaterials;
 
@@ -127,15 +159,15 @@ export const calculateRefineCostForLevel = ({
       };
     }
 
-    case RefineMaterial.Enriched:
-    case RefineMaterial.Normal:
+    case OreType.Enriched:
+    case OreType.Normal:
       return refineAttempts > 1
         ? {
           cost: (oreCost + refineCost) + (totalRefineResult.cost + oreCost + refineCost) * (refineAttempts - 1),
           consumedMaterials: {
             baseItemCount: refineAttempts,
-            normalOre: oreType === RefineMaterial.Normal ? refineAttempts : 0,
-            enrichedOre: oreType === RefineMaterial.Enriched ? refineAttempts : 0,
+            normalOre: oreType === OreType.Normal ? refineAttempts : 0,
+            enrichedOre: oreType === OreType.Enriched ? refineAttempts : 0,
           },
           refineAttempts,
           refineLevel: targetLevel,
@@ -143,8 +175,8 @@ export const calculateRefineCostForLevel = ({
         : {
           cost: (oreCost + refineCost) * refineAttempts,
           consumedMaterials: {
-            normalOre: oreType === RefineMaterial.Normal ? 1 : 0,
-            enrichedOre: oreType === RefineMaterial.Enriched ? 1 : 0,
+            normalOre: oreType === OreType.Normal ? 1 : 0,
+            enrichedOre: oreType === OreType.Enriched ? 1 : 0,
           },
           refineAttempts,
           refineLevel: targetLevel,

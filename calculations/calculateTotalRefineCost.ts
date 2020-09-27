@@ -8,9 +8,10 @@ import { calculateRefineCostForLevel } from './calcualteRefineCostForLevel';
 
 type Params = {
   readonly baseCost: number;
+  readonly itemCosts: Map<number, number>;
+  readonly refineType?: RefineType,
   readonly startingRefineLevel?: number,
   readonly targetRefineLevel?: number,
-  readonly refineType?: RefineType,
 };
 
 export type TotalRefineCostResult = {
@@ -23,9 +24,10 @@ const getRefineParamsId = (refineParams: RefineParameters): string =>
 
 export const calculateTotalRefineCost = ({
   baseCost,
-  startingRefineLevel = 0,
-  targetRefineLevel = 10,
-  refineType = RefineType.Armor,
+  itemCosts,
+  refineType,
+  startingRefineLevel,
+  targetRefineLevel,
 }: Params): TotalRefineCostResult => {
   const refineResults: Map<number, RefineResult> = new Map<number, RefineResult>([
     [startingRefineLevel, {
@@ -56,11 +58,12 @@ export const calculateTotalRefineCost = ({
     for (const refineParams of refineParamsToTry) {
       const refineParamsResult = calculateRefineCostForLevel({
         currentRefineLevel,
+        itemCosts,
         oreType: refineParams.oreType,
         refineResults,
         refineType,
-        useBsb: refineParams.useBsb,
         totalRefineResults,
+        useBsb: refineParams.useBsb,
       });
 
       const refineParamsId = getRefineParamsId(refineParams);

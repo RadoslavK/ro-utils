@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { CheckBox } from '../../_components/CheckBox';
 import { RefineType } from '../../../types/refineType.type';
-import { RefineMaterial } from '../../../types/refineMaterial.type';
 import { TotalRefineResult } from '../../../types/totalRefineResult';
+import { OreType } from '../../../types/oreType.type';
 
-const getOreLabel = (refineType: RefineType, ore: RefineMaterial): string => {
+const getOreLabel = (refineType: RefineType, ore: OreType): string => {
   const isWeapon = refineType !== RefineType.Armor;
   const oreName = isWeapon ? 'Oridecon' : 'Elunium';
 
   switch(ore) {
-    case RefineMaterial.Enriched:
+    case OreType.Enriched:
       return `Enriched ${oreName}`;
-    case RefineMaterial.HD:
+    case OreType.HD:
       return `HD ${oreName}`;
-    case RefineMaterial.Normal:
+    case OreType.Normal:
       return oreName;
     default:
       throw new Error(`Unknown ore type: ${ore}`);
@@ -80,9 +80,9 @@ export const RefineLevel: React.FC<Props> = ({
               {shouldShowDetails && (
                 <div>
                   <div>Base items: {paramsResult.consumedMaterials.baseItemCount.toFixed(2)}</div>
-                  <div>{getOreLabel(refineType, RefineMaterial.Normal)}: {paramsResult.consumedMaterials.normalOre.toFixed(2)}</div>
-                  <div>{getOreLabel(refineType, RefineMaterial.Enriched)}: {paramsResult.consumedMaterials.enrichedOre.toFixed(2)}</div>
-                  <div>{getOreLabel(refineType, RefineMaterial.HD)}: {paramsResult.consumedMaterials.hdOre.toFixed(2)}</div>
+                  <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.consumedMaterials.normalOre.toFixed(2)}</div>
+                  <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.consumedMaterials.enrichedOre.toFixed(2)}</div>
+                  <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.consumedMaterials.hdOre.toFixed(2)}</div>
                   <div>BSB: {paramsResult.consumedMaterials.bsb.toFixed(2)}</div>
                 </div>
               )}
