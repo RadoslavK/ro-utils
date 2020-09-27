@@ -37,11 +37,38 @@ export const RefineLevel: React.FC<Props> = ({
   preferredRefineParamsId,
 }) => {
   const refineParamsResults = [...totalRefineResult.refineParamsResults.values()];
+  const refineParamsErrors = [...totalRefineResult.refineParamsErrors.values()];
   const [showDetails, setShowDetails] = useState<ReadonlyMap<string, boolean>>(new Map<string, boolean>());
 
   return (
     <div>
       <h3>+{level}</h3>
+
+      {refineParamsErrors.map(paramsError => {
+        const oreLabel = getOreLabel(refineType, paramsError.refineParams.oreType);
+
+        return (
+          <div
+            key={paramsError.id}
+            style={{
+              margin: 10,
+              border: '1px black solid',
+            }}
+          >
+            <div>Ore: {oreLabel}</div>
+            {level > 7 && (
+              <div>
+                BSB
+                <CheckBox
+                  disabled
+                  isChecked={paramsError.refineParams.useBsb}
+                />
+              </div>
+            )}
+            <div>Error message: {paramsError.message}</div>
+          </div>
+        );
+      })}
 
       {refineParamsResults.map(paramsResult => {
         const isBest = paramsResult.id === totalRefineResult.bestRefineParamsId;
@@ -67,7 +94,7 @@ export const RefineLevel: React.FC<Props> = ({
             }}
           >
             <div>Ore: {oreLabel}</div>
-            {level >= 7 && (
+            {level > 7 && (
               <div>
                 BSB
                 <CheckBox

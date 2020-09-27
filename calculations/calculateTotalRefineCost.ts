@@ -1,10 +1,11 @@
 import { RefineType } from '../types/refineType.type';
 import { RefineResult } from '../types/refineResult.type';
-import { RefineParamsResult, TotalRefineResult } from '../types/totalRefineResult';
+import { RefineParamsResultError, RefineParamsResultSuccess, TotalRefineResult } from '../types/totalRefineResult';
 import { ConsumedMaterials } from '../types/consumedMaterials.type';
 import { generateRefineParams } from '../utils/generateRefineParams';
 import { RefineParameters } from '../types/RefineParameters.type';
 import { calculateRefineCostForLevel } from './calcualteRefineCostForLevel';
+import { OreType } from '../types/oreType.type';
 
 type Params = {
   readonly baseCost: number;
@@ -31,34 +32,44 @@ export const calculateTotalRefineCost = ({
   startingRefineLevel,
   targetRefineLevel,
 }: Params): TotalRefineCostResult => {
-  const refineResults: Map<number, RefineResult> = new Map<number, RefineResult>([
-    [startingRefineLevel, {
-      cost: 0,
-      consumedMaterials: {},
-      refineAttempts: 0,
-      refineLevel: startingRefineLevel,
-    }],
-  ]);
-
-  const totalRefineResults: Map<number, TotalRefineResult> = new Map<number, TotalRefineResult>([
-    [0, { usedRefineParamsId: '', refineParamsResults: new Map<string, RefineParamsResult>(), bestRefineParamsId: '', refineLevel: 0 }],
-  ])
+  const refineResults: Map<number, RefineResult> = new Map<number, RefineResult>();
+  const totalRefineResults: Map<number, TotalRefineResult> = new Map<number, TotalRefineResult>();
 
   let totalCost = baseCost;
   let totalConsumedMaterials: ConsumedMaterials = {};
   let currentRefineLevel = startingRefineLevel;
 
   do {
-    const refineParamsToTry = generateRefineParams(currentRefineLevel + 1);
+    let refineParamsToTry = generateRefineParams(currentRefineLevel + 1);
 
-    const allRefineParamsResults: Map<string, RefineParamsResult> = new Map<string, RefineParamsResult>();
+    const allRefineParamsResults: Map<string, RefineParamsResultSuccess> = new Map<string, RefineParamsResultSuccess>();
+    const allRefineParamsErrors: Map<string, RefineParamsResultError> = new Map<string, RefineParamsResultError>();
     const allRefineResults: Map<string, RefineResult> = new Map<string, RefineResult>();
 
     let bestRefineResult: RefineResult;
     let bestRefineParamsId: string;
 
     for (const refineParams of refineParamsToTry) {
+      const refineParamsId = getRefineParamsId(refineParams);
+
+      const isInvalidHdParam = startingRefineLevel === currentRefineLevel
+        && startingRefineLevel >= 7
+        && refineParams.oreType === OreType.HD;
+
+      if (isInvalidHdParam) {
+        // Remove HD because we can't precisely calculate the cost refining downgraded item to continue
+        allRefineParamsErrors.set(refineParamsId, {
+          id: refineParamsId,
+          refineParams,
+          message: `Can not precisely calculate the HD cost because of missing information about refine cost of +${currentRefineLevel
+          - 1}`,
+        })
+
+        continue;
+      }
+
       const refineParamsResult = calculateRefineCostForLevel({
+        baseCost,
         currentRefineLevel,
         itemCosts,
         oreType: refineParams.oreType,
@@ -67,8 +78,6 @@ export const calculateTotalRefineCost = ({
         totalRefineResults,
         useBsb: refineParams.useBsb,
       });
-
-      const refineParamsId = getRefineParamsId(refineParams);
 
       allRefineResults.set(refineParamsId, refineParamsResult);
 
@@ -108,6 +117,7 @@ export const calculateTotalRefineCost = ({
       usedRefineParamsId: usedRefineResult.id,
       bestRefineParamsId,
       refineParamsResults: allRefineParamsResults,
+      refineParamsErrors: allRefineParamsErrors,
       refineLevel: currentRefineLevel,
     });
   } while (currentRefineLevel < targetRefineLevel);
