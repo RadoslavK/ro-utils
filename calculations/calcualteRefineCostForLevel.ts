@@ -43,7 +43,8 @@ export const calculateRefineCostForLevel = ({
 
   const targetLevel = currentRefineLevel + 1;
   const previousRefineResult = refineResults.get(currentRefineLevel)
-  const totalRefineResult = totalRefineResults.get(currentRefineLevel);
+  const allTotalRefineResults = totalRefineResults.get(currentRefineLevel);
+  const totalRefineResult = allTotalRefineResults.refineParamsResults.get(allTotalRefineResults.usedRefineParamsId);
   const oreCost = Cost[oreType];
   const refineCost = refineCosts[refineType];
   const chance = refineChances[refineType][oreType][currentRefineLevel];
@@ -84,14 +85,16 @@ export const calculateRefineCostForLevel = ({
 
       if (downgradedTimes > 0) {
         const attemptsNeededToGetToOriginalLevelAgain = downgradedTimes * previousRefineResult.refineAttempts;
-        const totalRefineResultOfPreviousRefine = totalRefineResults.get(currentRefineLevel - 1);
+        const allPreviousRefineTotalResults = totalRefineResults.get(currentRefineLevel - 1);
+        const totalRefineResultOfUsedPreviousRefine = allPreviousRefineTotalResults.refineParamsResults.get(allPreviousRefineTotalResults.usedRefineParamsId);
+
         //  In case they broke
-        const extraPreviousItemsNeeded = (totalRefineResultOfPreviousRefine.consumedMaterials.baseItemCount || 0) > 0
+        const extraPreviousItemsNeeded = (totalRefineResultOfUsedPreviousRefine.consumedMaterials.baseItemCount || 0) > 0
           ? attemptsNeededToGetToOriginalLevelAgain - downgradedTimes
           : 0
 
         cost += attemptsNeededToGetToOriginalLevelAgain * previousRefineResult.cost;
-        cost += extraPreviousItemsNeeded * totalRefineResultOfPreviousRefine.cost;
+        cost += extraPreviousItemsNeeded * totalRefineResultOfUsedPreviousRefine.cost;
 
         const previousRefineConsumedMaterials = previousRefineResult.consumedMaterials;
 

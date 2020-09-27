@@ -69,3 +69,5 @@ export const Prices: React.FC = () => {
     </>
   );
 };
+
+Prices.displayName = 'Prices';

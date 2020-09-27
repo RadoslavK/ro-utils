@@ -5,7 +5,7 @@
   "author": "RadoslavK <RadoslavK@kentico.com>",
   "license": "MIT",
   "scripts": {
-    "start": "webpack-dev-server --open --mode development"
+    "start": "webpack-dev-server --open --mode development --config webpack.dev.config.js"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

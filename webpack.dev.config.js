@@ -2,6 +2,7 @@ const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: './app/index.tsx',
+  devtool: 'source-map',
   devServer: {
     historyApiFallback: true,
   },

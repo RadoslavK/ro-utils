@@ -1,8 +1,7 @@
-import React, { useMemo, useState } from 'react';
+import React from 'react';
 import { NumberInput } from '../../_components/NumberInput';
 import { RefineType } from '../../../types/refineType.type';
 import { DropDown } from '../../_components/DropDown';
-import { calculateTotalRefineCost } from '../../../calculations/calculateTotalRefineCost';
 
 const refineTypeLabels: Record<RefineType, string> = {
   [RefineType.Armor]: 'Armor',
@@ -12,59 +11,61 @@ const refineTypeLabels: Record<RefineType, string> = {
   [RefineType.Weapon4]: 'Weapon level 4',
 };
 
-export const RefineCalculatorInput: React.FC = () => {
-  const [baseItemCost, setBaseItemCost] = useState(0);
-  const [startingRefineLevel, setStartingRefineLevel] = useState(0);
-  const [targetRefineLevel, setTargetRefineLevel] = useState(4);
-  const [refineType, setRefineType] = useState<RefineType>(RefineType.Armor);
+type Props = {
+  readonly baseItemCost: number;
+  readonly onBaseItemCostChange: (value: number) => void;
+  readonly startingRefineLevel: number;
+  readonly onStartingRefineLevelChange: (value: number) => void;
+  readonly targetRefineLevel: number;
+  readonly onTargetRefineLevelChange: (value: number) => void;
+  readonly refineType: RefineType;
+  readonly onRefineTypeChange: (value: RefineType) => void;
+}
 
-  const totalCost = useMemo(() => {
-    const result = [...calculateTotalRefineCost({
-      baseCost: baseItemCost,
-      refineType,
-      startingRefineLevel,
-      targetRefineLevel,
-    }).totalRefineResults.values()];
+export const RefineCalculatorInput: React.FC<Props> = ({
+  startingRefineLevel,
+  targetRefineLevel,
+  refineType,
+  baseItemCost,
+  onBaseItemCostChange,
+  onRefineTypeChange,
+  onStartingRefineLevelChange,
+  onTargetRefineLevelChange,
+}) => (
+  <div>
+    <h2>Input</h2>
 
-    return result[result.length - 1].cost;
-  }, [baseItemCost, refineType, startingRefineLevel, targetRefineLevel]);
+    <NumberInput
+      label="Base cost"
+      value={baseItemCost}
+      onChange={onBaseItemCostChange}
+      minValue={0}
+    />
 
-  return (
-    <div>
-      <h2>Input</h2>
+    <NumberInput
+      label="Starting refine level"
+      value={startingRefineLevel}
+      onChange={onStartingRefineLevelChange}
+      minValue={0}
+      maxValue={targetRefineLevel}
+    />
 
-      <NumberInput
-        label="Base cost"
-        value={baseItemCost}
-        onChange={setBaseItemCost}
-        minValue={0}
-      />
+    <NumberInput
+      label="Target refine level"
+      value={targetRefineLevel}
+      onChange={onTargetRefineLevelChange}
+      minValue={startingRefineLevel + 1}
+    />
 
-      <NumberInput
-        label="Starting refine level"
-        value={startingRefineLevel}
-        onChange={setStartingRefineLevel}
-        minValue={0}
-        maxValue={targetRefineLevel}
-      />
+    <DropDown<RefineType>
+      label="Refine type"
+      selectedValue={refineType}
+      values={Object.values(RefineType)}
+      onChange={onRefineTypeChange}
+      getId={refineType => refineType}
+      getName={refineType => refineTypeLabels[refineType]}
+    />
+  </div>
+);
 
-      <NumberInput
-        label="Target refine level"
-        value={targetRefineLevel}
-        onChange={setTargetRefineLevel}
-        minValue={startingRefineLevel + 1}
-      />
-
-      <DropDown<RefineType>
-        label="Refine type"
-        selectedValue={refineType}
-        values={Object.values(RefineType)}
-        onChange={setRefineType}
-        getId={refineType => refineType}
-        getName={refineType => refineTypeLabels[refineType]}
-      />
-
-      Cost: {totalCost}
-    </div>
-  );
-};
+RefineCalculatorInput.displayName = 'RefineCalculatorInput';
