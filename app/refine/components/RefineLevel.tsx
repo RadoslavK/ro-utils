@@ -25,12 +25,16 @@ type Props = {
   readonly level: number;
   readonly refineType: RefineType;
   readonly totalRefineResult: TotalRefineResult;
+  readonly preferredRefineParamsId: string | undefined;
+  readonly onPreferredRefineParamsChange: (id: string | null) => void;
 }
 
 export const RefineLevel: React.FC<Props> = ({
   level,
   refineType,
   totalRefineResult,
+  onPreferredRefineParamsChange,
+  preferredRefineParamsId,
 }) => {
   const refineParamsResults = [...totalRefineResult.refineParamsResults.values()];
   const [showDetails, setShowDetails] = useState<ReadonlyMap<string, boolean>>(new Map<string, boolean>());
@@ -41,13 +45,26 @@ export const RefineLevel: React.FC<Props> = ({
 
       {refineParamsResults.map(paramsResult => {
         const isBest = paramsResult.id === totalRefineResult.bestRefineParamsId;
+        const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
         const oreLabel = getOreLabel(refineType, paramsResult.refineParams.oreType);
         const shouldShowDetails = showDetails.get(paramsResult.id);
 
         return (
           <div
             key={paramsResult.id}
-            style={isBest ? { color: 'green', margin: 10, border: '1px black solid' } : { margin: 10, border: '1px black solid' }}
+            style={{
+              margin: 10,
+              border: '1px ' + (isUsed ? 'gold' : 'black') + ' solid',
+              color: isBest ? 'green' : undefined,
+            }}
+            onClick={() => {
+              if (preferredRefineParamsId === paramsResult.id) {
+                onPreferredRefineParamsChange(null);
+              }
+              else {
+                onPreferredRefineParamsChange(paramsResult.id);
+              }
+            }}
           >
             <div>Ore: {oreLabel}</div>
             {level >= 7 && (
@@ -62,7 +79,8 @@ export const RefineLevel: React.FC<Props> = ({
             <div>Cost: {Math.round(paramsResult.cost)}</div>
             <div>
               <h4
-                onClick={() => {
+                onClick={(e) => {
+                  e.stopPropagation();
                   const newMap = new Map<string, boolean>(showDetails);
 
                   if (shouldShowDetails) {

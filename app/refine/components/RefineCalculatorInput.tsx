@@ -47,7 +47,7 @@ export const RefineCalculatorInput: React.FC<Props> = ({
       value={startingRefineLevel}
       onChange={onStartingRefineLevelChange}
       minValue={0}
-      maxValue={targetRefineLevel}
+      maxValue={targetRefineLevel - 1}
     />
 
     <NumberInput

@@ -53,6 +53,7 @@ export const RefinePage: React.FC = () => {
   const [startingRefineLevel, setStartingRefineLevel] = useState(0);
   const [targetRefineLevel, setTargetRefineLevel] = useState(9);
   const [refineType, setRefineType] = useState<RefineType>(RefineType.Armor);
+  const [refineParamsPreferences, setRefineParamsPreferences] = useState<Map<number, string>>(new Map<number, string>());
 
   const refineResult = useMemo(() => calculateTotalRefineCost({
     baseCost: baseItemCost,
@@ -60,7 +61,8 @@ export const RefinePage: React.FC = () => {
     refineType,
     startingRefineLevel,
     targetRefineLevel,
-  }), [costs, baseItemCost, refineType, startingRefineLevel, targetRefineLevel]);
+    refineParamsPreferences,
+  }), [refineParamsPreferences, costs, baseItemCost, refineType, startingRefineLevel, targetRefineLevel]);
 
   return (
     <div>
@@ -83,6 +85,8 @@ export const RefinePage: React.FC = () => {
       <RefineResult
         refineType={refineType}
         result={refineResult}
+        onPreferencesChange={setRefineParamsPreferences}
+        preferences={refineParamsPreferences}
       />
     </div>
   );

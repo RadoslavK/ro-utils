@@ -12,6 +12,7 @@ type Params = {
   readonly refineType?: RefineType,
   readonly startingRefineLevel?: number,
   readonly targetRefineLevel?: number,
+  readonly refineParamsPreferences: Map<number, string>;
 };
 
 export type TotalRefineCostResult = {
@@ -25,6 +26,7 @@ const getRefineParamsId = (refineParams: RefineParameters): string =>
 export const calculateTotalRefineCost = ({
   baseCost,
   itemCosts,
+  refineParamsPreferences,
   refineType,
   startingRefineLevel,
   targetRefineLevel,
@@ -89,7 +91,12 @@ export const calculateTotalRefineCost = ({
       }
     }
 
-    const usedRefineResult = allRefineParamsResults.get(bestRefineParamsId);
+    const preferredRefineParamsId = refineParamsPreferences.get(currentRefineLevel + 1);
+    const usedRefineParamsId = preferredRefineParamsId !== undefined
+      ? preferredRefineParamsId
+      : bestRefineParamsId;
+
+    const usedRefineResult = allRefineParamsResults.get(usedRefineParamsId);
 
     totalCost = usedRefineResult.cost;
     totalConsumedMaterials = usedRefineResult.consumedMaterials;
