@@ -1,5 +1,5 @@
-import { ConsumedMaterials } from './consumedMaterials.type';
 import { RefineParameters } from './RefineParameters.type';
+import { ConsumedMaterials } from './consumedMaterials.type';
 
 export type RefineParamsResultBase = {
   readonly id: string;
