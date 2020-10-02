@@ -103,7 +103,7 @@ export const RefineLevel: React.FC<Props> = ({
                 />
               </div>
             )}
-            <div>Cost: {Math.round(paramsResult.cost)}</div>
+            <div>Cost: {Math.round(paramsResult.cost).toLocaleString()}</div>
             <div>
               <h4
                 onClick={(e) => {
