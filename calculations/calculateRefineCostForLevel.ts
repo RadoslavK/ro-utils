@@ -8,8 +8,7 @@ import { bsbAmountsNeeded } from '../constants/bsbAmountsNeeded';
 import {
   addConsumedMaterials,
   ConsumedMaterials,
-  createConsumedMaterials,
-  multiplyConsumedMaterials,
+  createConsumedMaterials, multiplyConsumedMaterialsBase,
 } from '../types/consumedMaterials.type';
 import { getOreId } from '../utils/getOreId';
 import { RefineResult } from '../types/refineResult.type';
@@ -84,7 +83,7 @@ export const calculateRefineCostForLevel = ({
       [usedOreKey]: 1,
       bsb: bsbAmount,
     })
-    const totalConsumedMaterials = multiplyConsumedMaterials(attemptConsumedMaterials, refineAttempts);
+    const totalConsumedMaterials = multiplyConsumedMaterialsBase(attemptConsumedMaterials, refineAttempts);
 
     return {
       attemptConsumedMaterials,
@@ -139,22 +138,20 @@ export const calculateRefineCostForLevel = ({
 
           consumedMaterialsForDowngradedAttempts = addConsumedMaterials(
             consumedMaterialsForDowngradedAttempts,
-            multiplyConsumedMaterials(
+            multiplyConsumedMaterialsBase(
               previousRefineResult.attemptConsumedMaterials,
               attemptsNeededToGetToOriginalLevelAgain,
             ),
             createConsumedMaterials({
-              itemsOfRefine: extraPreviousItemsNeeded
-                ? new Map<number, number>([
-                  [downgradedRefineLevel, extraPreviousItemsNeeded],
-                ])
-                : new Map<number, number>(),
+              items: extraPreviousItemsNeeded
+                ? { amount: extraPreviousItemsNeeded, refineLevel: downgradedRefineLevel }
+                : undefined,
             }),
           );
         } while (downgradedTimes > 0);
 
         const totalConsumedMaterials = addConsumedMaterials(
-          multiplyConsumedMaterials(attemptConsumedMaterials, refineAttempts),
+          multiplyConsumedMaterialsBase(attemptConsumedMaterials, refineAttempts),
           consumedMaterialsForDowngradedAttempts,
         );
 
@@ -194,11 +191,9 @@ export const calculateRefineCostForLevel = ({
         const totalCost = attemptCost * refineAttempts + lostItemCost * lostItemsCount;
 
         const totalConsumedMaterials = addConsumedMaterials(
-          multiplyConsumedMaterials(attemptConsumedMaterials, refineAttempts),
+          multiplyConsumedMaterialsBase(attemptConsumedMaterials, refineAttempts),
           createConsumedMaterials({
-            itemsOfRefine: new Map<number, number>([
-              [currentRefineLevel, lostItemsCount],
-            ]),
+            items: { amount: lostItemsCount, refineLevel: currentRefineLevel },
           }),
         );
 

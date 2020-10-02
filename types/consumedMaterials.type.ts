@@ -15,36 +15,78 @@ export const multiplyItemsOfRefine = (items: Map<number, number>, multiplier: nu
     ([key, value]) => [key, value * multiplier],
   ));
 
-export type ConsumedMaterials = {
-  readonly itemsOfRefine: Map<number, number>;
+export type ConsumedMaterialsBase = {
   readonly bsb: number;
   readonly enrichedOre: number;
   readonly hdOre: number;
   readonly normalOre: number;
 };
 
-export const createConsumedMaterials = (params: Partial<ConsumedMaterials> = {}): ConsumedMaterials => ({
+type ConsumedItem = {
+  readonly amount: number;
+  readonly refineLevel: number;
+}
+
+export type ConsumedMaterials = ConsumedMaterialsBase & {
+  readonly items?: ConsumedItem;
+};
+
+export type TotalConsumedMaterials = ConsumedMaterialsBase & {
+  readonly baseItems: number;
+};
+
+export const createConsumedMaterialsBase = (params: Partial<ConsumedMaterialsBase> = {}): ConsumedMaterialsBase => ({
   bsb: params.bsb || 0,
   enrichedOre: params.enrichedOre || 0,
   hdOre: params.hdOre || 0,
-  itemsOfRefine: params.itemsOfRefine || new Map<number, number>(),
   normalOre: params.normalOre || 0,
 });
 
-export const addConsumedMaterials = (...materials: readonly ConsumedMaterials[]): ConsumedMaterials => {
-  return materials.reduce((total, current) => ({
+export const createConsumedMaterials = (params: Partial<ConsumedMaterials> = {}): ConsumedMaterials => ({
+  ...createConsumedMaterialsBase(params),
+  items: params.items,
+});
+
+export const addConsumedMaterialsBase = (...materials: readonly ConsumedMaterialsBase[]): ConsumedMaterialsBase =>
+  materials.reduce((total, current) => ({
     bsb: total.bsb + current.bsb,
     enrichedOre: total.enrichedOre + current.enrichedOre,
     hdOre: total.hdOre + current.hdOre,
-    itemsOfRefine: mergeItemsOfRefine(total.itemsOfRefine, current.itemsOfRefine),
     normalOre: total.normalOre + current.normalOre,
-  }), createConsumedMaterials());
-};
+  }), createConsumedMaterialsBase());
 
-export const multiplyConsumedMaterials = (materials: ConsumedMaterials, multiplier: number): ConsumedMaterials => ({
+export const addConsumedMaterials = (...materials: readonly ConsumedMaterials[]): ConsumedMaterials =>
+  materials.reduce((total, current) => {
+    if (!total.items) {
+      return {
+        ...addConsumedMaterialsBase(total, current),
+        items: current.items,
+      };
+    }
+
+    if (!current.items) {
+      return {
+        ...addConsumedMaterialsBase(total, current),
+        items: total.items,
+      };
+    }
+
+    if (total.items.refineLevel !== current.items.refineLevel) {
+      throw new Error('Adding different refine levels');
+    }
+
+    return ({
+      ...addConsumedMaterialsBase(total, current),
+      items: {
+        refineLevel: current.items.refineLevel,
+        amount: total.items.amount + current.items.amount,
+      },
+    });
+  }, createConsumedMaterials());
+
+export const multiplyConsumedMaterialsBase = (materials: ConsumedMaterialsBase, multiplier: number): ConsumedMaterialsBase => ({
   bsb: materials.bsb * multiplier,
   enrichedOre: materials.enrichedOre * multiplier,
   hdOre: materials.hdOre * multiplier,
-  itemsOfRefine: multiplyItemsOfRefine(materials.itemsOfRefine, multiplier),
   normalOre: materials.normalOre * multiplier,
-})
+});

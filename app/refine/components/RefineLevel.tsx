@@ -3,7 +3,6 @@ import { CheckBox } from '../../_components/CheckBox';
 import { RefineType } from '../../../types/refineType.type';
 import { TotalRefineResult } from '../../../types/totalRefineResult.type';
 import { OreType } from '../../../types/oreType.type';
-import { TotalRefineCostResult } from '../../../calculations/calculateTotalRefineCost';
 
 const getOreLabel = (refineType: RefineType, ore: OreType): string => {
   const isWeapon = refineType !== RefineType.Armor;
@@ -77,12 +76,6 @@ export const RefineLevel: React.FC<Props> = ({
         const oreLabel = getOreLabel(refineType, paramsResult.refineParams.oreType);
         const shouldShowDetails = showDetails.get(paramsResult.id);
 
-        let baseItemsCount = 1;
-
-        for (const count of paramsResult.consumedMaterials.itemsOfRefine.values()) {
-          baseItemsCount += (count + 1);
-        }
-
         return (
           <div
             key={paramsResult.id}
@@ -131,7 +124,7 @@ export const RefineLevel: React.FC<Props> = ({
               </h4>
               {shouldShowDetails && (
                 <div>
-                  <div>Base items: {baseItemsCount.toFixed(2)}</div>
+                  <div>Base items: {paramsResult.consumedMaterials.baseItems.toFixed(2)}</div>
                   <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.consumedMaterials.normalOre.toFixed(2)}</div>
                   <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.consumedMaterials.enrichedOre.toFixed(2)}</div>
                   <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.consumedMaterials.hdOre.toFixed(2)}</div>

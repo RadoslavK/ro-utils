@@ -1,7 +1,6 @@
 import {
-  addConsumedMaterials,
-  createConsumedMaterials,
-  mergeItemsOfRefine,
+  addConsumedMaterialsBase, createConsumedMaterialsBase,
+  multiplyConsumedMaterialsBase, TotalConsumedMaterials,
 } from '../types/consumedMaterials.type';
 import { generateRefineParams } from '../utils/generateRefineParams';
 import { OreType } from '../types/oreType.type';
@@ -40,9 +39,8 @@ export const calculateTotalRefineCost = ({
   const refineResults: Map<number, RefineResult> = new Map<number, RefineResult>();
   const totalRefineResults: Map<number, TotalRefineResult> = new Map<number, TotalRefineResult>();
 
-  let totalCost = baseCost;
-  let totalConsumedMaterials = createConsumedMaterials();
   let currentRefineLevel = startingRefineLevel;
+  const usedRefineResultSuccessMap: Map<number, RefineParamsResultSuccess> = new Map<number, RefineParamsResultSuccess>();
 
   do {
     let refineParamsToTry = generateRefineParams(currentRefineLevel + 1);
@@ -86,19 +84,44 @@ export const calculateTotalRefineCost = ({
 
       allRefineResults.set(refineParamsId, refineParamsResult);
 
-      allRefineParamsResults.set(refineParamsId, {
-        id: refineParamsId,
-        consumedMaterials: {
-          itemsOfRefine: mergeItemsOfRefine(totalConsumedMaterials.itemsOfRefine,  refineParamsResult.totalConsumedMaterials.itemsOfRefine),
-          ...addConsumedMaterials(
-            {
-              itemsOfRefine: new Map<number, number>(),
-              ...totalConsumedMaterials,
-            },
+      const previousUsedRefineResultSuccess = usedRefineResultSuccessMap.get(currentRefineLevel - 1);
+      const previousUsedRefineConsumedMaterials = previousUsedRefineResultSuccess?.consumedMaterials ?? { baseItems: 1, ...createConsumedMaterialsBase() };
+      const consumedItems = refineParamsResult.totalConsumedMaterials.items;
+
+      let consumedMaterials: TotalConsumedMaterials;
+
+      if (consumedItems) {
+        const usedRefineResultSuccessForConsumedItem = usedRefineResultSuccessMap.get(consumedItems.refineLevel - 1);
+
+        consumedMaterials = {
+          baseItems: consumedItems.refineLevel !== currentRefineLevel
+            ? previousUsedRefineConsumedMaterials.baseItems
+              + usedRefineResultSuccessForConsumedItem.consumedMaterials.baseItems * consumedItems.amount
+            : usedRefineResultSuccessForConsumedItem.consumedMaterials.baseItems * (consumedItems.amount + 1),
+          ...addConsumedMaterialsBase(
             refineParamsResult.totalConsumedMaterials,
+            previousUsedRefineConsumedMaterials,
+            multiplyConsumedMaterialsBase(
+              usedRefineResultSuccessForConsumedItem.consumedMaterials,
+              consumedItems.amount,
+            ),
           ),
-        },
-        cost: totalCost + refineParamsResult.totalCost,
+        };
+      }
+      else {
+        consumedMaterials = {
+          baseItems: previousUsedRefineConsumedMaterials.baseItems,
+          ...addConsumedMaterialsBase(
+            refineParamsResult.totalConsumedMaterials,
+            previousUsedRefineConsumedMaterials,
+          ),
+        };
+      }
+
+      allRefineParamsResults.set(refineParamsId, {
+        consumedMaterials,
+        cost: (previousUsedRefineResultSuccess?.cost ?? baseCost) + refineParamsResult.totalCost,
+        id: refineParamsId,
         refineParams,
       });
 
@@ -113,16 +136,14 @@ export const calculateTotalRefineCost = ({
       ? preferredRefineParamsId
       : bestRefineParamsId;
 
-    const usedRefineResult = allRefineParamsResults.get(usedRefineParamsId);
-
-    totalCost = usedRefineResult.cost;
-    totalConsumedMaterials = usedRefineResult.consumedMaterials;
+    const usedRefineResultSuccess = allRefineParamsResults.get(usedRefineParamsId);
+    usedRefineResultSuccessMap.set(currentRefineLevel, usedRefineResultSuccess);
 
     currentRefineLevel++;
 
-    refineResults.set(currentRefineLevel, allRefineResults.get(usedRefineResult.id));
+    refineResults.set(currentRefineLevel, allRefineResults.get(usedRefineResultSuccess.id));
     totalRefineResults.set(currentRefineLevel, {
-      usedRefineParamsId: usedRefineResult.id,
+      usedRefineParamsId: usedRefineResultSuccess.id,
       bestRefineParamsId,
       refineParamsResults: allRefineParamsResults,
       refineParamsErrors: allRefineParamsErrors,
