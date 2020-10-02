@@ -31,7 +31,7 @@ export const Costs: React.FC<Props> = ({
     <>
       <h2>Item costs</h2>
       <div>
-        {Object.values(refineItemIds).map(refineItemId => (
+        {[refineItemIds.Oridecon, refineItemIds.Elunium, refineItemIds.BlacksmithBlessing].map(refineItemId => (
           <NumberInput
             key={refineItemId}
             value={costs.get(refineItemId) || 0}

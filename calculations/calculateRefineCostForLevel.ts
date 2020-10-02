@@ -12,6 +12,7 @@ import {
 } from '../types/consumedMaterials.type';
 import { getOreId } from '../utils/getOreId';
 import { RefineResult } from '../types/refineResult.type';
+import { getOreCost } from '../utils/getOreCost';
 
 type Params = {
   readonly baseCost: number;
@@ -56,14 +57,10 @@ export const calculateRefineCostForLevel = ({
   const targetLevel = currentRefineLevel + 1;
   const allTotalRefineResults = totalRefineResults.get(currentRefineLevel);
   const totalRefineResult = allTotalRefineResults?.refineParamsResults?.get(allTotalRefineResults.usedRefineParamsId);
-  const oreCost = itemCosts.get(oreId);
+  const oreCost = getOreCost(oreId, itemCosts);
   const refineCost = getRefineCost(refineType, oreType);
   const chance = refineChances[refineType][oreType][currentRefineLevel];
   const bsbCost = itemCosts.get(refineItemIds.BlacksmithBlessing);
-
-  if (oreCost === undefined) {
-    throw new Error(`Cost for item with it: ${oreId} is missing`);
-  }
 
   const refineAttempts = 100 / chance;
 

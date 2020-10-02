@@ -13,12 +13,8 @@ const loadPrices = (): Map<number, number> => {
   return pricesRaw
     ? new Map<number, number>(JSON.parse(pricesRaw))
     : new Map<number, number>([
-      [refineItemIds.Elunium, 1_500],
+      [refineItemIds.Elunium, 2_000],
       [refineItemIds.Oridecon, 5_000],
-      [refineItemIds.EnrichedElunium, 501_500],
-      [refineItemIds.EnrichedOridecon, 505_000],
-      [refineItemIds.HDElunium, 1_501_500],
-      [refineItemIds.HDOridecon, 1_505_000],
       [refineItemIds.BlacksmithBlessing, 3_600_000],
       [refineItemIds.Phracon, 100],
       [refineItemIds.Emveretarcon, 1_000],
@@ -49,7 +45,7 @@ export const RefinePage: React.FC = () => {
     setCost,
   } = useCosts();
 
-  const [baseItemCost, setBaseItemCost] = useState(2_000_000);
+  const [baseItemCost, setBaseItemCost] = useState(1_500_000);
   const [startingRefineLevel, setStartingRefineLevel] = useState(0);
   const [targetRefineLevel, setTargetRefineLevel] = useState(9);
   const [refineType, setRefineType] = useState<RefineType>(RefineType.Armor);
