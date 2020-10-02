@@ -7,8 +7,10 @@ export type RefineParamsResultBase = {
 }
 
 export type RefineParamsResultSuccess = RefineParamsResultBase & {
-  readonly consumedMaterials: TotalConsumedMaterials;
-  readonly cost: number;
+  readonly refineConsumedMaterials: TotalConsumedMaterials;
+  readonly refineCost: number;
+  readonly totalConsumedMaterials: TotalConsumedMaterials;
+  readonly totalCost: number;
 }
 
 export type RefineParamsResultError = RefineParamsResultBase & {

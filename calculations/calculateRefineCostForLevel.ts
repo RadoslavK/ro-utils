@@ -126,7 +126,7 @@ export const calculateRefineCostForLevel = ({
             : attemptsNeededToGetToOriginalLevelAgain - downgradedTimes;
 
           totalCost += attemptsNeededToGetToOriginalLevelAgain * previousRefineResult.attemptCost;
-          totalCost += extraPreviousItemsNeeded * (totalRefineResultOfUsedPreviousRefine ? totalRefineResultOfUsedPreviousRefine.cost : baseCost);
+          totalCost += extraPreviousItemsNeeded * (totalRefineResultOfUsedPreviousRefine ? totalRefineResultOfUsedPreviousRefine.totalCost : baseCost);
 
           downgradedRefineLevel--;
           downgradedTimes = previousRefineResult.attemptConsumedMaterials.hdOre > 0
@@ -183,7 +183,7 @@ export const calculateRefineCostForLevel = ({
       })
 
       if (refineAttempts > 1) {
-        const lostItemCost = totalRefineResult ? totalRefineResult.cost : baseCost;
+        const lostItemCost = totalRefineResult ? totalRefineResult.totalCost : baseCost;
         const lostItemsCount = refineAttempts - 1;
         const totalCost = attemptCost * refineAttempts + lostItemCost * lostItemsCount;
 

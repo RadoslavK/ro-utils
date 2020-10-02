@@ -103,7 +103,7 @@ export const RefineLevel: React.FC<Props> = ({
                 />
               </div>
             )}
-            <div>Cost: {Math.round(paramsResult.cost).toLocaleString()}</div>
+            <div>Cost: {Math.round(paramsResult.totalCost).toLocaleString()}</div>
             <div>
               <h4
                 onClick={(e) => {
@@ -123,12 +123,23 @@ export const RefineLevel: React.FC<Props> = ({
                 {shouldShowDetails ? 'Hide' : 'Show'} consumed materials
               </h4>
               {shouldShowDetails && (
-                <div>
-                  <div>Base items: {paramsResult.consumedMaterials.baseItems.toFixed(2)}</div>
-                  <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.consumedMaterials.normalOre.toFixed(2)}</div>
-                  <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.consumedMaterials.enrichedOre.toFixed(2)}</div>
-                  <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.consumedMaterials.hdOre.toFixed(2)}</div>
-                  <div>BSB: {paramsResult.consumedMaterials.bsb.toFixed(2)}</div>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ marginRight: 10 }}>
+                    <h3>Upgrade</h3>
+                    <div>Extra base items: {paramsResult.refineConsumedMaterials.baseItems.toFixed(2)}</div>
+                    <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.refineConsumedMaterials.normalOre.toFixed(2)}</div>
+                    <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.refineConsumedMaterials.enrichedOre.toFixed(2)}</div>
+                    <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.refineConsumedMaterials.hdOre.toFixed(2)}</div>
+                    <div>BSB: {paramsResult.refineConsumedMaterials.bsb.toFixed(2)}</div>
+                  </div>
+                  <div>
+                    <h3>Total</h3>
+                    <div>Base items: {paramsResult.totalConsumedMaterials.baseItems.toFixed(2)}</div>
+                    <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.totalConsumedMaterials.normalOre.toFixed(2)}</div>
+                    <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.totalConsumedMaterials.enrichedOre.toFixed(2)}</div>
+                    <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.totalConsumedMaterials.hdOre.toFixed(2)}</div>
+                    <div>BSB: {paramsResult.totalConsumedMaterials.bsb.toFixed(2)}</div>
+                  </div>
                 </div>
               )}
             </div>
