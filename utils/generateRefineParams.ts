@@ -12,7 +12,7 @@ export const generateRefineParams = (targetLevel: number): readonly RefineParame
       });
     }
 
-    if (targetLevel > 7) {
+    if (targetLevel > 7 && oreType !== OreType.HD) {
       refineParams.push({
         oreType,
         useBsb: true,
