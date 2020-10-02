@@ -41,7 +41,7 @@ export const RefineLevel: React.FC<Props> = ({
   const [showDetails, setShowDetails] = useState<ReadonlyMap<string, boolean>>(new Map<string, boolean>());
 
   return (
-    <div>
+    <div style={{ flex: '0 0 auto' }}>
       <h3>+{level}</h3>
 
       {refineParamsErrors.map(paramsError => {
@@ -123,7 +123,7 @@ export const RefineLevel: React.FC<Props> = ({
                 {shouldShowDetails ? 'Hide' : 'Show'} consumed materials
               </h4>
               {shouldShowDetails && (
-                <div style={{ display: 'flex' }}>
+                <div>
                   <div style={{ marginRight: 10 }}>
                     <h3>Upgrade</h3>
                     <div>Extra base items: {paramsResult.refineConsumedMaterials.baseItems.toFixed(2)}</div>

@@ -62,21 +62,23 @@ export const RefinePage: React.FC = () => {
 
   return (
     <div>
-      <Costs
-        costs={costs}
-        setCost={setCost}
-      />
+      <div style={{ display: 'flex' }}>
+        <RefineCalculatorInput
+          baseItemCost={baseItemCost}
+          onBaseItemCostChange={setBaseItemCost}
+          onRefineTypeChange={setRefineType}
+          onStartingRefineLevelChange={setStartingRefineLevel}
+          onTargetRefineLevelChange={setTargetRefineLevel}
+          refineType={refineType}
+          startingRefineLevel={startingRefineLevel}
+          targetRefineLevel={targetRefineLevel}
+        />
 
-      <RefineCalculatorInput
-        baseItemCost={baseItemCost}
-        onBaseItemCostChange={setBaseItemCost}
-        onRefineTypeChange={setRefineType}
-        onStartingRefineLevelChange={setStartingRefineLevel}
-        onTargetRefineLevelChange={setTargetRefineLevel}
-        refineType={refineType}
-        startingRefineLevel={startingRefineLevel}
-        targetRefineLevel={targetRefineLevel}
-      />
+        <Costs
+          costs={costs}
+          setCost={setCost}
+        />
+      </div>
 
       <RefineResult
         refineType={refineType}

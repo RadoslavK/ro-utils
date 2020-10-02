@@ -28,7 +28,7 @@ export const Costs: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <div>
       <h2>Item costs</h2>
       <div>
         {[refineItemIds.Oridecon, refineItemIds.Elunium, refineItemIds.BlacksmithBlessing].map(refineItemId => (
@@ -41,7 +41,7 @@ export const Costs: React.FC<Props> = ({
           />
         ))}
       </div>
-    </>
+    </div>
   );
 };
 

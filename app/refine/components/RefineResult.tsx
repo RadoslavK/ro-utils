@@ -33,16 +33,18 @@ export const RefineResult: React.FC<Props> = ({
     <div>
       <h2>Result</h2>
 
-      {result.totalRefineResults.map(levelResult => (
-        <RefineLevel
-          key={levelResult.refineLevel}
-          level={levelResult.refineLevel}
-          refineType={refineType}
-          totalRefineResult={levelResult}
-          onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
-          preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
-        />
-      ))}
+      <div style={{ display: 'flex', flexBasis: 500 }}>
+        {result.totalRefineResults.map(levelResult => (
+          <RefineLevel
+            key={levelResult.refineLevel}
+            level={levelResult.refineLevel}
+            refineType={refineType}
+            totalRefineResult={levelResult}
+            onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
+            preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
+          />
+        ))}
+      </div>
     </div>
   );
 };
