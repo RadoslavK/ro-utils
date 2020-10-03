@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { CheckBox } from '../../../components/CheckBox';
 import { RefineType } from '../../../../types/refineType.type';
 import { TotalRefineResult } from '../../../../types/totalRefineResult.type';
@@ -36,15 +36,19 @@ export const RefineLevel: React.FC<Props> = ({
   onPreferredRefineParamsChange,
   preferredRefineParamsId,
 }) => {
-  const refineParamsResults = [...totalRefineResult.refineParamsResults.values()];
   const [showDetails, setShowDetails] = useState<ReadonlyMap<string, boolean>>(new Map<string, boolean>());
+
+  const sortedRefineParamsResults = useMemo(() => {
+    const results = [...totalRefineResult.refineParamsResults.values()];
+
+    return results.sort((result, otherResult) => result.totalCost - otherResult.totalCost);
+  }, [totalRefineResult]);
 
   return (
     <div style={{ flex: '0 0 auto' }}>
       <h3>+{level}</h3>
 
-      {refineParamsResults.map(paramsResult => {
-        const isBest = paramsResult.id === totalRefineResult.bestRefineParamsId;
+      {sortedRefineParamsResults.map(paramsResult => {
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
         const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
           ? getOreLabel(refineType, paramsResult.refineParams.oreType)
@@ -56,8 +60,7 @@ export const RefineLevel: React.FC<Props> = ({
             key={paramsResult.id}
             style={{
               margin: 10,
-              border: '1px ' + (isUsed ? 'gold' : 'black') + ' solid',
-              color: isBest ? 'green' : undefined,
+              border: `${isUsed ? 2.5 : 1 }px ${isUsed ? 'gold' : 'black'} solid`,
             }}
             onClick={() => {
               if (preferredRefineParamsId === paramsResult.id) {
