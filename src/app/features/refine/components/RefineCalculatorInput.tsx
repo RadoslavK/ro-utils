@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
-import { NumberInput } from '../../_components/NumberInput';
-import { RefineType } from '../../../types/refineType.type';
-import { DropDown } from '../../_components/DropDown';
-import { RefineInput } from '../../../types/refineInput.type';
+import { NumberInput } from '../../../components/NumberInput';
+import { RefineType } from '../../../../types/refineType.type';
+import { DropDown } from '../../../components/DropDown';
+import { RefineInput } from '../../../../types/refineInput.type';
 
 const refineTypeLabels: Record<RefineType, string> = {
   [RefineType.Armor]: 'Armor',

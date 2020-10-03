@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { CheckBox } from '../../_components/CheckBox';
-import { RefineType } from '../../../types/refineType.type';
-import { TotalRefineResult } from '../../../types/totalRefineResult.type';
-import { OreType } from '../../../types/oreType.type';
-import { isOreRefineParameters } from '../../../types/RefineParameters.type';
+import { CheckBox } from '../../../components/CheckBox';
+import { RefineType } from '../../../../types/refineType.type';
+import { TotalRefineResult } from '../../../../types/totalRefineResult.type';
+import { OreType } from '../../../../types/oreType.type';
+import { isOreRefineParameters } from '../../../../types/RefineParameters.type';
 
 const getOreLabel = (refineType: RefineType, ore: OreType): string => {
   const isWeapon = refineType !== RefineType.Armor;
@@ -20,7 +20,6 @@ const getOreLabel = (refineType: RefineType, ore: OreType): string => {
       throw new Error(`Unknown ore type: ${ore}`);
   }
 };
-
 
 type Props = {
   readonly level: number;

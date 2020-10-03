@@ -1,7 +1,7 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: './app/index.tsx',
+  entry: './src/app/index.tsx',
   devtool: 'source-map',
   devServer: {
     historyApiFallback: true,
@@ -25,7 +25,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebPackPlugin({
-      template: "./app/static/index.html",
+      template: "./src/app/static/index.html",
       filename: "./index.html"
     }),
   ],

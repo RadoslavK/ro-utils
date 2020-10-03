@@ -1,7 +1,7 @@
 import React from 'react';
-import { items } from '../../_constants/items';
-import { NumberInput } from '../../_components/NumberInput';
-import { refineItemIds } from '../../../constants/refineItemIds';
+import { items } from '../../../constants/items';
+import { NumberInput } from '../../../components/NumberInput';
+import { refineItemIds } from '../../../../constants/refineItemIds';
 
 type Props = {
   readonly costs: Map<number, number>;

@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { Costs} from './Costs';
 import { RefineCalculatorInput } from './RefineCalculatorInput';
-import { calculateTotalRefineCost } from '../../../calculations/calculateTotalRefineCost';
+import { calculateTotalRefineCost } from '../../../../calculations/calculateTotalRefineCost';
 import { RefineResult } from './RefineResult';
-import { useCosts } from '../../hooks/useCosts';
-import { useRefineInput } from '../../hooks/useRefineInput';
+import { useCosts } from '../hooks/useCosts';
+import { useRefineInput } from '../hooks/useRefineInput';
 
 export const RefinePage: React.FC = () => {
   const { costs, setCost } = useCosts();
