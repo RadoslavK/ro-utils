@@ -27,7 +27,7 @@ export const useRefineInput = () => {
   };
 
   return {
-    refineInput: refineInput,
+    refineInput,
     setRefineInput: changeRefineInput,
   };
 };

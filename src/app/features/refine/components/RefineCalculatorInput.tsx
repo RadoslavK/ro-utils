@@ -30,19 +30,19 @@ export const RefineCalculatorInput: React.FC<Props> = ({
 
   const onBaseItemCostChange = useCallback((baseItemCost: number): void => {
     onRefineInputChange({ ...refineInput, baseItemCost });
-  }, []);
+  }, [refineInput]);
 
   const onStartingRefineLevelChange = useCallback((startingRefineLevel: number): void => {
     onRefineInputChange({ ...refineInput, startingRefineLevel });
-  }, []);
+  }, [refineInput]);
 
   const onTargetRefineLevelChange = useCallback((targetRefineLevel: number): void => {
     onRefineInputChange({ ...refineInput, targetRefineLevel });
-  }, []);
+  }, [refineInput]);
 
   const onRefineTypeChange = useCallback((refineType: RefineType): void => {
     onRefineInputChange({ ...refineInput, refineType });
-  }, []);
+  }, [refineInput]);
 
   return (
     <div>
