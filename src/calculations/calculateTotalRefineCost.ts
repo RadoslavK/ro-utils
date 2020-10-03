@@ -3,11 +3,9 @@ import {
   multiplyConsumedMaterialsBase, TotalConsumedMaterials,
 } from '../types/consumedMaterials.type';
 import { generateRefineParams } from '../utils/generateRefineParams';
-import { OreType } from '../types/oreType.type';
 import { calculateRefineCostForLevel } from './calculateRefineCostForLevel';
 import {
-  RefineParamsResultError,
-  RefineParamsResultSuccess,
+  RefineParamsResult,
   TotalRefineResult,
 } from '../types/totalRefineResult.type';
 import { getRefineParamsId } from '../utils/getRefineParamsId';
@@ -16,8 +14,8 @@ import { isOreRefineParameters } from '../types/RefineParameters.type';
 import { RefineInput } from '../types/refineInput.type';
 
 type Params = {
-  readonly itemCosts: Map<number, number>;
   readonly refineInput: RefineInput;
+  readonly itemCosts: Map<number, number>;
   readonly refineParamsPreferences: Map<number, string>;
 };
 
@@ -41,14 +39,13 @@ export const calculateTotalRefineCost = ({
   const refineResults: Map<number, RefineResult> = new Map<number, RefineResult>();
   const totalRefineResults: Map<number, TotalRefineResult> = new Map<number, TotalRefineResult>();
 
-  let currentRefineLevel = startingRefineLevel;
-  const usedRefineResultSuccessMap: Map<number, RefineParamsResultSuccess> = new Map<number, RefineParamsResultSuccess>();
+  let currentRefineLevel = 0;
+  const usedRefineResultsMap: Map<number, RefineParamsResult> = new Map<number, RefineParamsResult>();
 
   do {
     let refineParamsToTry = generateRefineParams(currentRefineLevel + 1);
 
-    const allRefineParamsResults: Map<string, RefineParamsResultSuccess> = new Map<string, RefineParamsResultSuccess>();
-    const allRefineParamsErrors: Map<string, RefineParamsResultError> = new Map<string, RefineParamsResultError>();
+    const allRefineParamsResults: Map<string, RefineParamsResult> = new Map<string, RefineParamsResult>();
     const allRefineResults: Map<string, RefineResult> = new Map<string, RefineResult>();
 
     let bestRefineTotalCost: number;
@@ -56,23 +53,6 @@ export const calculateTotalRefineCost = ({
 
     for (const refineParams of refineParamsToTry) {
       const refineParamsId = getRefineParamsId(refineParams);
-
-      const isInvalidHdParam = startingRefineLevel === currentRefineLevel
-        && startingRefineLevel >= 7
-        && isOreRefineParameters(refineParams)
-        && refineParams.oreType === OreType.HD;
-
-      if (isInvalidHdParam) {
-        // Remove HD because we can't precisely calculate the cost refining downgraded item to continue
-        allRefineParamsErrors.set(refineParamsId, {
-          id: refineParamsId,
-          refineParams,
-          message: `Can not precisely calculate the HD cost because of missing information about refine cost of +${currentRefineLevel
-          - 1}`,
-        })
-
-        continue;
-      }
 
       const refineParamsResult = calculateRefineCostForLevel({
         baseItemCost,
@@ -86,7 +66,7 @@ export const calculateTotalRefineCost = ({
 
       allRefineResults.set(refineParamsId, refineParamsResult);
 
-      const previousUsedRefineResultSuccess = usedRefineResultSuccessMap.get(currentRefineLevel - 1);
+      const previousUsedRefineResultSuccess = usedRefineResultsMap.get(currentRefineLevel - 1);
       const previousUsedRefineConsumedMaterials = previousUsedRefineResultSuccess?.totalConsumedMaterials ?? { baseItems: 1, ...createConsumedMaterialsBase() };
       const consumedItems = refineParamsResult.totalConsumedMaterials.items;
 
@@ -95,7 +75,7 @@ export const calculateTotalRefineCost = ({
       let totalCost: number;
 
       if (consumedItems) {
-        const usedRefineResultSuccessForConsumedItem = usedRefineResultSuccessMap.get(consumedItems.refineLevel - 1);
+        const usedRefineResultSuccessForConsumedItem = usedRefineResultsMap.get(consumedItems.refineLevel - 1);
 
         refineConsumedMaterials = {
           baseItems: usedRefineResultSuccessForConsumedItem.totalConsumedMaterials.baseItems * consumedItems.amount,
@@ -149,7 +129,15 @@ export const calculateTotalRefineCost = ({
           };
 
           totalConsumedMaterials = refineConsumedMaterials;
-          totalCost = baseItemCost + refineParamsResult.totalCost;
+
+          //  We need to apply the cost of item at current refine
+          //  Otherwise it could get misleading results for using refine box for it
+          const startingRefineLevelResult = totalRefineResults.get(startingRefineLevel);
+          const startingRefineLevelBaseCost = startingRefineLevelResult?.refineParamsResults
+              ?.get(startingRefineLevelResult?.usedRefineParamsId)?.totalCost
+                ?? baseItemCost;
+
+          totalCost = startingRefineLevelBaseCost + refineParamsResult.totalCost;
         }
       }
 
@@ -174,7 +162,7 @@ export const calculateTotalRefineCost = ({
       : bestRefineParamsId;
 
     const usedRefineResultSuccess = allRefineParamsResults.get(usedRefineParamsId);
-    usedRefineResultSuccessMap.set(currentRefineLevel, usedRefineResultSuccess);
+    usedRefineResultsMap.set(currentRefineLevel, usedRefineResultSuccess);
 
     currentRefineLevel++;
 
@@ -183,7 +171,6 @@ export const calculateTotalRefineCost = ({
       usedRefineParamsId: usedRefineResultSuccess.id,
       bestRefineParamsId,
       refineParamsResults: allRefineParamsResults,
-      refineParamsErrors: allRefineParamsErrors,
       refineLevel: currentRefineLevel,
     });
   } while (currentRefineLevel < targetRefineLevel);

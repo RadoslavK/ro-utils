@@ -1,26 +1,18 @@
 import { RefineParameters } from './RefineParameters.type';
-import { ConsumedMaterials, TotalConsumedMaterials } from './consumedMaterials.type';
+import { TotalConsumedMaterials } from './consumedMaterials.type';
 
-export type RefineParamsResultBase = {
+export type RefineParamsResult = {
   readonly id: string;
-  readonly refineParams: RefineParameters;
-}
-
-export type RefineParamsResultSuccess = RefineParamsResultBase & {
   readonly refineConsumedMaterials: TotalConsumedMaterials;
   readonly refineCost: number;
+  readonly refineParams: RefineParameters;
   readonly totalConsumedMaterials: TotalConsumedMaterials;
   readonly totalCost: number;
 }
 
-export type RefineParamsResultError = RefineParamsResultBase & {
-  readonly message: string;
-}
-
 export type TotalRefineResult = {
   readonly refineLevel: number;
-  readonly refineParamsResults: Map<string, RefineParamsResultSuccess>;
-  readonly refineParamsErrors: Map<string, RefineParamsResultError>;
+  readonly refineParamsResults: Map<string, RefineParamsResult>;
   readonly bestRefineParamsId: string;
   readonly usedRefineParamsId: string;
 };

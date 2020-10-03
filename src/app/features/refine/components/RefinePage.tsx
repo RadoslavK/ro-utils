@@ -13,8 +13,8 @@ export const RefinePage: React.FC = () => {
 
   const refineResult = useMemo(() => calculateTotalRefineCost({
     itemCosts: costs,
-    refineParamsPreferences,
     refineInput,
+    refineParamsPreferences,
   }), [refineParamsPreferences, costs, refineInput]);
 
   return (
@@ -36,6 +36,7 @@ export const RefinePage: React.FC = () => {
         result={refineResult}
         onPreferencesChange={setRefineParamsPreferences}
         preferences={refineParamsPreferences}
+        startingRefineLevel={refineInput.startingRefineLevel}
       />
     </div>
   );

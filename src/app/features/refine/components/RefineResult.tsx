@@ -8,6 +8,7 @@ type Props = {
   readonly onPreferencesChange: (preferences: Map<number, string>) => void;
   readonly refineType: RefineType;
   readonly result: TotalRefineCostResult;
+  readonly startingRefineLevel: number;
 }
 
 export const RefineResult: React.FC<Props> = ({
@@ -15,6 +16,7 @@ export const RefineResult: React.FC<Props> = ({
   preferences,
   refineType,
   result,
+  startingRefineLevel,
 }) => {
   const setPreference = (refineLevel: number) => (refineParamsId: string | null): void => {
     const newPreferences = new Map<number, string>(preferences);
@@ -35,14 +37,19 @@ export const RefineResult: React.FC<Props> = ({
 
       <div style={{ display: 'flex', flexBasis: 500 }}>
         {result.totalRefineResults.map(levelResult => (
-          <RefineLevel
-            key={levelResult.refineLevel}
-            level={levelResult.refineLevel}
-            refineType={refineType}
-            totalRefineResult={levelResult}
-            onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
-            preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
-          />
+          <React.Fragment key={levelResult.refineLevel}>
+            <RefineLevel
+              level={levelResult.refineLevel}
+              refineType={refineType}
+              totalRefineResult={levelResult}
+              onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
+              preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
+            />
+
+            {levelResult.refineLevel === startingRefineLevel && (
+              <div style={{ borderLeft: '6px solid green' }} />
+            )}
+          </React.Fragment>
         ))}
       </div>
     </div>
