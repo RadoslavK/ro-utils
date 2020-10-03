@@ -3,13 +3,15 @@ import React from 'react';
 type Props = {
   readonly disabled?: boolean;
   readonly isChecked: boolean;
+  readonly label: string;
   readonly onChange?: (isChecked: boolean) => void;
 }
 
 export const CheckBox: React.FC<Props> = ({
-  isChecked,
-  onChange,
   disabled,
+  isChecked,
+  label,
+  onChange,
 }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { checked } = event.currentTarget;
@@ -17,12 +19,15 @@ export const CheckBox: React.FC<Props> = ({
   };
 
   return (
-    <input
-      disabled={disabled}
-      checked={isChecked}
-      onChange={disabled ? undefined : handleChange}
-      type="checkbox"
-    />
+    <div>
+      {label}
+      <input
+        disabled={disabled}
+        checked={isChecked}
+        onChange={disabled ? undefined : handleChange}
+        type="checkbox"
+      />
+    </div>
   );
 };
 

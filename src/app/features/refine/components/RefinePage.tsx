@@ -10,6 +10,7 @@ export const RefinePage: React.FC = () => {
   const { costs, setCost } = useCosts();
   const { refineInput, setRefineInput } = useRefineInput();
   const [refineParamsPreferences, setRefineParamsPreferences] = useState<Map<number, string>>(new Map<number, string>());
+  const [shouldShowOnlyBestResults, setShouldShowOnlyBestResults] = useState(false);
 
   const refineResult = useMemo(() => calculateTotalRefineCost({
     itemCosts: costs,
@@ -23,6 +24,8 @@ export const RefinePage: React.FC = () => {
         <RefineCalculatorInput
           refineInput={refineInput}
           onRefineInputChange={setRefineInput}
+          onShowOnlyBestResultsChange={setShouldShowOnlyBestResults}
+          shouldShowOnlyBestResults={shouldShowOnlyBestResults}
         />
 
         <Costs
@@ -36,6 +39,7 @@ export const RefinePage: React.FC = () => {
         result={refineResult}
         onPreferencesChange={setRefineParamsPreferences}
         preferences={refineParamsPreferences}
+        shouldShowOnlyBestResults={shouldShowOnlyBestResults}
         startingRefineLevel={refineInput.startingRefineLevel}
       />
     </div>

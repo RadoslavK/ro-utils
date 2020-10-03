@@ -3,6 +3,7 @@ import { NumberInput } from '../../../components/NumberInput';
 import { RefineType } from '../../../../types/refineType.type';
 import { DropDown } from '../../../components/DropDown';
 import { RefineInput } from '../../../../types/refineInput.type';
+import { CheckBox } from '../../../components/CheckBox';
 
 const refineTypeLabels: Record<RefineType, string> = {
   [RefineType.Armor]: 'Armor',
@@ -14,12 +15,16 @@ const refineTypeLabels: Record<RefineType, string> = {
 
 type Props = {
   readonly onRefineInputChange: (value: RefineInput) => void;
+  readonly onShowOnlyBestResultsChange: (value: boolean) => void;
   readonly refineInput: RefineInput;
+  readonly shouldShowOnlyBestResults: boolean;
 }
 
 export const RefineCalculatorInput: React.FC<Props> = ({
   onRefineInputChange,
+  onShowOnlyBestResultsChange,
   refineInput,
+  shouldShowOnlyBestResults,
 }) => {
   const {
     baseItemCost,
@@ -77,6 +82,12 @@ export const RefineCalculatorInput: React.FC<Props> = ({
         onChange={onRefineTypeChange}
         getId={refineType => refineType}
         getName={refineType => refineTypeLabels[refineType]}
+      />
+
+      <CheckBox
+        isChecked={shouldShowOnlyBestResults}
+        label="Show only best results"
+        onChange={onShowOnlyBestResultsChange}
       />
     </div>
   );

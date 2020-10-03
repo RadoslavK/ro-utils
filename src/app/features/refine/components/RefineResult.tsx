@@ -4,10 +4,11 @@ import { RefineType } from '../../../../types/refineType.type';
 import { RefineLevel } from './RefineLevel';
 
 type Props = {
-  readonly preferences: Map<number, string>;
   readonly onPreferencesChange: (preferences: Map<number, string>) => void;
+  readonly preferences: Map<number, string>;
   readonly refineType: RefineType;
   readonly result: TotalRefineCostResult;
+  readonly shouldShowOnlyBestResults: boolean;
   readonly startingRefineLevel: number;
 }
 
@@ -16,6 +17,7 @@ export const RefineResult: React.FC<Props> = ({
   preferences,
   refineType,
   result,
+  shouldShowOnlyBestResults,
   startingRefineLevel,
 }) => {
   const setPreference = (refineLevel: number) => (refineParamsId: string | null): void => {
@@ -44,6 +46,7 @@ export const RefineResult: React.FC<Props> = ({
               totalRefineResult={levelResult}
               onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
               preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
+              shouldShowOnlyBestResults={shouldShowOnlyBestResults}
             />
 
             {levelResult.refineLevel === startingRefineLevel && (

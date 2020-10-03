@@ -23,26 +23,32 @@ const getOreLabel = (refineType: RefineType, ore: OreType): string => {
 
 type Props = {
   readonly level: number;
-  readonly refineType: RefineType;
-  readonly totalRefineResult: TotalRefineResult;
-  readonly preferredRefineParamsId: string | undefined;
   readonly onPreferredRefineParamsChange: (id: string | null) => void;
+  readonly preferredRefineParamsId: string | undefined;
+  readonly refineType: RefineType;
+  readonly shouldShowOnlyBestResults: boolean;
+  readonly totalRefineResult: TotalRefineResult;
 }
 
 export const RefineLevel: React.FC<Props> = ({
   level,
-  refineType,
-  totalRefineResult,
   onPreferredRefineParamsChange,
   preferredRefineParamsId,
+  refineType,
+  shouldShowOnlyBestResults,
+  totalRefineResult,
 }) => {
   const [showDetails, setShowDetails] = useState<ReadonlyMap<string, boolean>>(new Map<string, boolean>());
 
-  const sortedRefineParamsResults = useMemo(() => {
+  let sortedRefineParamsResults = useMemo(() => {
     const results = [...totalRefineResult.refineParamsResults.values()];
 
     return results.sort((result, otherResult) => result.totalCost - otherResult.totalCost);
   }, [totalRefineResult]);
+
+  if (shouldShowOnlyBestResults) {
+    sortedRefineParamsResults = sortedRefineParamsResults.slice(0, 1);
+  }
 
   return (
     <div style={{ flex: '0 0 auto' }}>
@@ -50,6 +56,7 @@ export const RefineLevel: React.FC<Props> = ({
 
       {sortedRefineParamsResults.map(paramsResult => {
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
+        const shouldBeMarked = !shouldShowOnlyBestResults && isUsed;
         const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
           ? getOreLabel(refineType, paramsResult.refineParams.oreType)
           : 'Random refine box';
@@ -60,7 +67,7 @@ export const RefineLevel: React.FC<Props> = ({
             key={paramsResult.id}
             style={{
               margin: 10,
-              border: `${isUsed ? 2.5 : 1 }px ${isUsed ? 'gold' : 'black'} solid`,
+              border: `${shouldBeMarked ? 2.5 : 1 }px ${shouldBeMarked ? 'gold' : 'black'} solid`,
             }}
             onClick={() => {
               if (preferredRefineParamsId === paramsResult.id) {
@@ -73,13 +80,11 @@ export const RefineLevel: React.FC<Props> = ({
           >
             <div>Method: {refineMethodLabel}</div>
             {level > 7 && isOreRefineParameters(paramsResult.refineParams) && (
-              <div>
-                BSB
-                <CheckBox
-                  disabled
-                  isChecked={paramsResult.refineParams.useBsb}
-                />
-              </div>
+              <CheckBox
+                disabled
+                isChecked={paramsResult.refineParams.useBsb}
+                label="BSB"
+              />
             )}
             <div>Cost: {Math.round(paramsResult.totalCost).toLocaleString()}</div>
             <div>
