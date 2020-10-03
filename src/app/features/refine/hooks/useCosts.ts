@@ -11,7 +11,16 @@ export const useCosts = () => {
   })
 
   const [prices, setPrices] = useState<Map<number, number>>(() => {
-    return localStorageManager.load(defaultRefineItemsPrices);
+    const loadedPrices = localStorageManager.load(defaultRefineItemsPrices);
+
+    [...defaultRefineItemsPrices.entries()]
+      .forEach(([itemId, defaultPrice]) => {
+        if (loadedPrices.get(itemId) === undefined) {
+          loadedPrices.set(itemId, defaultPrice);
+        }
+      });
+
+    return loadedPrices;
   });
 
   const setPrice = (itemId: number, price: number): void => {

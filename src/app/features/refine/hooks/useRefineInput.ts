@@ -17,7 +17,17 @@ export const useRefineInput = () => {
   });
 
   const [refineInput, setRefineInput] = useState<RefineInput>(() => {
-    return localStorageManager.load(defaultRefineItemInput);
+    const loadedInput = localStorageManager.load(defaultRefineItemInput);
+
+    Object
+      .entries(defaultRefineItemInput)
+      .forEach((([key, value]) => {
+        if (!(key in loadedInput)) {
+          loadedInput[key] = value;
+        }
+      }));
+
+    return loadedInput;
   });
 
   const changeRefineInput = (refineInput: RefineInput): void => {
