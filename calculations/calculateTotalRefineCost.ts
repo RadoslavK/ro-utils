@@ -11,16 +11,13 @@ import {
   TotalRefineResult,
 } from '../types/totalRefineResult.type';
 import { getRefineParamsId } from '../utils/getRefineParamsId';
-import { RefineType } from '../types/refineType.type';
 import { RefineResult } from '../types/refineResult.type';
 import { isOreRefineParameters } from '../types/RefineParameters.type';
+import { RefineInput } from '../types/refineInput.type';
 
 type Params = {
-  readonly baseCost: number;
   readonly itemCosts: Map<number, number>;
-  readonly refineType?: RefineType,
-  readonly startingRefineLevel?: number,
-  readonly targetRefineLevel?: number,
+  readonly refineInput: RefineInput;
   readonly refineParamsPreferences: Map<number, string>;
 };
 
@@ -30,13 +27,17 @@ export type TotalRefineCostResult = {
 }
 
 export const calculateTotalRefineCost = ({
-  baseCost,
   itemCosts,
+  refineInput,
   refineParamsPreferences,
-  refineType,
-  startingRefineLevel,
-  targetRefineLevel,
 }: Params): TotalRefineCostResult => {
+  const {
+    baseItemCost,
+    refineType,
+    startingRefineLevel,
+    targetRefineLevel,
+  } = refineInput;
+
   const refineResults: Map<number, RefineResult> = new Map<number, RefineResult>();
   const totalRefineResults: Map<number, TotalRefineResult> = new Map<number, TotalRefineResult>();
 
@@ -74,7 +75,7 @@ export const calculateTotalRefineCost = ({
       }
 
       const refineParamsResult = calculateRefineCostForLevel({
-        baseCost,
+        baseItemCost,
         currentRefineLevel,
         itemCosts,
         refineParams,
@@ -122,7 +123,7 @@ export const calculateTotalRefineCost = ({
           ),
         };
 
-        totalCost = (previousUsedRefineResultSuccess?.totalCost ?? baseCost) + refineParamsResult.totalCost;
+        totalCost = (previousUsedRefineResultSuccess?.totalCost ?? baseItemCost) + refineParamsResult.totalCost;
       }
       else {
         if (isOreRefineParameters(refineParams)) {
@@ -139,7 +140,7 @@ export const calculateTotalRefineCost = ({
             ),
           };
 
-          totalCost = (previousUsedRefineResultSuccess?.totalCost ?? baseCost) + refineParamsResult.totalCost;
+          totalCost = (previousUsedRefineResultSuccess?.totalCost ?? baseItemCost) + refineParamsResult.totalCost;
         }
         else {
           refineConsumedMaterials = {
@@ -148,7 +149,7 @@ export const calculateTotalRefineCost = ({
           };
 
           totalConsumedMaterials = refineConsumedMaterials;
-          totalCost = baseCost + refineParamsResult.totalCost;
+          totalCost = baseItemCost + refineParamsResult.totalCost;
         }
       }
 

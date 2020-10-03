@@ -1,4 +1,4 @@
-import { Item } from '../_types/item.type';
+import { Item } from '../../types/item.type';
 
 export const items: Map<number, Item> = new Map<number, Item>([
   [984, {

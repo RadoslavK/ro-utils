@@ -17,7 +17,7 @@ import { isOreRefineParameters, RefineParameters } from '../types/RefineParamete
 import { cumulativeRefineBoxChances } from '../constants/refineBoxChances';
 
 type Params = {
-  readonly baseCost: number;
+  readonly baseItemCost: number;
   readonly currentRefineLevel: number;
   readonly itemCosts: Map<number, number>;
   readonly refineParams: RefineParameters;
@@ -36,7 +36,7 @@ const getUsedOreKey = (ore: OreType): keyof ConsumedMaterials => {
 }
 
 export const calculateRefineCostForLevel = ({
-  baseCost,
+  baseItemCost,
   currentRefineLevel,
   itemCosts,
   refineParams,
@@ -133,7 +133,7 @@ export const calculateRefineCostForLevel = ({
               : attemptsNeededToGetToOriginalLevelAgain - downgradedTimes;
 
             totalCost += attemptsNeededToGetToOriginalLevelAgain * previousRefineResult.attemptCost;
-            totalCost += extraPreviousItemsNeeded * (totalRefineResultOfUsedPreviousRefine ? totalRefineResultOfUsedPreviousRefine.totalCost : baseCost);
+            totalCost += extraPreviousItemsNeeded * (totalRefineResultOfUsedPreviousRefine ? totalRefineResultOfUsedPreviousRefine.totalCost : baseItemCost);
 
             downgradedRefineLevel--;
             downgradedTimes = previousRefineResult.attemptConsumedMaterials.hdOre > 0
@@ -190,7 +190,7 @@ export const calculateRefineCostForLevel = ({
         })
 
         if (refineAttempts > 1) {
-          const lostItemCost = totalRefineResult ? totalRefineResult.totalCost : baseCost;
+          const lostItemCost = totalRefineResult ? totalRefineResult.totalCost : baseItemCost;
           const lostItemsCount = refineAttempts - 1;
           const totalCost = attemptCost * refineAttempts + lostItemCost * lostItemsCount;
 
