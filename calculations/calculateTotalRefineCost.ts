@@ -13,6 +13,7 @@ import {
 import { getRefineParamsId } from '../utils/getRefineParamsId';
 import { RefineType } from '../types/refineType.type';
 import { RefineResult } from '../types/refineResult.type';
+import { isOreRefineParameters } from '../types/RefineParameters.type';
 
 type Params = {
   readonly baseCost: number;
@@ -49,7 +50,7 @@ export const calculateTotalRefineCost = ({
     const allRefineParamsErrors: Map<string, RefineParamsResultError> = new Map<string, RefineParamsResultError>();
     const allRefineResults: Map<string, RefineResult> = new Map<string, RefineResult>();
 
-    let bestRefineResult: RefineResult;
+    let bestRefineTotalCost: number;
     let bestRefineParamsId: string;
 
     for (const refineParams of refineParamsToTry) {
@@ -57,6 +58,7 @@ export const calculateTotalRefineCost = ({
 
       const isInvalidHdParam = startingRefineLevel === currentRefineLevel
         && startingRefineLevel >= 7
+        && isOreRefineParameters(refineParams)
         && refineParams.oreType === OreType.HD;
 
       if (isInvalidHdParam) {
@@ -75,11 +77,10 @@ export const calculateTotalRefineCost = ({
         baseCost,
         currentRefineLevel,
         itemCosts,
-        oreType: refineParams.oreType,
+        refineParams,
         refineResults,
         refineType,
         totalRefineResults,
-        useBsb: refineParams.useBsb,
       });
 
       allRefineResults.set(refineParamsId, refineParamsResult);
@@ -90,6 +91,7 @@ export const calculateTotalRefineCost = ({
 
       let totalConsumedMaterials: TotalConsumedMaterials;
       let refineConsumedMaterials: TotalConsumedMaterials;
+      let totalCost: number;
 
       if (consumedItems) {
         const usedRefineResultSuccessForConsumedItem = usedRefineResultSuccessMap.get(consumedItems.refineLevel - 1);
@@ -119,34 +121,49 @@ export const calculateTotalRefineCost = ({
             ),
           ),
         };
+
+        totalCost = (previousUsedRefineResultSuccess?.totalCost ?? baseCost) + refineParamsResult.totalCost;
       }
       else {
-        refineConsumedMaterials = {
-          baseItems: 0,
-          ...refineParamsResult.totalConsumedMaterials,
-        };
+        if (isOreRefineParameters(refineParams)) {
+          refineConsumedMaterials = {
+            baseItems: 0,
+            ...refineParamsResult.totalConsumedMaterials,
+          };
 
-        totalConsumedMaterials = {
-          baseItems: previousUsedRefineConsumedMaterials.baseItems,
-          ...addConsumedMaterialsBase(
-            refineParamsResult.totalConsumedMaterials,
-            previousUsedRefineConsumedMaterials,
-          ),
-        };
+          totalConsumedMaterials = {
+            baseItems: previousUsedRefineConsumedMaterials.baseItems,
+            ...addConsumedMaterialsBase(
+              refineParamsResult.totalConsumedMaterials,
+              previousUsedRefineConsumedMaterials,
+            ),
+          };
+
+          totalCost = (previousUsedRefineResultSuccess?.totalCost ?? baseCost) + refineParamsResult.totalCost;
+        }
+        else {
+          refineConsumedMaterials = {
+            baseItems: 0,
+            ...refineParamsResult.totalConsumedMaterials,
+          };
+
+          totalConsumedMaterials = refineConsumedMaterials;
+          totalCost = baseCost + refineParamsResult.totalCost;
+        }
       }
 
       allRefineParamsResults.set(refineParamsId, {
         totalConsumedMaterials: totalConsumedMaterials,
-        totalCost: (previousUsedRefineResultSuccess?.totalCost ?? baseCost) + refineParamsResult.totalCost,
+        totalCost,
         refineConsumedMaterials: refineConsumedMaterials,
         refineCost: refineParamsResult.totalCost,
         id: refineParamsId,
         refineParams,
       });
 
-      if (!bestRefineParamsId || refineParamsResult.totalCost < bestRefineResult.totalCost) {
+      if (!bestRefineParamsId || totalCost < bestRefineTotalCost) {
         bestRefineParamsId = getRefineParamsId(refineParams);
-        bestRefineResult = refineParamsResult;
+        bestRefineTotalCost = totalCost;
       }
     }
 

@@ -1,18 +1,7 @@
 import React from 'react';
 import { items } from '../../_constants/items';
 import { NumberInput } from '../../_components/NumberInput';
-
-export const refineItemIds = {
-  Elunium: 985,
-  EnrichedElunium: 6291,
-  HDElunium: 6241,
-  Oridecon: 984,
-  EnrichedOridecon: 6292,
-  HDOridecon: 6240,
-  BlacksmithBlessing: 6635,
-  Phracon: 1010,
-  Emveretarcon: 1011,
-}
+import { refineItemIds } from '../../../constants/refineItemIds';
 
 type Props = {
   readonly costs: Map<number, number>;

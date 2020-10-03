@@ -20,6 +20,7 @@ export type ConsumedMaterialsBase = {
   readonly enrichedOre: number;
   readonly hdOre: number;
   readonly normalOre: number;
+  readonly refineBox: number;
 };
 
 type ConsumedItem = {
@@ -40,6 +41,7 @@ export const createConsumedMaterialsBase = (params: Partial<ConsumedMaterialsBas
   enrichedOre: params.enrichedOre || 0,
   hdOre: params.hdOre || 0,
   normalOre: params.normalOre || 0,
+  refineBox: params.refineBox || 0,
 });
 
 export const createConsumedMaterials = (params: Partial<ConsumedMaterials> = {}): ConsumedMaterials => ({
@@ -53,6 +55,7 @@ export const addConsumedMaterialsBase = (...materials: readonly ConsumedMaterial
     enrichedOre: total.enrichedOre + current.enrichedOre,
     hdOre: total.hdOre + current.hdOre,
     normalOre: total.normalOre + current.normalOre,
+    refineBox: total.refineBox + current.refineBox,
   }), createConsumedMaterialsBase());
 
 export const addConsumedMaterials = (...materials: readonly ConsumedMaterials[]): ConsumedMaterials =>
@@ -89,4 +92,5 @@ export const multiplyConsumedMaterialsBase = (materials: ConsumedMaterialsBase, 
   enrichedOre: materials.enrichedOre * multiplier,
   hdOre: materials.hdOre * multiplier,
   normalOre: materials.normalOre * multiplier,
+  refineBox: materials.refineBox * multiplier,
 });

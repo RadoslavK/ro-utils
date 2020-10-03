@@ -1,6 +1,6 @@
 import { OreType } from '../types/oreType.type';
 import { RefineType } from '../types/refineType.type';
-import { refineItemIds } from '../app/refine/components/Costs';
+import { refineItemIds } from '../constants/refineItemIds';
 
 export const getOreId = (oreType: OreType, refineType: RefineType): number => {
   switch (oreType) {

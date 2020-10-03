@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from 'react';
-import { Costs, refineItemIds } from './Costs';
+import { Costs} from './Costs';
 import { RefineCalculatorInput } from './RefineCalculatorInput';
 import { RefineType } from '../../../types/refineType.type';
 import { calculateTotalRefineCost } from '../../../calculations/calculateTotalRefineCost';
 import { RefineResult } from './RefineResult';
+import { refineItemIds } from '../../../constants/refineItemIds';
 
 const PricesStorageKey = 'prices';
 
@@ -18,6 +19,7 @@ const loadPrices = (): Map<number, number> => {
       [refineItemIds.BlacksmithBlessing, 3_600_000],
       [refineItemIds.Phracon, 100],
       [refineItemIds.Emveretarcon, 1_000],
+      [refineItemIds.RandomRefineBox, 4_000_000],
     ]);
 };
 

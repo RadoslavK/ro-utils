@@ -1,4 +1,4 @@
-import { refineItemIds } from '../app/refine/components/Costs';
+import { refineItemIds } from '../constants/refineItemIds';
 
 const getBaseOreCost = (oreId: number, costs: Map<number, number>): number => {
   const cost = costs.get(oreId);

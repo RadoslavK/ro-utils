@@ -3,6 +3,7 @@ import { CheckBox } from '../../_components/CheckBox';
 import { RefineType } from '../../../types/refineType.type';
 import { TotalRefineResult } from '../../../types/totalRefineResult.type';
 import { OreType } from '../../../types/oreType.type';
+import { isOreRefineParameters } from '../../../types/RefineParameters.type';
 
 const getOreLabel = (refineType: RefineType, ore: OreType): string => {
   const isWeapon = refineType !== RefineType.Armor;
@@ -45,6 +46,10 @@ export const RefineLevel: React.FC<Props> = ({
       <h3>+{level}</h3>
 
       {refineParamsErrors.map(paramsError => {
+        if (!isOreRefineParameters(paramsError.refineParams)) {
+          return;
+        }
+
         const oreLabel = getOreLabel(refineType, paramsError.refineParams.oreType);
 
         return (
@@ -73,7 +78,9 @@ export const RefineLevel: React.FC<Props> = ({
       {refineParamsResults.map(paramsResult => {
         const isBest = paramsResult.id === totalRefineResult.bestRefineParamsId;
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
-        const oreLabel = getOreLabel(refineType, paramsResult.refineParams.oreType);
+        const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
+          ? getOreLabel(refineType, paramsResult.refineParams.oreType)
+          : 'Random refine box';
         const shouldShowDetails = showDetails.get(paramsResult.id);
 
         return (
@@ -93,8 +100,8 @@ export const RefineLevel: React.FC<Props> = ({
               }
             }}
           >
-            <div>Ore: {oreLabel}</div>
-            {level > 7 && (
+            <div>Method: {refineMethodLabel}</div>
+            {level > 7 && isOreRefineParameters(paramsResult.refineParams) && (
               <div>
                 BSB
                 <CheckBox
@@ -131,6 +138,7 @@ export const RefineLevel: React.FC<Props> = ({
                     <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.refineConsumedMaterials.enrichedOre.toFixed(2)}</div>
                     <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.refineConsumedMaterials.hdOre.toFixed(2)}</div>
                     <div>BSB: {paramsResult.refineConsumedMaterials.bsb.toFixed(2)}</div>
+                    <div>Random refine boxes: {paramsResult.refineConsumedMaterials.refineBox.toFixed(2)}</div>
                   </div>
                   <div>
                     <h3>Total</h3>
@@ -139,6 +147,7 @@ export const RefineLevel: React.FC<Props> = ({
                     <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.totalConsumedMaterials.enrichedOre.toFixed(2)}</div>
                     <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.totalConsumedMaterials.hdOre.toFixed(2)}</div>
                     <div>BSB: {paramsResult.totalConsumedMaterials.bsb.toFixed(2)}</div>
+                    <div>Random refine boxes: {paramsResult.totalConsumedMaterials.refineBox.toFixed(2)}</div>
                   </div>
                 </div>
               )}
