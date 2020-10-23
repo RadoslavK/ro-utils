@@ -3,24 +3,9 @@ import { css } from '@emotion/core';
 import { CheckBox } from '../../../components/CheckBox';
 import { RefineType } from '../../../../types/refineType.type';
 import { TotalRefineResult } from '../../../../types/totalRefineResult.type';
-import { OreType } from '../../../../types/oreType.type';
 import { isOreRefineParameters } from '../../../../types/RefineParameters.type';
-
-const getOreLabel = (refineType: RefineType, ore: OreType): string => {
-  const isWeapon = refineType !== RefineType.Armor;
-  const oreName = isWeapon ? 'Oridecon' : 'Elunium';
-
-  switch(ore) {
-    case OreType.Enriched:
-      return `Enriched ${oreName}`;
-    case OreType.HD:
-      return `HD ${oreName}`;
-    case OreType.Normal:
-      return oreName;
-    default:
-      throw new Error(`Unknown ore type: ${ore}`);
-  }
-};
+import { getOreLabel } from '../../utils/getOreLabel';
+import { ConsumedMaterials } from './ConsumedMaterials';
 
 type Props = {
   readonly level: number;
@@ -112,21 +97,17 @@ export const RefineLevel: React.FC<Props> = ({
                 <div>
                   <div css={css`margin-right: 10px`}>
                     <h3>Upgrade</h3>
-                    <div>Extra base items: {paramsResult.refineConsumedMaterials.baseItems.toFixed(2)}</div>
-                    <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.refineConsumedMaterials.normalOre.toFixed(2)}</div>
-                    <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.refineConsumedMaterials.enrichedOre.toFixed(2)}</div>
-                    <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.refineConsumedMaterials.hdOre.toFixed(2)}</div>
-                    <div>BSB: {paramsResult.refineConsumedMaterials.bsb.toFixed(2)}</div>
-                    <div>Random refine boxes: {paramsResult.refineConsumedMaterials.refineBox.toFixed(2)}</div>
+                    <ConsumedMaterials
+                      consumedMaterials={paramsResult.refineConsumedMaterials}
+                      refineType={refineType}
+                    />
                   </div>
                   <div>
                     <h3>Total</h3>
-                    <div>Base items: {paramsResult.totalConsumedMaterials.baseItems.toFixed(2)}</div>
-                    <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.totalConsumedMaterials.normalOre.toFixed(2)}</div>
-                    <div>{getOreLabel(refineType, OreType.Enriched)}: {paramsResult.totalConsumedMaterials.enrichedOre.toFixed(2)}</div>
-                    <div>{getOreLabel(refineType, OreType.HD)}: {paramsResult.totalConsumedMaterials.hdOre.toFixed(2)}</div>
-                    <div>BSB: {paramsResult.totalConsumedMaterials.bsb.toFixed(2)}</div>
-                    <div>Random refine boxes: {paramsResult.totalConsumedMaterials.refineBox.toFixed(2)}</div>
+                    <ConsumedMaterials
+                      consumedMaterials={paramsResult.totalConsumedMaterials}
+                      refineType={refineType}
+                    />
                   </div>
                 </div>
               )}
