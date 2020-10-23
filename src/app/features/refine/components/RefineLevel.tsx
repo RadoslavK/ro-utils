@@ -46,7 +46,7 @@ export const RefineLevel: React.FC<Props> = ({
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
         const shouldBeMarked = !shouldShowOnlyBestResults && isUsed;
         const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
-          ? getOreLabel(refineType, paramsResult.refineParams.oreType)
+          ? `${paramsResult.refineParams.useBsb ? 'BSB + ' : ''}${getOreLabel(refineType, paramsResult.refineParams.oreType)}`
           : 'Random refine box';
         const shouldShowDetails = showDetails.get(paramsResult.id);
 
@@ -67,13 +67,6 @@ export const RefineLevel: React.FC<Props> = ({
             }}
           >
             <div>Method: {refineMethodLabel}</div>
-            {level > 7 && isOreRefineParameters(paramsResult.refineParams) && (
-              <CheckBox
-                disabled
-                isChecked={paramsResult.refineParams.useBsb}
-                label="BSB"
-              />
-            )}
             <div>Cost: {Math.round(paramsResult.totalCost).toLocaleString()}</div>
             <div>
               <h4

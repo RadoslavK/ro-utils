@@ -24,12 +24,12 @@ export const ConsumedMaterials: React.FC<Props> = ({
 
   return (
     <>
-      <div>Base items: {baseItems.toFixed(2)}</div>
-      <div>{getOreLabel(refineType, OreType.Normal)}: {normalOre.toFixed(2)}</div>
-      <div>{getOreLabel(refineType, OreType.Enriched)}: {enrichedOre.toFixed(2)}</div>
-      <div>{getOreLabel(refineType, OreType.HD)}: {hdOre.toFixed(2)}</div>
-      <div>BSB: {bsb.toFixed(2)}</div>
-      <div>Random refine boxes: {refineBox.toFixed(2)}</div>
+      {!!baseItems && <div>Base items: {baseItems.toFixed(2)}</div>}
+      {!!normalOre && <div>{getOreLabel(refineType, OreType.Normal)}: {normalOre.toFixed(2)}</div>}
+      {!!enrichedOre && <div>{getOreLabel(refineType, OreType.Enriched)}: {enrichedOre.toFixed(2)}</div>}
+      {!!hdOre && <div>{getOreLabel(refineType, OreType.HD)}: {hdOre.toFixed(2)}</div>}
+      {!!bsb && <div>BSB: {bsb.toFixed(2)}</div>}
+      {!!refineBox && <div>Random refine boxes: {refineBox.toFixed(2)}</div>}
     </>
   );
 };
