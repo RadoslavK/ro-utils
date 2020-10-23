@@ -8,6 +8,7 @@ import { getOreLabel } from '../../utils/getOreLabel';
 import { ConsumedMaterials } from './ConsumedMaterials';
 
 type Props = {
+  readonly isCoveredByStartingRefine: boolean;
   readonly level: number;
   readonly onPreferredRefineParamsChange: (id: string | null) => void;
   readonly preferredRefineParamsId: string | undefined;
@@ -17,6 +18,7 @@ type Props = {
 }
 
 export const RefineLevel: React.FC<Props> = ({
+  isCoveredByStartingRefine,
   level,
   onPreferredRefineParamsChange,
   preferredRefineParamsId,
@@ -37,7 +39,14 @@ export const RefineLevel: React.FC<Props> = ({
   }
 
   return (
-    <div css={css`flex: 0 0 auto`}>
+    <div
+      css={css`
+        flex: 0 0 auto;
+        ${isCoveredByStartingRefine && css`
+          background-color: greenyellow;
+        `}
+      `}
+    >
       <h3 css={css`text-align: center`}>
         +{level}
       </h3>
@@ -55,6 +64,7 @@ export const RefineLevel: React.FC<Props> = ({
             key={paramsResult.id}
             css={css`
               margin: 10px;
+              padding: 10px;
               border: ${shouldBeMarked ? 2.5 : 1}px ${shouldBeMarked ? 'gold' : 'black'} solid;
             `}
             onClick={() => {
@@ -66,12 +76,13 @@ export const RefineLevel: React.FC<Props> = ({
               }
             }}
           >
-            <div>Method: {refineMethodLabel}</div>
-            <div>Cost: {Math.round(paramsResult.totalCost).toLocaleString()}</div>
-            <div>
-              <h4
-                onClick={(e) => {
-                  e.stopPropagation();
+            <div><strong>Method</strong>: {refineMethodLabel}</div>
+            <div><strong>Cost</strong>: {Math.round(paramsResult.totalCost).toLocaleString()} Z</div>
+            <div css={css`margin-top: 8px`}>
+              <CheckBox
+                isChecked={!!shouldShowDetails}
+                label={`${shouldShowDetails ? 'Hide' : 'Show'} consumed materials`}
+                onChange={() => {
                   const newMap = new Map<string, boolean>(showDetails);
 
                   if (shouldShowDetails) {
@@ -83,12 +94,15 @@ export const RefineLevel: React.FC<Props> = ({
 
                   setShowDetails(newMap);
                 }}
-              >
-                {shouldShowDetails ? 'Hide' : 'Show'} consumed materials
-              </h4>
+              />
               {shouldShowDetails && (
-                <div>
-                  <div css={css`margin-right: 10px`}>
+                <div
+                  css={css`
+                    display: flex;
+                    justify-content: space-around;
+                  `}
+                >
+                  <div>
                     <h3>Upgrade</h3>
                     <ConsumedMaterials
                       consumedMaterials={paramsResult.refineConsumedMaterials}

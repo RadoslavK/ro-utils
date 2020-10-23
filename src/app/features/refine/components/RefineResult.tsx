@@ -46,6 +46,7 @@ export const RefineResult: React.FC<Props> = ({
         {result.totalRefineResults.map(levelResult => (
           <React.Fragment key={levelResult.refineLevel}>
             <RefineLevel
+              isCoveredByStartingRefine={levelResult.refineLevel <= startingRefineLevel}
               level={levelResult.refineLevel}
               refineType={refineType}
               totalRefineResult={levelResult}
@@ -53,10 +54,6 @@ export const RefineResult: React.FC<Props> = ({
               preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
               shouldShowOnlyBestResults={shouldShowOnlyBestResults}
             />
-
-            {levelResult.refineLevel === startingRefineLevel && (
-              <div css={css`border-left: 6px solid green`} />
-            )}
           </React.Fragment>
         ))}
       </div>

@@ -1,40 +1,45 @@
 import { Item } from '../../types/item.type';
+import { refineItemIds } from '../../constants/refineItemIds';
 
 export const items: Map<number, Item> = new Map<number, Item>([
-  [984, {
-    id: 984,
+  [refineItemIds.Oridecon, {
+    id: refineItemIds.Oridecon,
     name: 'Oridecon',
   }],
-  [985, {
-    id: 985,
+  [refineItemIds.Elunium, {
+    id: refineItemIds.Elunium,
     name: 'Elunium',
   }],
-  [1010, {
-    id: 1010,
+  [refineItemIds.Phracon, {
+    id: refineItemIds.Phracon,
     name: 'Phracon',
   }],
-  [1011, {
-    id: 1011,
+  [refineItemIds.Emveretarcon, {
+    id: refineItemIds.Emveretarcon,
     name: 'Emveretarcon',
   }],
-  [6240, {
-    id: 6240,
+  [refineItemIds.HDOridecon, {
+    id: refineItemIds.HDOridecon,
     name: 'HD Oridecon',
   }],
-  [6241, {
-    id: 6241,
+  [refineItemIds.HDElunium, {
+    id: refineItemIds.HDElunium,
     name: 'HD Elunium',
   }],
-  [6291, {
-    id: 6291,
+  [refineItemIds.EnrichedElunium, {
+    id: refineItemIds.EnrichedElunium,
     name: 'Enriched Elunium',
   }],
-  [6292, {
-    id: 6292,
+  [refineItemIds.EnrichedOridecon, {
+    id: refineItemIds.EnrichedOridecon,
     name: 'Enriched Oridecon',
   }],
-  [6635, {
-    id: 6635,
+  [refineItemIds.BlacksmithBlessing, {
+    id: refineItemIds.BlacksmithBlessing,
     name: 'Blacksmith Blessing',
+  }],
+  [refineItemIds.RandomRefineBox, {
+    id: refineItemIds.RandomRefineBox,
+    name: 'Random Refine Box',
   }],
 ]);

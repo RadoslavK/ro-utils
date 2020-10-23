@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { css } from '@emotion/core';
 
 type Props = {
@@ -14,6 +14,8 @@ export const CheckBox: React.FC<Props> = ({
   label,
   onChange,
 }) => {
+  const { current: id } = useRef(Math.random().toString(16).slice(-4));
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const { checked } = event.currentTarget;
     onChange(checked);
@@ -22,13 +24,13 @@ export const CheckBox: React.FC<Props> = ({
   return (
     <div css={css`display: flex`}>
       <input
-        id="checkbox"
+        id={id}
         disabled={disabled}
         checked={isChecked}
         onChange={disabled ? undefined : handleChange}
         type="checkbox"
       />
-      <label htmlFor="checkbox">
+      <label htmlFor={id}>
         {label}
       </label>
     </div>
