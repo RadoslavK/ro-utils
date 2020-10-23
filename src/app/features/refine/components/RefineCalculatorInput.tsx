@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { NumberInput } from '../../../components/NumberInput';
-import { RefineType } from '../../../../types/refineType.type';
+import { RefineType } from '../types/refineType.type';
 import { DropDown } from '../../../components/DropDown';
-import { RefineInput } from '../../../../types/refineInput.type';
+import { RefineInput } from '../types/refineInput.type';
 import { CheckBox } from '../../../components/CheckBox';
 import { css } from '@emotion/core';
-import { refineItemIds } from '../../../../constants/refineItemIds';
+import { refineItemIds } from '../constants/refineItemIds';
 import { items } from '../../../constants/items';
 
 const refineTypeLabels: Record<RefineType, string> = {

@@ -1,5 +1,5 @@
-import { Item } from '../../types/item.type';
-import { refineItemIds } from '../../constants/refineItemIds';
+import { Item } from '../features/refine/types/item.type';
+import { refineItemIds } from '../features/refine/constants/refineItemIds';
 
 export const items: Map<number, Item> = new Map<number, Item>([
   [refineItemIds.Oridecon, {

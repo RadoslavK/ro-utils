@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { css } from '@emotion/core';
 import { CheckBox } from '../../../components/CheckBox';
-import { RefineType } from '../../../../types/refineType.type';
-import { TotalRefineResult } from '../../../../types/totalRefineResult.type';
-import { isOreRefineParameters } from '../../../../types/RefineParameters.type';
-import { getOreLabel } from '../../utils/getOreLabel';
+import { RefineType } from '../types/refineType.type';
+import { TotalRefineResult } from '../types/totalRefineResult.type';
+import { isOreRefineParameters } from '../types/RefineParameters.type';
+import { getOreLabel } from '../utils/getOreLabel';
 import { ConsumedMaterials } from './ConsumedMaterials';
 
 type Props = {

@@ -1,8 +1,8 @@
 import { LocalStorageManager } from '../../../models/localStorageManager';
 import { LocalStorageKeys } from '../../../constants/localStorageKeys';
 import { useState } from 'react';
-import { RefineType } from '../../../../types/refineType.type';
-import { RefineInput } from '../../../../types/refineInput.type';
+import { RefineType } from '../types/refineType.type';
+import { RefineInput } from '../types/refineInput.type';
 
 const defaultRefineItemInput: RefineInput = {
   baseItemCost: 1_500_000,

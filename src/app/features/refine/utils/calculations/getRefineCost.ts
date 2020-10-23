@@ -1,5 +1,5 @@
-import { RefineType } from '../types/refineType.type';
-import { OreType } from '../types/oreType.type';
+import { RefineType } from '../../types/refineType.type';
+import { OreType } from '../../types/oreType.type';
 
 export const getRefineCost = (refineType: RefineType, oreType: OreType): number => {
   switch (refineType) {

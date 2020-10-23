@@ -1,6 +1,6 @@
 import React from 'react';
-import { TotalRefineCostResult } from '../../../../calculations/calculateTotalRefineCost';
-import { RefineType } from '../../../../types/refineType.type';
+import { TotalRefineCostResult } from '../utils/calculations/calculateTotalRefineCost';
+import { RefineType } from '../types/refineType.type';
 import { RefineLevel } from './RefineLevel';
 import { css } from '@emotion/core';
 

@@ -1,5 +1,5 @@
-import { RefineType } from '../../../types/refineType.type';
-import { OreType } from '../../../types/oreType.type';
+import { RefineType } from '../types/refineType.type';
+import { OreType } from '../types/oreType.type';
 
 export const getOreLabel = (refineType: RefineType, ore: OreType): string => {
   const isWeapon = refineType !== RefineType.Armor;

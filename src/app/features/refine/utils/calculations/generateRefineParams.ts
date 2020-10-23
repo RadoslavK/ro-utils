@@ -1,5 +1,5 @@
-import { RefineParameters, useRefineBoxParameters } from '../types/RefineParameters.type';
-import { OreType } from '../types/oreType.type';
+import { RefineParameters, useRefineBoxParameters } from '../../types/RefineParameters.type';
+import { OreType } from '../../types/oreType.type';
 
 export const generateRefineParams = (targetLevel: number): readonly RefineParameters[] => {
   const refineParams: RefineParameters[] = [];

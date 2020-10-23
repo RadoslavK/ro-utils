@@ -1,18 +1,19 @@
 import React from 'react';
-import { TotalConsumedMaterials } from '../../../../types/consumedMaterials.type';
-import { RefineType } from '../../../../types/refineType.type';
+import { TotalConsumedMaterials } from '../types/consumedMaterials.type';
+import { RefineType } from '../types/refineType.type';
 import { css } from '@emotion/core';
-import { refineItemIds } from '../../../../constants/refineItemIds';
-import { getOreId } from '../../../../utils/getOreId';
-import { OreType } from '../../../../types/oreType.type';
+import { refineItemIds } from '../constants/refineItemIds';
+import { getOreId } from '../utils/getOreId';
+import { OreType } from '../types/oreType.type';
 import { items } from '../../../constants/items';
+import { getItemImageLink } from '../utils/getItemImageLink';
 
 const renderImageWithCount = (count: number, itemId: number, title?: string): JSX.Element | null => {
   if (!count) {
     return null;
   }
 
-  const imageLink = getImageLink(itemId);
+  const imageLink = getItemImageLink(itemId);
 
   return (
     <div
@@ -39,26 +40,10 @@ const renderImageWithCount = (count: number, itemId: number, title?: string): JS
   );
 }
 
-const renderTextWithCount = (count: number, text: string): JSX.Element | null => {
-  if (!count) {
-    return null;
-  }
-
-  return (
-    <div css={css`display: flex`}>
-      <div css={css`margin-right: 6px`}>{text}</div>
-      <div>{count.toFixed(2)}</div>
-    </div>
-  );
-};
-
 type Props = {
   readonly consumedMaterials: TotalConsumedMaterials;
   readonly refineType: RefineType;
 }
-
-const getImageLink = (id: number): string =>
-  `https://static.divine-pride.net/images/items/item/${id}.png`;
 
 export const ConsumedMaterials: React.FC<Props> = ({
   consumedMaterials,
