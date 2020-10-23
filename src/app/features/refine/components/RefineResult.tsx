@@ -37,7 +37,7 @@ export const RefineResult: React.FC<Props> = ({
     <div>
       <h2>Result</h2>
 
-      <div style={{ display: 'flex', flexBasis: 500 }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', flexBasis: 500 }}>
         {result.totalRefineResults.map(levelResult => (
           <React.Fragment key={levelResult.refineLevel}>
             <RefineLevel

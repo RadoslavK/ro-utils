@@ -52,7 +52,7 @@ export const RefineLevel: React.FC<Props> = ({
 
   return (
     <div style={{ flex: '0 0 auto' }}>
-      <h3>+{level}</h3>
+      <h3 style={{ textAlign: 'center' }}>+{level}</h3>
 
       {sortedRefineParamsResults.map(paramsResult => {
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
