@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { css, jsx } from '@emotion/core';
+import { css } from '@emotion/core';
 import { CheckBox } from '../../../components/CheckBox';
 import { RefineType } from '../../../../types/refineType.type';
 import { TotalRefineResult } from '../../../../types/totalRefineResult.type';

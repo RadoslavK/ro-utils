@@ -14,8 +14,8 @@ import { isOreRefineParameters } from '../types/RefineParameters.type';
 import { RefineInput } from '../types/refineInput.type';
 
 type Params = {
-  readonly refineInput: RefineInput;
   readonly itemCosts: Map<number, number>;
+  readonly refineInput: RefineInput;
   readonly refineParamsPreferences: Map<number, string>;
 };
 
@@ -55,9 +55,9 @@ export const calculateTotalRefineCost = ({
       const refineParamsId = getRefineParamsId(refineParams);
 
       const refineParamsResult = calculateRefineCostForLevel({
-        baseItemCost,
         currentRefineLevel,
         itemCosts,
+        baseItemCost,
         refineParams,
         refineResults,
         refineType,

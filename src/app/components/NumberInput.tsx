@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/core';
 
 type Props = {
   readonly label: string;
@@ -29,8 +30,8 @@ export const NumberInput: React.FC<Props> = ({
   };
 
   return (
-    <div>
-      {label}
+    <div css={css`margin: 8px 0`}>
+      <div>{label}</div>
       <input
         type="number"
         value={value}

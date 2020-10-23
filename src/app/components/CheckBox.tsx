@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/core';
 
 type Props = {
   readonly disabled?: boolean;
@@ -19,14 +20,17 @@ export const CheckBox: React.FC<Props> = ({
   };
 
   return (
-    <div>
-      {label}
+    <div css={css`display: flex`}>
       <input
+        id="checkbox"
         disabled={disabled}
         checked={isChecked}
         onChange={disabled ? undefined : handleChange}
         type="checkbox"
       />
+      <label htmlFor="checkbox">
+        {label}
+      </label>
     </div>
   );
 };

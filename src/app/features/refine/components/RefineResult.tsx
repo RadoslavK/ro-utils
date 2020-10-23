@@ -2,7 +2,7 @@ import React from 'react';
 import { TotalRefineCostResult } from '../../../../calculations/calculateTotalRefineCost';
 import { RefineType } from '../../../../types/refineType.type';
 import { RefineLevel } from './RefineLevel';
-import { css, jsx } from '@emotion/core';
+import { css } from '@emotion/core';
 
 type Props = {
   readonly onPreferencesChange: (preferences: Map<number, string>) => void;

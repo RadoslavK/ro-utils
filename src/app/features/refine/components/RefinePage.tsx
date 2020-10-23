@@ -1,17 +1,15 @@
 import React, { useMemo, useState } from 'react';
-import { Costs} from './Costs';
 import { RefineCalculatorInput } from './RefineCalculatorInput';
 import { calculateTotalRefineCost } from '../../../../calculations/calculateTotalRefineCost';
 import { RefineResult } from './RefineResult';
 import { useCosts } from '../hooks/useCosts';
 import { useRefineInput } from '../hooks/useRefineInput';
-import { css, jsx } from '@emotion/core';
 
 export const RefinePage: React.FC = () => {
   const { costs, setCost } = useCosts();
   const { refineInput, setRefineInput } = useRefineInput();
   const [refineParamsPreferences, setRefineParamsPreferences] = useState<Map<number, string>>(new Map<number, string>());
-  const [shouldShowOnlyBestResults, setShouldShowOnlyBestResults] = useState(false);
+  const [shouldShowOnlyBestResults, setShouldShowOnlyBestResults] = useState(true);
 
   const refineResult = useMemo(() => calculateTotalRefineCost({
     itemCosts: costs,
@@ -21,19 +19,14 @@ export const RefinePage: React.FC = () => {
 
   return (
     <div>
-      <div css={css`display: flex`}>
-        <RefineCalculatorInput
-          refineInput={refineInput}
-          onRefineInputChange={setRefineInput}
-          onShowOnlyBestResultsChange={setShouldShowOnlyBestResults}
-          shouldShowOnlyBestResults={shouldShowOnlyBestResults}
-        />
-
-        <Costs
-          costs={costs}
-          setCost={setCost}
-        />
-      </div>
+      <RefineCalculatorInput
+        itemCosts={costs}
+        onItemCostChange={setCost}
+        onRefineInputChange={setRefineInput}
+        onShowOnlyBestResultsChange={setShouldShowOnlyBestResults}
+        refineInput={refineInput}
+        shouldShowOnlyBestResults={shouldShowOnlyBestResults}
+      />
 
       <RefineResult
         refineType={refineInput.refineType}

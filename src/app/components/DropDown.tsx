@@ -1,4 +1,5 @@
 import React from 'react';
+import { css } from '@emotion/core';
 
 type Props<T> = {
   readonly selectedValue: T;
@@ -24,8 +25,8 @@ export const DropDown = <T extends unknown>({
   };
 
   return (
-    <div>
-      {label}
+    <div css={css`margin: 8px 0`}>
+      <div>{label}</div>
       <select
         value={getId(selectedValue)}
         onChange={changeValue}

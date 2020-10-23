@@ -1,6 +1,6 @@
 import { refineItemIds } from '../constants/refineItemIds';
 
-const getBaseOreCost = (oreId: number, costs: Map<number, number>): number => {
+const getBaseOreCost = (costs: Map<number, number>, oreId: number): number => {
   const cost = costs.get(oreId);
 
   if (cost === undefined) {
@@ -10,25 +10,25 @@ const getBaseOreCost = (oreId: number, costs: Map<number, number>): number => {
   return cost;
 }
 
-export const getOreCost = (oreId: number, costs: Map<number, number>): number => {
+export const getOreCost = (oreId: number, itemCosts: Map<number, number>): number => {
   switch (oreId) {
     case refineItemIds.Phracon:
     case refineItemIds.Emveretarcon:
     case refineItemIds.Oridecon:
     case refineItemIds.Elunium:
-      return costs.get(oreId);
+      return getBaseOreCost(itemCosts, oreId);
 
     case refineItemIds.EnrichedOridecon:
-      return costs.get(refineItemIds.Oridecon) + 500_000;
+      return getBaseOreCost(itemCosts, refineItemIds.Oridecon) + 500_000;
 
     case refineItemIds.EnrichedElunium:
-      return costs.get(refineItemIds.Elunium) + 500_000;
+      return getBaseOreCost(itemCosts, refineItemIds.Elunium) + 500_000;
 
     case refineItemIds.HDOridecon:
-      return costs.get(refineItemIds.Elunium) + 1_500_000;
+      return getBaseOreCost(itemCosts, refineItemIds.Elunium) + 1_500_000;
 
     case refineItemIds.HDElunium:
-      return costs.get(refineItemIds.Elunium) + 1_500_000;
+      return getBaseOreCost(itemCosts, refineItemIds.Elunium) + 1_500_000;
 
     default:
       throw new Error(`Unknown ore: ${oreId}`);
