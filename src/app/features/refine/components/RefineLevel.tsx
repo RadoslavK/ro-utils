@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from 'react';
+import { css, jsx } from '@emotion/core';
 import { CheckBox } from '../../../components/CheckBox';
 import { RefineType } from '../../../../types/refineType.type';
 import { TotalRefineResult } from '../../../../types/totalRefineResult.type';
@@ -51,8 +52,10 @@ export const RefineLevel: React.FC<Props> = ({
   }
 
   return (
-    <div style={{ flex: '0 0 auto' }}>
-      <h3 style={{ textAlign: 'center' }}>+{level}</h3>
+    <div css={css`flex: 0 0 auto`}>
+      <h3 css={css`text-align: center`}>
+        +{level}
+      </h3>
 
       {sortedRefineParamsResults.map(paramsResult => {
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
@@ -65,10 +68,10 @@ export const RefineLevel: React.FC<Props> = ({
         return (
           <div
             key={paramsResult.id}
-            style={{
-              margin: 10,
-              border: `${shouldBeMarked ? 2.5 : 1 }px ${shouldBeMarked ? 'gold' : 'black'} solid`,
-            }}
+            css={css`
+              margin: 10px;
+              border: ${shouldBeMarked ? 2.5 : 1}px ${shouldBeMarked ? 'gold' : 'black'} solid;
+            `}
             onClick={() => {
               if (preferredRefineParamsId === paramsResult.id) {
                 onPreferredRefineParamsChange(null);
@@ -107,7 +110,7 @@ export const RefineLevel: React.FC<Props> = ({
               </h4>
               {shouldShowDetails && (
                 <div>
-                  <div style={{ marginRight: 10 }}>
+                  <div css={css`margin-right: 10px`}>
                     <h3>Upgrade</h3>
                     <div>Extra base items: {paramsResult.refineConsumedMaterials.baseItems.toFixed(2)}</div>
                     <div>{getOreLabel(refineType, OreType.Normal)}: {paramsResult.refineConsumedMaterials.normalOre.toFixed(2)}</div>

@@ -5,6 +5,7 @@ import { calculateTotalRefineCost } from '../../../../calculations/calculateTota
 import { RefineResult } from './RefineResult';
 import { useCosts } from '../hooks/useCosts';
 import { useRefineInput } from '../hooks/useRefineInput';
+import { css, jsx } from '@emotion/core';
 
 export const RefinePage: React.FC = () => {
   const { costs, setCost } = useCosts();
@@ -20,7 +21,7 @@ export const RefinePage: React.FC = () => {
 
   return (
     <div>
-      <div style={{ display: 'flex' }}>
+      <div css={css`display: flex`}>
         <RefineCalculatorInput
           refineInput={refineInput}
           onRefineInputChange={setRefineInput}
