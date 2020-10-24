@@ -58,34 +58,30 @@ export const addConsumedMaterialsBase = (...materials: readonly ConsumedMaterial
     refineBox: total.refineBox + current.refineBox,
   }), createConsumedMaterialsBase());
 
+const addItems = (items: ConsumedItem | undefined, addition: ConsumedItem | undefined): ConsumedItem | undefined => {
+  if (!items) {
+    return addition;
+  }
+
+  if (!addition) {
+    return items;
+  }
+
+  if (items.refineLevel !== addition.refineLevel) {
+    throw new Error('Adding different refine levels');
+  }
+
+  return {
+    refineLevel: items.refineLevel,
+    amount: items.amount + addition.amount,
+  }
+};
+
 export const addConsumedMaterials = (...materials: readonly ConsumedMaterials[]): ConsumedMaterials =>
-  materials.reduce((total, current) => {
-    if (!total.items) {
-      return {
-        ...addConsumedMaterialsBase(total, current),
-        items: current.items,
-      };
-    }
-
-    if (!current.items) {
-      return {
-        ...addConsumedMaterialsBase(total, current),
-        items: total.items,
-      };
-    }
-
-    if (total.items.refineLevel !== current.items.refineLevel) {
-      throw new Error('Adding different refine levels');
-    }
-
-    return ({
-      ...addConsumedMaterialsBase(total, current),
-      items: {
-        refineLevel: current.items.refineLevel,
-        amount: total.items.amount + current.items.amount,
-      },
-    });
-  }, createConsumedMaterials());
+  materials.reduce((total, current) => ({
+    ...addConsumedMaterialsBase(total, current),
+    items: addItems(total.items, current.items),
+  }), createConsumedMaterials());
 
 export const multiplyConsumedMaterialsBase = (materials: ConsumedMaterialsBase, multiplier: number): ConsumedMaterialsBase => ({
   bsb: materials.bsb * multiplier,

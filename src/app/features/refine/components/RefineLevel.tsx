@@ -62,7 +62,7 @@ export const RefineLevel: React.FC<Props> = ({
               margin: 10px;
               padding: 10px;
               border: ${shouldBeMarked ? 2.5 : 1}px ${shouldBeMarked ? 'gold' : 'black'} solid;
-              width: 180px;
+              width: 220px;
             `}
             onClick={() => {
               if (preferredRefineParamsId === paramsResult.id) {
@@ -74,7 +74,7 @@ export const RefineLevel: React.FC<Props> = ({
             }}
           >
             <div><strong>Method</strong>: {refineMethodLabel}</div>
-            <div><strong>Cost</strong>: {Math.round(paramsResult.totalCost).toLocaleString()} Z</div>
+            <div><strong>Total cost</strong>: {Math.round(paramsResult.totalCost).toLocaleString()} Z</div>
             <div css={css`margin-top: 8px`}>
               <div
                 css={css`
@@ -84,6 +84,7 @@ export const RefineLevel: React.FC<Props> = ({
               >
                 <div>
                   <h3>Upgrade</h3>
+                  {Math.round(paramsResult.refineCost).toLocaleString()} Z
                   <ConsumedMaterials
                     consumedMaterials={paramsResult.refineConsumedMaterials}
                     refineType={refineType}
@@ -91,6 +92,7 @@ export const RefineLevel: React.FC<Props> = ({
                 </div>
                 <div>
                   <h3>Total</h3>
+                  {Math.round(paramsResult.totalCost).toLocaleString()} Z
                   <ConsumedMaterials
                     consumedMaterials={paramsResult.totalConsumedMaterials}
                     refineType={refineType}

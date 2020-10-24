@@ -175,8 +175,56 @@ export const calculateTotalRefineCost = ({
     });
   } while (currentRefineLevel < targetRefineLevel);
 
+  if (startingRefineLevel === 0) {
+    return {
+      refineResults: [...refineResults.values()],
+      totalRefineResults: [...totalRefineResults.values()],
+    };
+  }
+
+  const startingRefineTotalRefineResults = totalRefineResults.get(startingRefineLevel);
+  const startingRefineUsedResults = startingRefineTotalRefineResults.refineParamsResults.get(startingRefineTotalRefineResults.usedRefineParamsId);
+
+  const totalRefineResultsFromStartingRefine = [...totalRefineResults
+    .entries()]
+    .reduce((reduced, [key, value]) => {
+      if (key <= startingRefineLevel) {
+        reduced.set(key, value);
+
+        return reduced;
+      }
+
+      //  The original object contains total consumed materials if we refined from scratch
+      //  But we need to reflect the starting refine
+      const correctedConsumedMaterials: TotalRefineResult = {
+        ...value,
+        refineParamsResults: [...value.refineParamsResults.entries()].reduce((reduced2, [key2, value2]) => {
+          const correctedResult: RefineParamsResult = {
+            ...value2,
+            totalCost: value2.totalCost - startingRefineUsedResults.totalCost,
+            totalConsumedMaterials: {
+              baseItems: value2.totalConsumedMaterials.baseItems - startingRefineUsedResults.totalConsumedMaterials.baseItems,
+              bsb: value2.totalConsumedMaterials.bsb - startingRefineUsedResults.totalConsumedMaterials.bsb,
+              enrichedOre: value2.totalConsumedMaterials.enrichedOre - startingRefineUsedResults.totalConsumedMaterials.enrichedOre,
+              hdOre: value2.totalConsumedMaterials.hdOre - startingRefineUsedResults.totalConsumedMaterials.hdOre,
+              normalOre: value2.totalConsumedMaterials.normalOre - startingRefineUsedResults.totalConsumedMaterials.normalOre,
+              refineBox: value2.totalConsumedMaterials.refineBox - startingRefineUsedResults.totalConsumedMaterials.refineBox,
+            },
+          };
+
+          reduced2.set(key2, correctedResult);
+
+          return reduced2;
+        }, new Map<string, RefineParamsResult>()),
+      };
+
+      reduced.set(key, correctedConsumedMaterials);
+
+      return reduced;
+    }, new Map<number, TotalRefineResult>());
+
   return {
     refineResults: [...refineResults.values()],
-    totalRefineResults: [...totalRefineResults.values()],
+    totalRefineResults: [...totalRefineResultsFromStartingRefine.values()],
   };
 };
