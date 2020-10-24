@@ -19,6 +19,7 @@ export const useRefineInput = () => {
   const [refineInput, setRefineInput] = useState<RefineInput>(() => {
     const loadedInput = localStorageManager.load(defaultRefineItemInput);
 
+    //  TODO get rid of this
     Object
       .entries(defaultRefineItemInput)
       .forEach((([key, value]) => {

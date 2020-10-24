@@ -1,17 +1,17 @@
 import {
   addConsumedMaterialsBase, createConsumedMaterialsBase,
   multiplyConsumedMaterialsBase, TotalConsumedMaterials,
-} from '../../types/consumedMaterials.type';
+} from '../types/consumedMaterials.type';
 import { generateRefineParams } from './generateRefineParams';
 import { calculateRefineCostForLevel } from './calculateRefineCostForLevel';
 import {
   RefineParamsResult,
   TotalRefineResult,
-} from '../../types/totalRefineResult.type';
+} from '../types/totalRefineResult.type';
 import { getRefineParamsId } from './getRefineParamsId';
-import { RefineResult } from '../../types/refineResult.type';
-import { isOreRefineParameters } from '../../types/RefineParameters.type';
-import { RefineInput } from '../../types/refineInput.type';
+import { RefineResult } from '../types/refineResult.type';
+import { isOreRefineParameters } from '../types/RefineParameters.type';
+import { RefineInput } from '../types/refineInput.type';
 
 type Params = {
   readonly itemCosts: Map<number, number>;

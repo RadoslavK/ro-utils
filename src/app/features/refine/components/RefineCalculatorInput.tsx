@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { NumberInput } from '../../../components/NumberInput';
 import { RefineType } from '../types/refineType.type';
 import { DropDown } from '../../../components/DropDown';
@@ -44,21 +44,12 @@ export const RefineCalculatorInput: React.FC<Props> = ({
     targetRefineLevel,
   } = refineInput;
 
-  const onBaseItemCostChange = useCallback((baseItemCost: number): void => {
-    onRefineInputChange({ ...refineInput, baseItemCost });
-  }, [refineInput, onRefineInputChange]);
-
-  const onStartingRefineLevelChange = useCallback((startingRefineLevel: number): void => {
-    onRefineInputChange({ ...refineInput, startingRefineLevel });
-  }, [refineInput, onRefineInputChange]);
-
-  const onTargetRefineLevelChange = useCallback((targetRefineLevel: number): void => {
-    onRefineInputChange({ ...refineInput, targetRefineLevel });
-  }, [refineInput, onRefineInputChange]);
-
-  const onRefineTypeChange = useCallback((refineType: RefineType): void => {
-    onRefineInputChange({ ...refineInput, refineType });
-  }, [refineInput, onRefineInputChange]);
+  const onChange = <TKey extends keyof RefineInput>(prop: TKey) => (value: RefineInput[TKey]): void => {
+    onRefineInputChange({
+      ...refineInput,
+      [prop]: value,
+    });
+  };
 
   return (
     <div
@@ -76,21 +67,21 @@ export const RefineCalculatorInput: React.FC<Props> = ({
         <NumberInput
           label="Starting refine level"
           value={startingRefineLevel}
-          onChange={onStartingRefineLevelChange}
+          onChange={onChange('startingRefineLevel')}
           minValue={0}
           maxValue={targetRefineLevel - 1}
         />
         <NumberInput
           label="Target refine level"
           value={targetRefineLevel}
-          onChange={onTargetRefineLevelChange}
+          onChange={onChange('targetRefineLevel')}
           minValue={startingRefineLevel + 1}
         />
         <DropDown<RefineType>
           label="Refine type"
           selectedValue={refineType}
           values={Object.values(RefineType)}
-          onChange={onRefineTypeChange}
+          onChange={onChange('refineType')}
           getId={refineType => refineType}
           getName={refineType => refineTypeLabels[refineType]}
         />
@@ -110,7 +101,7 @@ export const RefineCalculatorInput: React.FC<Props> = ({
         <NumberInput
           label="Base cost"
           value={baseItemCost}
-          onChange={onBaseItemCostChange}
+          onChange={onChange('baseItemCost')}
           minValue={0}
         />
         {[refineItemIds.Oridecon, refineItemIds.Elunium, refineItemIds.BlacksmithBlessing].map(refineItemId => (

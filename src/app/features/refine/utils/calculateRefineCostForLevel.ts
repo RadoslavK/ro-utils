@@ -1,20 +1,20 @@
-import { OreType } from '../../types/oreType.type';
-import { RefineType } from '../../types/refineType.type';
-import { TotalRefineResult } from '../../types/totalRefineResult.type';
-import { refineChances } from '../../constants/refineChances';
+import { OreType } from '../types/oreType.type';
+import { RefineType } from '../types/refineType.type';
+import { TotalRefineResult } from '../types/totalRefineResult.type';
+import { refineChances } from '../constants/refineChances';
 import { getRefineCost } from './getRefineCost';
-import { bsbAmountsNeeded } from '../../constants/bsbAmountsNeeded';
+import { bsbAmountsNeeded } from '../constants/bsbAmountsNeeded';
 import {
   addConsumedMaterials,
   ConsumedMaterials,
   createConsumedMaterials, multiplyConsumedMaterialsBase,
-} from '../../types/consumedMaterials.type';
-import { getOreId } from '../getOreId';
-import { RefineResult } from '../../types/refineResult.type';
+} from '../types/consumedMaterials.type';
+import { getOreId } from './getOreId';
+import { RefineResult } from '../types/refineResult.type';
 import { getOreCost } from './getOreCost';
-import { refineItemIds } from '../../constants/refineItemIds';
-import { isOreRefineParameters, RefineParameters } from '../../types/RefineParameters.type';
-import { cumulativeRefineBoxChances } from '../../constants/refineBoxChances';
+import { refineItemIds } from '../constants/refineItemIds';
+import { isOreRefineParameters, RefineParameters } from '../types/RefineParameters.type';
+import { cumulativeRefineBoxChances } from '../constants/refineBoxChances';
 
 type Params = {
   readonly baseItemCost: number;

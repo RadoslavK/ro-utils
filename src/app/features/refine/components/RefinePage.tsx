@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { RefineCalculatorInput } from './RefineCalculatorInput';
-import { calculateTotalRefineCost } from '../utils/calculations/calculateTotalRefineCost';
+import { calculateTotalRefineCost } from '../utils/calculateTotalRefineCost';
 import { RefineResult } from './RefineResult';
 import { useCosts } from '../hooks/useCosts';
 import { useRefineInput } from '../hooks/useRefineInput';

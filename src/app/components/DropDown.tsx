@@ -11,12 +11,12 @@ type Props<T> = {
 }
 
 export const DropDown = <T extends unknown>({
-  onChange,
-  values,
-  selectedValue,
   getId,
   getName,
   label,
+  onChange,
+  selectedValue,
+  values,
 }: Props<T>) => {
   const changeValue = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = event.currentTarget;
