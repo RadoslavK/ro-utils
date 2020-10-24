@@ -74,7 +74,7 @@ export const RefineLevel: React.FC<Props> = ({
             }}
           >
             <div><strong>Method</strong>: {refineMethodLabel}</div>
-            <div><strong>Total cost</strong>: {Math.round(paramsResult.totalCost).toLocaleString()} Z</div>
+            <div><strong>Total cost</strong>: {Math.round(paramsResult.totalItemCost).toLocaleString()} Z</div>
             <div css={css`margin-top: 8px`}>
               <div
                 css={css`

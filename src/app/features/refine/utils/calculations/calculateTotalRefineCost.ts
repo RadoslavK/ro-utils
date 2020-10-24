@@ -143,6 +143,7 @@ export const calculateTotalRefineCost = ({
 
       allRefineParamsResults.set(refineParamsId, {
         totalConsumedMaterials: totalConsumedMaterials,
+        totalItemCost: totalCost,
         totalCost,
         refineConsumedMaterials: refineConsumedMaterials,
         refineCost: refineParamsResult.totalCost,

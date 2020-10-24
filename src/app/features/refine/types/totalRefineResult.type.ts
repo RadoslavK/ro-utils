@@ -8,6 +8,7 @@ export type RefineParamsResult = {
   readonly refineParams: RefineParameters;
   readonly totalConsumedMaterials: TotalConsumedMaterials;
   readonly totalCost: number;
+  readonly totalItemCost: number;
 }
 
 export type TotalRefineResult = {
