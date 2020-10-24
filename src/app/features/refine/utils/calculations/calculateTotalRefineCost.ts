@@ -43,7 +43,7 @@ export const calculateTotalRefineCost = ({
   const usedRefineResultsMap: Map<number, RefineParamsResult> = new Map<number, RefineParamsResult>();
 
   do {
-    let refineParamsToTry = generateRefineParams(currentRefineLevel + 1);
+    const refineParamsToTry = generateRefineParams(currentRefineLevel + 1);
 
     const allRefineParamsResults: Map<string, RefineParamsResult> = new Map<string, RefineParamsResult>();
     const allRefineResults: Map<string, RefineResult> = new Map<string, RefineResult>();

@@ -1,6 +1,6 @@
 import { LocalStorageManager } from '../../../models/localStorageManager';
 import { LocalStorageKeys } from '../../../constants/localStorageKeys';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { RefineType } from '../types/refineType.type';
 import { RefineInput } from '../types/refineInput.type';
 
@@ -11,11 +11,11 @@ const defaultRefineItemInput: RefineInput = {
   targetRefineLevel: 9,
 };
 
-export const useRefineInput = () => {
-  const localStorageManager = new LocalStorageManager<RefineInput>({
-    key: LocalStorageKeys.RefineInput,
-  });
+const localStorageManager = new LocalStorageManager<RefineInput>({
+  key: LocalStorageKeys.RefineInput,
+});
 
+export const useRefineInput = () => {
   const [refineInput, setRefineInput] = useState<RefineInput>(() => {
     const loadedInput = localStorageManager.load(defaultRefineItemInput);
 
@@ -30,11 +30,11 @@ export const useRefineInput = () => {
     return loadedInput;
   });
 
-  const changeRefineInput = (refineInput: RefineInput): void => {
+  const changeRefineInput = useCallback((refineInput: RefineInput): void => {
     setRefineInput(refineInput);
 
     localStorageManager.save(refineInput);
-  };
+  }, [setRefineInput]);
 
   return {
     refineInput,

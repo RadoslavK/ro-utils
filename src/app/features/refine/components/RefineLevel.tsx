@@ -1,6 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { css } from '@emotion/core';
-import { CheckBox } from '../../../components/CheckBox';
 import { RefineType } from '../types/refineType.type';
 import { TotalRefineResult } from '../types/totalRefineResult.type';
 import { isOreRefineParameters } from '../types/RefineParameters.type';
@@ -26,8 +25,6 @@ export const RefineLevel: React.FC<Props> = ({
   shouldShowOnlyBestResults,
   totalRefineResult,
 }) => {
-  const [showDetails, setShowDetails] = useState<ReadonlyMap<string, boolean>>(new Map<string, boolean>());
-
   let sortedRefineParamsResults = useMemo(() => {
     const results = [...totalRefineResult.refineParamsResults.values()];
 
@@ -57,7 +54,6 @@ export const RefineLevel: React.FC<Props> = ({
         const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
           ? `${paramsResult.refineParams.useBsb ? 'BSB + ' : ''}${getOreLabel(refineType, paramsResult.refineParams.oreType)}`
           : 'Random refine box';
-        const shouldShowDetails = showDetails.get(paramsResult.id);
 
         return (
           <div
@@ -66,6 +62,7 @@ export const RefineLevel: React.FC<Props> = ({
               margin: 10px;
               padding: 10px;
               border: ${shouldBeMarked ? 2.5 : 1}px ${shouldBeMarked ? 'gold' : 'black'} solid;
+              width: 180px;
             `}
             onClick={() => {
               if (preferredRefineParamsId === paramsResult.id) {
@@ -79,45 +76,27 @@ export const RefineLevel: React.FC<Props> = ({
             <div><strong>Method</strong>: {refineMethodLabel}</div>
             <div><strong>Cost</strong>: {Math.round(paramsResult.totalCost).toLocaleString()} Z</div>
             <div css={css`margin-top: 8px`}>
-              <CheckBox
-                isChecked={!!shouldShowDetails}
-                label={`${shouldShowDetails ? 'Hide' : 'Show'} consumed materials`}
-                onChange={() => {
-                  const newMap = new Map<string, boolean>(showDetails);
-
-                  if (shouldShowDetails) {
-                    newMap.delete(paramsResult.id);
-                  }
-                  else {
-                    newMap.set(paramsResult.id, true);
-                  }
-
-                  setShowDetails(newMap);
-                }}
-              />
-              {shouldShowDetails && (
-                <div
-                  css={css`
-                    display: flex;
-                    justify-content: space-around;
-                  `}
-                >
-                  <div>
-                    <h3>Upgrade</h3>
-                    <ConsumedMaterials
-                      consumedMaterials={paramsResult.refineConsumedMaterials}
-                      refineType={refineType}
-                    />
-                  </div>
-                  <div>
-                    <h3>Total</h3>
-                    <ConsumedMaterials
-                      consumedMaterials={paramsResult.totalConsumedMaterials}
-                      refineType={refineType}
-                    />
-                  </div>
+              <div
+                css={css`
+                  display: flex;
+                  justify-content: space-around;
+                `}
+              >
+                <div>
+                  <h3>Upgrade</h3>
+                  <ConsumedMaterials
+                    consumedMaterials={paramsResult.refineConsumedMaterials}
+                    refineType={refineType}
+                  />
                 </div>
-              )}
+                <div>
+                  <h3>Total</h3>
+                  <ConsumedMaterials
+                    consumedMaterials={paramsResult.totalConsumedMaterials}
+                    refineType={refineType}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         );

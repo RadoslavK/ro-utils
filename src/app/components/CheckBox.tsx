@@ -38,7 +38,7 @@ export const CheckBox: React.FC<Props> = ({
 };
 
 CheckBox.propTypes = {
-  onChange: (props: Props, propName, componentName, location, propFullName,) => {
+  onChange: (props: Props) => {
     if (!props.disabled && !props.onChange) {
       throw new Error('Provide onChange callback when CheckBox is not disabled');
     }

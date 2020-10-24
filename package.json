@@ -7,7 +7,8 @@
   "scripts": {
     "start": "webpack-dev-server --open --mode development --config webpack.dev.config.js",
     "build": "webpack --mode production --config webpack.prod.config.js",
-    "deploy": "yarn build&& surge dist ro-utils.surge.sh"
+    "deploy": "yarn build&& surge dist ro-utils.surge.sh",
+    "lint": "yarn eslint src/**"
   },
   "resolutions": {
     "acorn": "npm:acorn-with-stage3"
@@ -21,6 +22,8 @@
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-router": "^5.1.8",
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
+    "@typescript-eslint/parser": "^4.5.0",
     "babel-loader": "^8.1.0",
     "copy-webpack-plugin": "^6.2.1",
     "eslint": "^7.10.0",

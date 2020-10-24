@@ -20,6 +20,7 @@ const renderImageWithCount = (count: number, itemId: number, title?: string): JS
       css={css`
         display: flex;
         align-items: center;
+        margin: 4px;
       `}
     >
       <div
