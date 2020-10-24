@@ -1,6 +1,5 @@
 Bugs:
-* Reset input values like aspd bot when switching classes and the class can not use it anymore.
-* Fix correct rendering of left hand dueal wield options.  
+* Reset input values like aspd bot when switching classes and the class can not use it anymore.  
 * Fix refine box, it requires. min 4 lvl and check if it uses 20k for HD
 
 New features:

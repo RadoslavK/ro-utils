@@ -48,7 +48,7 @@ export const EquipInput: React.FC<Props> = ({
       leftHandOptions: [Equip.BareHand, ...leftHandOptions],
       rightHandOptions: [Equip.BareHand, ...rightHandOptions],
     };
-  }, [characterClass]);
+  }, [characterClass, rightHandEquip]);
 
   const changeLeftHand = (equip: Equip): void => {
     onChange({
@@ -59,7 +59,7 @@ export const EquipInput: React.FC<Props> = ({
 
   const changeRightHand = (equip: Equip): void => {
     onChange({
-      leftHand: isTwoHandEquip(equip) ? equip : (isTwoHandEquip(leftHandEquip) ? Equip.BareHand : undefined),
+      leftHand: isTwoHandEquip(equip) ? equip : (isTwoHandEquip(leftHandEquip) ? Equip.BareHand : (!isDualWieldRightWeapon(equip) && isDualWieldLeftWeapon(leftHandEquip) ? Equip.BareHand : undefined)),
       rightHand: equip,
     });
   };
