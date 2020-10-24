@@ -17,7 +17,9 @@ const refineTypeLabels: Record<RefineType, string> = {
 };
 
 type Props = {
+  readonly hideLevelsBeforeStartingRefine: boolean;
   readonly itemCosts: Map<number, number>;
+  readonly onHideLevelsBeforeStartingRefineChange: (value: boolean) => void;
   readonly onItemCostChange: (itemId: number, price: number) => void;
   readonly onRefineInputChange: (value: RefineInput) => void;
   readonly onShowOnlyBestResultsChange: (value: boolean) => void;
@@ -26,7 +28,9 @@ type Props = {
 }
 
 export const RefineCalculatorInput: React.FC<Props> = ({
+  hideLevelsBeforeStartingRefine,
   itemCosts,
+  onHideLevelsBeforeStartingRefineChange,
   onItemCostChange,
   onRefineInputChange,
   onShowOnlyBestResultsChange,
@@ -94,6 +98,11 @@ export const RefineCalculatorInput: React.FC<Props> = ({
           isChecked={shouldShowOnlyBestResults}
           label="Show only best methods"
           onChange={onShowOnlyBestResultsChange}
+        />
+        <CheckBox
+          isChecked={hideLevelsBeforeStartingRefine}
+          label="Hide levels before starting refine"
+          onChange={onHideLevelsBeforeStartingRefineChange}
         />
       </div>
       <div>

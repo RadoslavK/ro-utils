@@ -5,6 +5,7 @@ import { RefineLevel } from './RefineLevel';
 import { css } from '@emotion/core';
 
 type Props = {
+  readonly hideLevelsBeforeStartingRefine: boolean;
   readonly onPreferencesChange: (preferences: Map<number, string>) => void;
   readonly preferences: Map<number, string>;
   readonly refineType: RefineType;
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export const RefineResult: React.FC<Props> = ({
+  hideLevelsBeforeStartingRefine,
   onPreferencesChange,
   preferences,
   refineType,
@@ -43,19 +45,24 @@ export const RefineResult: React.FC<Props> = ({
         flex-wrap: wrap;
         flex-basis: 500px;
       `}>
-        {result.totalRefineResults.map(levelResult => (
-          <React.Fragment key={levelResult.refineLevel}>
-            <RefineLevel
-              isCoveredByStartingRefine={levelResult.refineLevel <= startingRefineLevel}
-              level={levelResult.refineLevel}
-              refineType={refineType}
-              totalRefineResult={levelResult}
-              onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
-              preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
-              shouldShowOnlyBestResults={shouldShowOnlyBestResults}
-            />
-          </React.Fragment>
-        ))}
+        {result.totalRefineResults.map(levelResult => {
+          const shouldShowLevel = !hideLevelsBeforeStartingRefine
+            || levelResult.refineLevel > startingRefineLevel;
+
+          return shouldShowLevel && (
+            <React.Fragment key={levelResult.refineLevel}>
+              <RefineLevel
+                isCoveredByStartingRefine={levelResult.refineLevel <= startingRefineLevel}
+                level={levelResult.refineLevel}
+                refineType={refineType}
+                totalRefineResult={levelResult}
+                onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
+                preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
+                shouldShowOnlyBestResults={shouldShowOnlyBestResults}
+              />
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );
