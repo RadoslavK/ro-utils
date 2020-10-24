@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { css } from '@emotion/core';
 
 type Props<T> = {
@@ -18,6 +18,15 @@ export const DropDown = <T extends unknown>({
   selectedValue,
   values,
 }: Props<T>) => {
+  const onChangeRef = useRef<(value: T) => void>();
+  onChangeRef.current = onChange;
+
+  useEffect(() => {
+    if (!values.includes(selectedValue)) {
+      onChangeRef.current(values[0]);
+    }
+  }, [values, selectedValue]);
+
   const changeValue = (event: React.ChangeEvent<HTMLSelectElement>): void => {
     const { value } = event.currentTarget;
 
