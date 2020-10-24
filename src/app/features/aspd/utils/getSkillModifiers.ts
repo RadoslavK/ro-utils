@@ -8,18 +8,32 @@ const weaponsEligibleForAdrenalineRush: readonly Equip[] = [
   Equip.Mace,
 ];
 
-const getClassBasedModifiers = (characterClass: Class, canUseAdrenalineRush: boolean): readonly SkillAspdModifier[] => {
+const getClassBasedModifiers = (characterClass: Class, equip: Equip[]): readonly SkillAspdModifier[] => {
   switch (characterClass) {
     case Class.Crusader:
-      return [SkillAspdModifier.SpearQuicken];
+      return [Equip.OneHandSpear, Equip.TwoHandSpear].some(w => equip.includes(w))
+        ? [SkillAspdModifier.SpearQuicken]
+        : [];
 
-    case Class.Knight:
-      return [SkillAspdModifier.TwoHandQuicken, SkillAspdModifier.OneHandQuicken];
+    case Class.Knight: {
+      if (equip.includes(Equip.TwoHandSword)) {
+        return [SkillAspdModifier.TwoHandQuicken];
+      }
 
-    case Class.Blacksmith:
+      if (equip.includes(Equip.OneHandSword)) {
+        return [SkillAspdModifier.OneHandQuicken];
+      }
+
+      return [];
+    }
+
+    case Class.Blacksmith: {
+      const canUseAdrenalineRush = weaponsEligibleForAdrenalineRush.some(w => equip.includes(w));
+
       return canUseAdrenalineRush
         ? [SkillAspdModifier.AdrenalineRushSelf]
         : [];
+    }
 
     default:
       return [];
@@ -27,8 +41,8 @@ const getClassBasedModifiers = (characterClass: Class, canUseAdrenalineRush: boo
 }
 
 export function getSkillModifiers(characterClass: Class, equip: Equip[]): ReadonlySet<SkillAspdModifier> {
+  const classBasedModifiers = getClassBasedModifiers(characterClass, equip);
   const canUseAdrenalineRush = weaponsEligibleForAdrenalineRush.some(w => equip.includes(w));
-  const classBasedModifiers = getClassBasedModifiers(characterClass, canUseAdrenalineRush);
   const generalModifiers: SkillAspdModifier[] = [];
 
   if (characterClass !== Class.Blacksmith && canUseAdrenalineRush) {
