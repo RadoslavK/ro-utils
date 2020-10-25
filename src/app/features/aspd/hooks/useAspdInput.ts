@@ -5,6 +5,7 @@ import { PotAspdModifier } from '../types/potAspdModifier';
 import { SkillAspdModifier } from '../types/skillAspdModifier';
 import { Class } from '../types/class';
 import { Equip } from '../types/equip';
+import { adjustAspdInput } from '../utils/adjustAspdInput';
 
 const localStorageManager = new LocalStorageManager<AspdInput>({
   key: 'aspdInput',
@@ -27,8 +28,10 @@ export const useAspdInput = () => {
   const [aspdInput, setAspdInput] = useState<AspdInput>(loadAspdInputFromLocalStorage);
 
   const changeAspdInput = (input: AspdInput): void => {
-    setAspdInput(input);
-    localStorageManager.save(input);
+    const adjustedInput = adjustAspdInput(input);
+
+    setAspdInput(adjustedInput);
+    localStorageManager.save(adjustedInput);
   };
 
   return { aspdInput, changeAspdInput };
