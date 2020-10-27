@@ -8,6 +8,7 @@ import { Class } from '../types/class';
 import { EquipChanges, EquipInput } from './EquipInput';
 import { allowedPots } from '../constants/allowedPots';
 import { getSkillModifiers } from '../utils/getSkillModifiers';
+import { createOnChangeCallback } from '../../../utils/useOnChangeCallback';
 
 type Props = {
   readonly aspdInput: AspdInputType;
@@ -30,12 +31,7 @@ export const AspdInput: React.FC<Props> = ({
     skillModifier,
   } = aspdInput;
 
-  const onChange = <TKey extends keyof AspdInputType>(prop: TKey) => (value: AspdInputType[TKey]): void => {
-    onAspdInputChange({
-      ...aspdInput,
-      [prop]: value,
-    });
-  };
+  const onChange = createOnChangeCallback(aspdInput, onAspdInputChange);
 
   const changeEquip = (equip: EquipChanges): void => {
     onAspdInputChange({

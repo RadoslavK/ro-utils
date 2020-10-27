@@ -30,7 +30,7 @@ export const NumberInput: React.FC<Props> = ({
   };
 
   return (
-    <div css={css`margin: 8px 0`}>
+    <div css={css`margin-top: 8px; margin-bottom: 8px`}>
       <div>{label}</div>
       <input
         type="number"

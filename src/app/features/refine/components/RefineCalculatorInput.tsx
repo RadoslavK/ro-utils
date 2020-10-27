@@ -7,6 +7,7 @@ import { CheckBox } from '../../../components/CheckBox';
 import { css } from '@emotion/core';
 import { refineItemIds } from '../constants/refineItemIds';
 import { items } from '../../../constants/items';
+import { createOnChangeCallback } from '../../../utils/useOnChangeCallback';
 
 const refineTypeLabels: Record<RefineType, string> = {
   [RefineType.Armor]: 'Armor',
@@ -44,12 +45,7 @@ export const RefineCalculatorInput: React.FC<Props> = ({
     targetRefineLevel,
   } = refineInput;
 
-  const onChange = <TKey extends keyof RefineInput>(prop: TKey) => (value: RefineInput[TKey]): void => {
-    onRefineInputChange({
-      ...refineInput,
-      [prop]: value,
-    });
-  };
+  const onChange = createOnChangeCallback(refineInput, onRefineInputChange);
 
   return (
     <div
