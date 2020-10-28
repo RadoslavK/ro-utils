@@ -1,7 +1,7 @@
 export type Stats = {
-  readonly baseLevel: number;
+  readonly baseLevel: number
   readonly str: number;
   readonly dex: number;
   readonly luk: number;
-  readonly useCritical: boolean;
+  readonly crit: number;
 }

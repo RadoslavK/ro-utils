@@ -6,6 +6,7 @@ import { AtkReductionMultipliersInput } from './AtkReductionMultipliersInput';
 import { PropertyInput } from './PropertyInput';
 import { DropDown } from '../../../components/DropDown';
 import { Size } from '../types/size';
+import { NumberInput } from '../../../components/NumberInput';
 
 type Props = {
   readonly onChange: (reductions: Target) => void;
@@ -15,6 +16,7 @@ type Props = {
 export const TargetInput: React.FC<Props> = ({ onChange, target }) => {
   const {
     atkReductionMultiplier,
+    critShield,
     def,
     property,
     size,
@@ -45,6 +47,11 @@ export const TargetInput: React.FC<Props> = ({ onChange, target }) => {
       <PropertyInput
         onChange={onChangeCb('property')}
         property={property}
+      />
+      <NumberInput
+        label="Crit Shield"
+        value={critShield}
+        onChange={onChangeCb('critShield')}
       />
     </div>
   );

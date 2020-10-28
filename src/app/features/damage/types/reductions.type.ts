@@ -5,6 +5,7 @@ import { Size } from './size';
 
 export type Target = {
   readonly atkReductionMultiplier: AtkReductionMultiplier;
+  readonly critShield: number;
   readonly def: Def;
   readonly property: Property;
   readonly size: Size;

@@ -26,21 +26,22 @@ export const DamagePage: React.FC = () => {
     dex: 82,
     luk: 107,
     str: 8,
-    useCritical: true,
+    crit: 54,
   });
   const [weapon, setWeapon] = useState<Weapon>({
     baseDamage: 65,
     damageType: DamageType.PhysicalRanged,
-    element: PropertyElement.Neutral,
+    element: PropertyElement.Wind,
     level: 2,
     refineLevel: 6,
     type: WeaponType.Bow,
   });
   const [target, setTarget] = useState<Target>({
     def: {
-      soft: 13,
-      hard: 9,
+      soft: 90,
+      hard: 280,
     },
+    critShield: 12,
     atkReductionMultiplier: {
       property: 1,
       race: 1,
@@ -48,10 +49,10 @@ export const DamagePage: React.FC = () => {
       targetProperty: 1,
     },
     property: {
-      element: PropertyElement.Neutral,
-      level: 1,
+      element: PropertyElement.Water,
+      level: 2,
     },
-    size: Size.Medium,
+    size: Size.Large,
   })
   const [bonusAtk, setBonusAtk] = useState<BonusAtk>({
     extraAtk: {
@@ -61,7 +62,7 @@ export const DamagePage: React.FC = () => {
       ammunition: 25,
     },
     masteryAtk: 0,
-    buffAtk: 0,
+    buffAtk: 25,
   });
   const [atkMultipliers, setAtkMultipliers] = useState<AtkMultipliers>({
     atk: 1,
@@ -73,8 +74,8 @@ export const DamagePage: React.FC = () => {
   const [finalMultipliers, setFinalMultipliers] = useState<FinalMultipliers>({
     damage: 1,
     finalDamage: 1,
-    ranged: 1,
-    critical: 1.04,
+    ranged: 1.03,
+    critical: 1,
   });
   const [finalReductions, setFinalReductions] = useState<FinalReductions>({
     finalDamage: 1,
@@ -140,8 +141,8 @@ export const DamagePage: React.FC = () => {
         />
 
       </div>
-      <div>Min dmg: {minDmg}</div>
-      <div>Max dmg: {maxDmg}</div>
+      <div>Min dmg: {minDmg.toFixed(2)}</div>
+      <div>Max dmg: {maxDmg.toFixed(2)}</div>
       <div>Average dmg: {((minDmg + maxDmg) / 2).toFixed(2)}</div>
     </div>
   );

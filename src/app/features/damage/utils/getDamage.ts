@@ -73,21 +73,43 @@ export const getDamage = ({
     weapon,
   });
 
-  const minDamage = getAtkDamage({
+  const minNonCritDamage = getAtkDamage({
     atk: minAtk,
     finalMultipliers,
     finalReductions,
     target,
-    useCritical: stats.useCritical,
+    useCritical: false,
   });
 
-  const maxDamage = getAtkDamage({
+  const maxNonCritDamage = getAtkDamage({
     atk: maxAtk,
     finalMultipliers,
     finalReductions,
     target,
-    useCritical: stats.useCritical,
+    useCritical: false,
   });
+
+  const minCritDamage = getAtkDamage({
+    atk: minAtk,
+    finalMultipliers,
+    finalReductions,
+    target,
+    useCritical: true,
+  });
+
+  const maxCritDamage = getAtkDamage({
+    atk: maxAtk,
+    finalMultipliers,
+    finalReductions,
+    target,
+    useCritical: true,
+  });
+
+  const critChance = Math.min(100, Math.max(0, stats.crit - target.critShield)) / 100;
+  const nonCritChance = 1 - critChance;
+
+  const minDamage = minNonCritDamage * nonCritChance + minCritDamage * critChance;
+  const maxDamage = maxNonCritDamage * nonCritChance + maxCritDamage * critChance;
 
   return {
     min: minDamage,
