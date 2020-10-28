@@ -23,10 +23,10 @@ import { Size } from '../types/size';
 export const DamagePage: React.FC = () => {
   const [stats, setStats] = useState<Stats>({
     baseLevel: 99,
-    dex: 82,
+    dex: 98,
     luk: 107,
     str: 8,
-    crit: 54,
+    crit: 62,
   });
   const [weapon, setWeapon] = useState<Weapon>({
     baseDamage: 65,
@@ -57,7 +57,7 @@ export const DamagePage: React.FC = () => {
   const [bonusAtk, setBonusAtk] = useState<BonusAtk>({
     extraAtk: {
       pseudoBuff: 0,
-      equip: 0,
+      equip: 30,
       consumable: 0,
       ammunition: 25,
     },
@@ -74,7 +74,7 @@ export const DamagePage: React.FC = () => {
   const [finalMultipliers, setFinalMultipliers] = useState<FinalMultipliers>({
     damage: 1,
     finalDamage: 1,
-    ranged: 1.03,
+    ranged: 1.1,
     critical: 1,
   });
   const [finalReductions, setFinalReductions] = useState<FinalReductions>({
