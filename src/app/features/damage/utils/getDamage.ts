@@ -9,6 +9,7 @@ import { Target } from '../types/reductions.type';
 import { FinalMultipliers } from '../types/finalMultipliers.type';
 import { FinalReductions } from '../types/finalReductions.type';
 import { SkillInput } from '../types/skillInput.type';
+import { DamageType } from '../types/damageType';
 
 type SharedParams = {
   readonly finalMultipliers: FinalMultipliers;
@@ -18,11 +19,13 @@ type SharedParams = {
 
 type CalculateAtkDamageParams = SharedParams & {
   readonly atk: number;
+  readonly damageType: DamageType;
   readonly useCritical: boolean;
 };
 
 const getAtkDamage = ({
   atk,
+  damageType,
   finalMultipliers,
   finalReductions,
   target,
@@ -40,9 +43,9 @@ const getAtkDamage = ({
               Math.floor(
                 Math.floor(
                   Math.floor(atk * (useCritical ? finalMultipliers.critical : 1))
-                  * finalMultipliers.ranged)
+                  * (damageType === DamageType.PhysicalRanged ? finalMultipliers.ranged : 1))
                 * finalReductions.ranged)
-              * finalMultipliers.damage)
+              * (damageType === DamageType.PhysicalRanged ? finalMultipliers.damage : 1))
             * hardDefReduction)
           - softDef)
         * (useCritical ? baseCriticalMultiplier : 1))
@@ -81,6 +84,7 @@ export const getDamage = ({
 
     const minDamage = getAtkDamage({
       atk: minAtk * skillMultiplier,
+      damageType: weapon.damageType,
       finalMultipliers,
       finalReductions,
       target,
@@ -89,6 +93,7 @@ export const getDamage = ({
 
     const maxDamage = getAtkDamage({
       atk: maxAtk * skillMultiplier,
+      damageType: weapon.damageType,
       finalMultipliers,
       finalReductions,
       target,
@@ -103,6 +108,7 @@ export const getDamage = ({
 
   const minNonCritDamage = getAtkDamage({
     atk: minAtk,
+    damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
     target,
@@ -111,6 +117,7 @@ export const getDamage = ({
 
   const maxNonCritDamage = getAtkDamage({
     atk: maxAtk,
+    damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
     target,
@@ -119,6 +126,7 @@ export const getDamage = ({
 
   const minCritDamage = getAtkDamage({
     atk: minAtk,
+    damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
     target,
@@ -127,6 +135,7 @@ export const getDamage = ({
 
   const maxCritDamage = getAtkDamage({
     atk: maxAtk,
+    damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
     target,
