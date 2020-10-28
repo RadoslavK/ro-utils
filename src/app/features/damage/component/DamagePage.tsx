@@ -2,19 +2,21 @@ import React, { useMemo, useState } from 'react';
 import { StatsInput } from './StatsInput';
 import { Stats } from '../types/stats.type';
 import { getDamage } from '../utils/getDamage';
-import { Def } from '../types/def.type';
-import { DefInput } from './DefInput';
-import { NumberInput } from '../../../components/NumberInput';
-import { DropDown } from '../../../components/DropDown';
 import { DamageType } from '../types/damageType';
 import { BonusAtk } from '../types/bonusAtk.type';
 import { BonusAtkInput } from './BonusAtkInput';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
-import { AtkReductions } from '../types/atkReductions.type';
 import { AtkMultipliersInput } from './AtkMultipliersInput';
-import { AtkReductionsInput } from './AtkReductionsInput';
-import { CheckBox } from '../../../components/CheckBox';
 import { css } from '@emotion/core';
+import { WeaponInput } from './WeaponInput';
+import { Weapon } from '../types/weapon.type';
+import { ReductionsInput } from './ReductionsInput';
+import { PropertyElement } from '../types/propertyElement';
+import { Reductions } from '../types/reductions.type';
+import { FinalMultipliers } from '../types/finalMultipliers.type';
+import { FinalReductions } from '../types/finalReductions.type';
+import { FinalMultipliersInput } from './FinalMultipliersInput';
+import { FinalReductionsInput } from './FinalReductionsInput';
 
 export const DamagePage: React.FC = () => {
   const [stats, setStats] = useState<Stats>({
@@ -22,15 +24,32 @@ export const DamagePage: React.FC = () => {
     dex: 82,
     luk: 107,
     str: 8,
+    useCritical: true,
   });
-  const [def, setDef] = useState<Def>({
-    soft: 13,
-    hard: 9,
+  const [weapon, setWeapon] = useState<Weapon>({
+    damageType: DamageType.PhysicalRanged,
+    baseDamage: 65,
+    level: 2,
+    refineLevel: 6,
+    element: PropertyElement.Neutral,
   });
-  const [baseWeaponDamage, setBaseWeaponDamage] = useState(65);
-  const [weaponLevel, setWeaponLevel] = useState(2);
-  const [refineLevel, setRefineLevel] = useState(6);
-  const [damageType, setDamageType] = useState<DamageType>(DamageType.PhysicalRanged);
+  const [reductions, setReductions] = useState<Reductions>({
+    def: {
+      soft: 13,
+      hard: 9,
+    },
+    atkMultiplier: {
+      sizePenalty: 1,
+      property: 1,
+      race: 1,
+      size: 1,
+      targetProperty: 1,
+    },
+    property: {
+      element: PropertyElement.Neutral,
+      level: 1,
+    },
+  })
   const [bonusAtk, setBonusAtk] = useState<BonusAtk>({
     extraAtk: {
       pseudoBuff: 0,
@@ -44,167 +63,80 @@ export const DamagePage: React.FC = () => {
   const [atkMultipliers, setAtkMultipliers] = useState<AtkMultipliers>({
     atk: 1,
     monster: 1,
-    property: 1,
     race: 1,
     size: 1,
     targetProperty: 1,
   });
-  const [atkReductions, setAtkReductions] = useState<AtkReductions>({
-    sizePenalty: 1,
-    property: 1,
-    race: 1,
-    size: 1,
-    targetProperty: 1,
+  const [finalMultipliers, setFinalMultipliers] = useState<FinalMultipliers>({
+    damage: 1,
+    finalDamage: 1,
+    ranged: 1,
+    critical: 1.04,
   });
-  const [damageMultiplier, setDamageMultiplier] = useState(1);
-  const [finalDamageMultiplier, setFinalDamageMultiplier] = useState(1);
-  const [finalDamageReduction, setFinalDamageReduction] = useState(1);
-  const [rangedMultiplier, setRangedMultiplier] = useState(1);
-  const [rangedReduction, setRangedReduction] = useState(1);
-  const [criticalMultiplier, setCriticalMultiplier] = useState(1.04);
-  const [useCritical, setUseCritical] = useState(true);
+  const [finalReductions, setFinalReductions] = useState<FinalReductions>({
+    finalDamage: 1,
+    ranged: 1,
+  });
 
   const {
     max: maxDmg,
     min: minDmg,
   } = useMemo(() => getDamage({
     atkMultipliers,
-    atkReductions,
-    baseWeaponDamage,
     bonusAtk,
-    criticalMultiplier,
-    damageMultiplier,
-    damageType,
-    def,
-    finalDamageMultiplier,
-    finalDamageReduction,
-    rangedMultiplier,
-    rangedReduction,
-    refineLevel,
+    finalMultipliers,
+    finalReductions,
+    reductions,
     stats,
-    useCritical,
-    weaponLevel,
+    weapon,
   }), [
     atkMultipliers,
-    atkReductions,
-    baseWeaponDamage,
     bonusAtk,
-    criticalMultiplier,
-    damageMultiplier,
-    damageType,
-    def,
-    finalDamageMultiplier,
-    finalDamageReduction,
-    rangedMultiplier,
-    rangedReduction,
-    refineLevel,
+    finalMultipliers,
+    finalReductions,
+    reductions,
     stats,
-    useCritical,
-    weaponLevel,
+    weapon,
   ]);
 
   return (
-    <div css={css`
-      max-height: 100vh;
+    <div>
+      <div css={css`
       display: flex;
-      flex-direction: column;
-      flex-wrap: wrap;
-      align-content: flex-start;
-      
       > * {
-        margin-right: 64px;
+        margin-right: 32px;
       }
     `}>
-      <StatsInput
-        onChange={setStats}
-        stats={stats}
-      />
-      <DefInput
-        def={def}
-        onChange={setDef}
-      />
-      <NumberInput
-        label="Refine level"
-        value={refineLevel}
-        onChange={setRefineLevel}
-        minValue={0}
-        maxValue={10}
-      />
-      <NumberInput
-        label="Weapon level"
-        value={weaponLevel}
-        onChange={setWeaponLevel}
-        minValue={1}
-        maxValue={4}
-      />
-      <NumberInput
-        label="Weapon Damage"
-        value={baseWeaponDamage}
-        onChange={setBaseWeaponDamage}
-        minValue={0}
-      />
-      <DropDown<DamageType>
-        selectedValue={damageType}
-        values={Object.values(DamageType)}
-        onChange={setDamageType}
-        getId={type => type}
-        getName={type => type}
-        label="Damage Type"
-      />
-      <BonusAtkInput
-        bonusAtk={bonusAtk}
-        onChange={setBonusAtk}
-      />
-      <AtkMultipliersInput
-        atkMultipliers={atkMultipliers}
-        onChange={setAtkMultipliers}
-      />
-      <AtkReductionsInput
-        atkReductions={atkReductions}
-        onChange={setAtkReductions}
-      />
-      <NumberInput
-        label="Damage Multiplier"
-        value={damageMultiplier}
-        onChange={setDamageMultiplier}
-        minValue={0}
-      />
-      <NumberInput
-        label="Final Damage multiplier"
-        value={finalDamageMultiplier}
-        onChange={setFinalDamageMultiplier}
-        minValue={0}
-      />
-      <NumberInput
-        label="Final Damage Reduction"
-        value={finalDamageReduction}
-        onChange={setFinalDamageReduction}
-        minValue={0}
-      />
-      <NumberInput
-        label="Ranged Multiplier"
-        value={rangedMultiplier}
-        onChange={setRangedMultiplier}
-        minValue={0}
-      />
-      <NumberInput
-        label="Ranged Reduction"
-        value={rangedReduction}
-        onChange={setRangedReduction}
-        minValue={0}
-      />
-      <NumberInput
-        label="Critical Multiplier"
-        value={criticalMultiplier}
-        onChange={setCriticalMultiplier}
-        minValue={0}
-      />
-      <CheckBox
-        label="Use Critical"
-        isChecked={useCritical}
-        onChange={setUseCritical}
-      />
+        <StatsInput
+          onChange={setStats}
+          stats={stats}
+        />
+        <WeaponInput
+          onChange={setWeapon}
+          weapon={weapon}
+        />
+        <BonusAtkInput
+          bonusAtk={bonusAtk}
+          onChange={setBonusAtk}
+        />
+        <AtkMultipliersInput
+          atkMultipliers={atkMultipliers}
+          onChange={setAtkMultipliers}
+        />
+        <FinalMultipliersInput
+          finalMultipliers={finalMultipliers}
+          onChange={setFinalMultipliers}
+        />
+        <ReductionsInput
+          reductions={reductions}
+          onChange={setReductions}
+        />
+        <FinalReductionsInput
+          finalReductions={finalReductions}
+          onChange={setFinalReductions}
+        />
 
+      </div>
       <div>Min dmg: {minDmg}</div>
       <div>Max dmg: {maxDmg}</div>
     </div>

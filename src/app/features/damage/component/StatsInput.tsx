@@ -2,6 +2,7 @@ import React from 'react';
 import { Stats } from '../types/stats.type';
 import { NumberInput } from '../../../components/NumberInput';
 import { createOnChangeCallback } from '../../../utils/useOnChangeCallback';
+import { CheckBox } from '../../../components/CheckBox';
 
 type Props = {
   readonly onChange: (stats: Stats) => void;
@@ -14,12 +15,16 @@ export const StatsInput: React.FC<Props> = ({ onChange, stats }) => {
     dex,
     luk,
     str,
+    useCritical,
   } = stats;
 
   const onChangeCb = createOnChangeCallback(stats, onChange);
 
   return (
-    <>
+    <div>
+      <h2>
+        Stats
+      </h2>
       <NumberInput
         label="Base level"
         value={baseLevel}
@@ -45,6 +50,11 @@ export const StatsInput: React.FC<Props> = ({ onChange, stats }) => {
         onChange={onChangeCb('luk')}
         minValue={1}
       />
-    </>
+      <CheckBox
+        label="Use Critical"
+        isChecked={useCritical}
+        onChange={onChangeCb('useCritical')}
+      />
+    </div>
   );
 };

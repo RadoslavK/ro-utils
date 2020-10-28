@@ -18,7 +18,10 @@ export const ExtraAtkInput: React.FC<Props> = ({ extraAtk, onChange }) => {
   const onChangeCb = createOnChangeCallback(extraAtk, onChange);
 
   return (
-    <>
+    <div>
+      <h3>
+        Extra ATK
+      </h3>
       <NumberInput
         label="Ammunition"
         value={ammunition}
@@ -43,6 +46,6 @@ export const ExtraAtkInput: React.FC<Props> = ({ extraAtk, onChange }) => {
         onChange={onChangeCb('pseudoBuff')}
         minValue={0}
       />
-    </>
+    </div>
   );
 };

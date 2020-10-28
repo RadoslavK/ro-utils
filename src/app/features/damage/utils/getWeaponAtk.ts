@@ -2,46 +2,51 @@ import { Variance } from '../types/variance.type';
 import { Stats } from '../types/stats.type';
 import { getRefinementBonus } from './getRefinementBonus';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
-import { AtkReductions } from '../types/atkReductions.type';
-import { DamageType } from '../types/damageType';
 import { getMainStat } from './getMainStat';
+import { Weapon } from '../types/weapon.type';
+import { Reductions } from '../types/reductions.type';
+import { getPropertyMultiplier } from './getPropertyMultiplier';
 
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
-  readonly atkReductions: AtkReductions;
-  readonly baseWeaponDamage: number;
-  readonly damageType: DamageType;
-  readonly refineLevel: number;
+  readonly reductions: Reductions;
   readonly stats: Stats;
-  readonly useCritical: boolean;
-  readonly weaponLevel: number;
+  readonly weapon: Weapon;
 }
 
 export const getWeaponAtk = ({
-  atkReductions,
   atkMultipliers,
-  baseWeaponDamage,
-  damageType,
-  refineLevel,
+  reductions,
   stats,
-  useCritical,
-  weaponLevel,
+  weapon,
 }: Params): Variance => {
+  const {
+    baseDamage: baseWeaponDamage,
+    damageType,
+    level: weaponLevel,
+    refineLevel,
+  } = weapon;
   const variance = 0.05 * weaponLevel * baseWeaponDamage;
   const statBonus = baseWeaponDamage * getMainStat(stats, damageType) / 200;
   const refinementBonus = getRefinementBonus({ refineLevel, weaponLevel });
 
-  const totalAtkMultiplier = Object
-    .values(atkMultipliers)
-    .reduce((reduced, multiplier) => reduced * multiplier, 1);
+  const propertyMultiplier = getPropertyMultiplier(weapon.element, reductions);
+  const totalAtkMultiplier = atkMultipliers.race
+    * atkMultipliers.size
+    * atkMultipliers.targetProperty
+    * atkMultipliers.monster
+    * atkMultipliers.atk
+    * propertyMultiplier;
 
-  const totalAtkReduction = Object
-    .values(atkReductions)
-    .reduce((reduced, reduction) => reduced * reduction, 1);
+  const totalAtkReductionMultiplier = reductions.atkMultiplier.sizePenalty
+    * reductions.atkMultiplier.race
+    * reductions.atkMultiplier.size
+    * reductions.atkMultiplier.property
+    * reductions.atkMultiplier.targetProperty;
 
-  const totalMultiplier = totalAtkMultiplier * totalAtkReduction;
+  const totalMultiplier = totalAtkMultiplier * totalAtkReductionMultiplier;
 
-  const minVariance = useCritical
+  const minVariance = stats.useCritical
     ? variance
     : -variance;
   const maxVariance = variance;

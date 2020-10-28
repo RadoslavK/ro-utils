@@ -1,40 +1,33 @@
 import { getAtk } from './getAtk';
 import { Variance } from '../types/variance.type';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
-import { AtkReductions } from '../types/atkReductions.type';
 import { BonusAtk } from '../types/bonusAtk.type';
-import { DamageType } from '../types/damageType';
 import { Stats } from '../types/stats.type';
-import { Def } from '../types/def.type';
 import { baseCriticalMultiplier } from '../constants/baseCriticalMultiplier';
+import { Weapon } from '../types/weapon.type';
+import { Reductions } from '../types/reductions.type';
+import { FinalMultipliers } from '../types/finalMultipliers.type';
+import { FinalReductions } from '../types/finalReductions.type';
 
 type SharedParams = {
-  readonly criticalMultiplier: number;
-  readonly damageMultiplier: number;
-  readonly def: Def;
-  readonly finalDamageMultiplier: number;
-  readonly finalDamageReduction: number;
-  readonly rangedMultiplier: number;
-  readonly rangedReduction: number;
-  readonly useCritical: boolean;
+  readonly finalMultipliers: FinalMultipliers;
+  readonly finalReductions: FinalReductions;
+  readonly reductions: Reductions;
 };
 
 type CalculateAtkDamageParams = SharedParams & {
   readonly atk: number;
+  readonly useCritical: boolean;
 };
 
 const getAtkDamage = ({
   atk,
-  criticalMultiplier,
-  damageMultiplier,
-  def,
-  finalDamageMultiplier,
-  finalDamageReduction,
-  rangedMultiplier,
-  rangedReduction,
+  finalMultipliers,
+  finalReductions,
+  reductions,
   useCritical,
 }: CalculateAtkDamageParams): number => {
-  const { hard: hardDef, soft: softDef } = def;
+  const { hard: hardDef, soft: softDef } = reductions.def;
   const hardDefReduction = (4000 + hardDef) / (4000 + hardDef * 10);
 
   return Math.floor(
@@ -45,80 +38,56 @@ const getAtkDamage = ({
             Math.floor(
               Math.floor(
                 Math.floor(
-                  Math.floor(atk * (useCritical ? criticalMultiplier : 1))
-                  * rangedMultiplier)
-                * rangedReduction)
-              * damageMultiplier)
+                  Math.floor(atk * (useCritical ? finalMultipliers.critical : 1))
+                  * finalMultipliers.ranged)
+                * finalReductions.ranged)
+              * finalMultipliers.damage)
             * hardDefReduction)
           - softDef)
         * (useCritical ? baseCriticalMultiplier : 1))
-      * finalDamageMultiplier)
-    * finalDamageReduction);
+      * finalMultipliers.finalDamage)
+    * finalReductions.finalDamage);
 };
 
 type Params = SharedParams & {
   readonly atkMultipliers: AtkMultipliers;
-  readonly atkReductions: AtkReductions;
-  readonly baseWeaponDamage: number;
   readonly bonusAtk: BonusAtk;
-  readonly damageType: DamageType;
-  readonly refineLevel: number;
+  readonly reductions: Reductions;
   readonly stats: Stats;
-  readonly weaponLevel: number;
+  readonly weapon: Weapon;
 };
 
 export const getDamage = ({
   atkMultipliers,
-  atkReductions,
-  baseWeaponDamage,
   bonusAtk,
-  criticalMultiplier,
-  damageMultiplier,
-  damageType,
-  def,
-  finalDamageMultiplier,
-  finalDamageReduction,
-  rangedMultiplier,
-  rangedReduction,
-  refineLevel,
+  finalMultipliers,
+  finalReductions,
+  reductions,
   stats,
-  useCritical,
-  weaponLevel,
+  weapon,
 }: Params): Variance => {
   const { min: minAtk, max: maxAtk } = getAtk({
     atkMultipliers,
-    atkReductions,
-    baseWeaponDamage,
     bonusAtk,
-    damageType,
-    refineLevel,
+    reductions,
     stats,
-    useCritical,
-    weaponLevel,
+    weapon,
   });
 
   const minDamage = getAtkDamage({
     atk: minAtk,
-    criticalMultiplier,
-    damageMultiplier,
-    def,
-    finalDamageMultiplier,
-    finalDamageReduction,
-    rangedMultiplier,
-    rangedReduction,
-    useCritical,
+    finalMultipliers,
+    finalReductions,
+    reductions,
+    useCritical: stats.useCritical,
   });
 
   const maxDamage = getAtkDamage({
     atk: maxAtk,
-    criticalMultiplier,
-    damageMultiplier,
-    def,
-    finalDamageMultiplier,
-    finalDamageReduction,
-    rangedMultiplier,
-    rangedReduction,
-    useCritical,
+    finalMultipliers,
+    finalReductions,
+    reductions,
+    useCritical: stats.useCritical,
   });
 
   return {

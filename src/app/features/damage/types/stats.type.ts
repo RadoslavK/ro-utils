@@ -3,4 +3,5 @@ export type Stats = {
   readonly str: number;
   readonly dex: number;
   readonly luk: number;
+  readonly useCritical: boolean;
 }

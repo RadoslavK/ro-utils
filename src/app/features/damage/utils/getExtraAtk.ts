@@ -1,32 +1,40 @@
 import { ExtraAtk } from '../types/extraAtk.type';
-import { AtkReductions } from '../types/atkReductions.type';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
+import { Reductions } from '../types/reductions.type';
+import { PropertyElement } from '../types/propertyElement';
+import { getPropertyMultiplier } from './getPropertyMultiplier';
 
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
-  readonly atkReductions: AtkReductions;
   readonly extraAtk: ExtraAtk;
+  readonly reductions: Reductions;
+  readonly weaponElement: PropertyElement
 };
-
-const getKeyName = <T>(key: keyof T): keyof T => key;
 
 export const getExtraAtk = ({
   atkMultipliers,
-  atkReductions,
   extraAtk,
+  reductions,
+  weaponElement,
 }: Params): number => {
-  const totalAtkReductions = Object
-    .entries(atkReductions)
-    .filter(([reductionType]) => reductionType !== getKeyName<AtkReductions>('sizePenalty'))
-    .map(([, reduction]) => reduction)
-    .reduce((reduced, reduction) => reduced * reduction, 1);
-  const totalAtkMultipliers = Object
-    .values(atkMultipliers)
-    .reduce((reduced, reduction) => reduced * reduction, 1);
-  const totalMultipliers = totalAtkReductions * totalAtkMultipliers;
-  const totalExtraAtk = Object
-    .values(extraAtk)
-    .reduce((reduced, extraAtkPart) => reduced + extraAtkPart, 0);
+  const propertyMultiplier = getPropertyMultiplier(weaponElement, reductions);
+  const totalAtkMultiplier = atkMultipliers.race
+    * atkMultipliers.size
+    * atkMultipliers.targetProperty
+    * atkMultipliers.monster
+    * atkMultipliers.atk
+    * propertyMultiplier;
+
+  const totalAtkReductionMultiplier = reductions.atkMultiplier.race
+    * reductions.atkMultiplier.size
+    * reductions.atkMultiplier.property
+    * reductions.atkMultiplier.targetProperty;
+
+  const totalMultipliers = totalAtkMultiplier * totalAtkReductionMultiplier;
+  const totalExtraAtk = extraAtk.ammunition
+    + extraAtk.consumable
+    + extraAtk.equip
+    + extraAtk.pseudoBuff;
 
   return totalExtraAtk * totalMultipliers;
 };

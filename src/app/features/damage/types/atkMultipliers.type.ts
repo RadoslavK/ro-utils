@@ -4,5 +4,4 @@ export type AtkMultipliers = {
   readonly targetProperty: number;
   readonly monster: number;
   readonly atk: number;
-  readonly property: number;
 };
