@@ -1,5 +1,4 @@
 import { getAtk } from './getAtk';
-import { Variance } from '../types/variance.type';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
 import { BonusAtk } from '../types/bonusAtk.type';
 import { Stats } from '../types/stats.type';
@@ -10,6 +9,7 @@ import { FinalMultipliers } from '../types/finalMultipliers.type';
 import { FinalReductions } from '../types/finalReductions.type';
 import { SkillInput } from '../types/skillInput.type';
 import { DamageType } from '../types/damageType';
+import { Damage } from '../types/damage.type';
 
 type SharedParams = {
   readonly finalMultipliers: FinalMultipliers;
@@ -45,7 +45,7 @@ const getAtkDamage = ({
                   Math.floor(atk * (useCritical ? finalMultipliers.critical : 1))
                   * (damageType === DamageType.PhysicalRanged ? finalMultipliers.ranged : 1))
                 * finalReductions.ranged)
-              * (damageType === DamageType.PhysicalRanged ? finalMultipliers.damage : 1))
+              * finalMultipliers.damage)
             * hardDefReduction)
           - softDef)
         * (useCritical ? baseCriticalMultiplier : 1))
@@ -70,42 +70,10 @@ export const getDamage = ({
   stats,
   target,
   weapon,
-}: Params): Variance => {
-  if (skillInput !== undefined) {
-    const { min: minAtk, max: maxAtk } = getAtk({
-      atkMultipliers,
-      bonusAtk,
-      stats,
-      target,
-      useCritical: false,
-      weapon,
-    });
-
-    const skillMultiplier = skillInput.multiplier;
-
-    const minDamage = getAtkDamage({
-      atk: minAtk * skillMultiplier,
-      damageType: weapon.damageType,
-      finalMultipliers,
-      finalReductions,
-      target,
-      useCritical: false,
-    });
-
-    const maxDamage = getAtkDamage({
-      atk: maxAtk * skillMultiplier,
-      damageType: weapon.damageType,
-      finalMultipliers,
-      finalReductions,
-      target,
-      useCritical: false,
-    });
-
-    return {
-      min: minDamage * skillInput.hits,
-      max: maxDamage * skillInput.hits,
-    };
-  }
+}: Params): Damage => {
+  const canCrit = skillInput?.canCrit ?? true;
+  const skillMultiplier = skillInput?.multiplier ?? 1;
+  const numberOfHits = skillInput?.hits ?? 1;
 
   const { min: minAtkNonCrit, max: maxAtkNonCrit } = getAtk({
     atkMultipliers,
@@ -121,12 +89,12 @@ export const getDamage = ({
     bonusAtk,
     stats,
     target,
-    useCritical: true,
+    useCritical: canCrit,
     weapon,
   });
 
   const minNonCritDamage = getAtkDamage({
-    atk: minAtkNonCrit,
+    atk: minAtkNonCrit * skillMultiplier,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
@@ -135,7 +103,7 @@ export const getDamage = ({
   });
 
   const maxNonCritDamage = getAtkDamage({
-    atk: maxAtkNonCrit,
+    atk: maxAtkNonCrit * skillMultiplier,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
@@ -144,31 +112,41 @@ export const getDamage = ({
   });
 
   const minCritDamage = getAtkDamage({
-    atk: minAtkCrit,
+    atk: minAtkCrit * skillMultiplier,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
     target,
-    useCritical: true,
+    useCritical: canCrit,
   });
 
   const maxCritDamage = getAtkDamage({
-    atk: maxAtkCrit,
+    atk: maxAtkCrit * skillMultiplier,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
     target,
-    useCritical: true,
+    useCritical: canCrit,
   });
 
   const critChance = Math.min(100, Math.max(0, stats.crit - target.critShield)) / 100;
   const nonCritChance = 1 - critChance;
 
-  const minDamage = minNonCritDamage * nonCritChance + minCritDamage * critChance;
-  const maxDamage = maxNonCritDamage * nonCritChance + maxCritDamage * critChance;
+  const minAveragedDamage = minNonCritDamage * nonCritChance + minCritDamage * critChance;
+  const maxAveragedDamage = maxNonCritDamage * nonCritChance + maxCritDamage * critChance;
 
   return {
-    min: minDamage,
-    max: maxDamage,
+    averaged: {
+      min: minAveragedDamage * numberOfHits,
+      max: maxAveragedDamage * numberOfHits,
+    },
+    crit: {
+      min: minCritDamage * numberOfHits,
+      max: maxCritDamage * numberOfHits,
+    },
+    nonCrit: {
+      min: minNonCritDamage * numberOfHits,
+      max: maxNonCritDamage * numberOfHits,
+    },
   };
 };

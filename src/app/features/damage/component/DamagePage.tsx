@@ -27,24 +27,24 @@ export const DamagePage: React.FC = () => {
   const [stats, setStats] = useState<Stats>({
     baseLevel: 99,
     dex: 98,
-    luk: 107,
-    str: 8,
-    crit: 62,
+    luk: 112,
+    str: 6,
+    crit: 53,
   });
   const [weapon, setWeapon] = useState<Weapon>({
-    baseDamage: 65,
+    baseDamage: 120,
     damageType: DamageType.PhysicalRanged,
-    element: PropertyElement.Wind,
-    level: 2,
-    refineLevel: 6,
+    element: PropertyElement.Holy,
+    level: 3,
+    refineLevel: 9,
     type: WeaponType.Bow,
   });
   const [target, setTarget] = useState<Target>({
     def: {
-      soft: 90,
-      hard: 280,
+      hard: 279,
+      soft: 114,
     },
-    critShield: 12,
+    critShield: 14.2,
     atkReductionMultiplier: {
       property: 1,
       race: 1,
@@ -52,15 +52,15 @@ export const DamagePage: React.FC = () => {
       targetProperty: 1,
     },
     property: {
-      element: PropertyElement.Water,
-      level: 2,
+      element: PropertyElement.Undead,
+      level: 1,
     },
-    size: Size.Large,
+    size: Size.Medium,
   })
   const [bonusAtk, setBonusAtk] = useState<BonusAtk>({
     extraAtk: {
       pseudoBuff: 0,
-      equip: 30,
+      equip: 85,
       consumable: 0,
       ammunition: 25,
     },
@@ -77,24 +77,21 @@ export const DamagePage: React.FC = () => {
   const [finalMultipliers, setFinalMultipliers] = useState<FinalMultipliers>({
     damage: 1,
     finalDamage: 1,
-    ranged: 1.1,
-    critical: 1,
+    ranged: 1.3,
+    critical: 1.1,
   });
   const [finalReductions, setFinalReductions] = useState<FinalReductions>({
     finalDamage: 1,
     ranged: 1,
   });
   const [skillInput, setSkillInput] = useState<SkillInput>({
-    canCrit: false,
-    multiplier: 1.9,
-    hits: 2,
+    canCrit: true,
+    multiplier: 3,
+    hits: 1,
   });
   const [useSkill, setUseSkill] = useState(false);
 
-  const {
-    max: maxDmg,
-    min: minDmg,
-  } = useMemo(() => getDamage({
+  const damage = useMemo(() => getDamage({
     atkMultipliers,
     bonusAtk,
     finalMultipliers,
@@ -147,6 +144,11 @@ export const DamagePage: React.FC = () => {
             onChange={setUseSkill}
             label="Use Skill"
           />
+          <CheckBox
+            isChecked={skillInput.canCrit}
+            onChange={newV => setSkillInput({ ...skillInput, canCrit: newV })}
+            label="Can Skill Crit"
+          />
         </div>
         <BonusAtkInput
           bonusAtk={bonusAtk}
@@ -169,9 +171,29 @@ export const DamagePage: React.FC = () => {
           onChange={setFinalReductions}
         />
       </div>
-      <div>Min dmg: {minDmg.toFixed(2)}</div>
-      <div>Max dmg: {maxDmg.toFixed(2)}</div>
-      <div>Average dmg: {((minDmg + maxDmg) / 2).toFixed(2)}</div>
+      <div>
+        <h2>
+          Damage
+        </h2>
+        <div>
+          <h3>Non Crit</h3>
+          <div>Min dmg: {damage.nonCrit.min.toFixed(2)}</div>
+          <div>Max dmg: {damage.nonCrit.max.toFixed(2)}</div>
+          <div>Average dmg: {((damage.nonCrit.min + damage.nonCrit.max) / 2).toFixed(2)}</div>
+        </div>
+        <div>
+          <h3>Crit</h3>
+          <div>Min dmg: {damage.crit.min.toFixed(2)}</div>
+          <div>Max dmg: {damage.crit.max.toFixed(2)}</div>
+          <div>Average dmg: {((damage.crit.min + damage.crit.max) / 2).toFixed(2)}</div>
+        </div>
+        <div>
+          <h3>Averaged</h3>
+          <div>Min dmg: {damage.averaged.min.toFixed(2)}</div>
+          <div>Max dmg: {damage.averaged.max.toFixed(2)}</div>
+          <div>Average dmg: {((damage.averaged.min + damage.averaged.max) / 2).toFixed(2)}</div>
+        </div>
+      </div>
     </div>
   );
 };
