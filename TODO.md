@@ -1,3 +1,7 @@
+* Damage
+    * Use ammunition only if it makes sense
+    * Save input to local storage  
+
 Bugs:  
 * Fix refine box, it requires. min 4 lvl and check if it uses 20k for HD
 

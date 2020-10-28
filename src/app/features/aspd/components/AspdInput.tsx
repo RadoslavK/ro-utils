@@ -67,11 +67,13 @@ export const AspdInput: React.FC<Props> = ({
         label="AGI"
         value={agi}
         onChange={onChange('agi')}
+        minValue={0}
       />
       <NumberInput
         label="DEX"
         value={dex}
         onChange={onChange('dex')}
+        minValue={0}
       />
       <DropDown<PotAspdModifier>
         onChange={onChange('potModifer')}
@@ -95,11 +97,13 @@ export const AspdInput: React.FC<Props> = ({
         label="% Bonus"
         value={percentageBonus}
         onChange={onChange('percentageBonus')}
+        minValue={0}
       />
       <NumberInput
         label="Flat Bonus"
         value={flatBonus}
         onChange={onChange('flatBonus')}
+        minValue={0}
       />
     </div>
   );
