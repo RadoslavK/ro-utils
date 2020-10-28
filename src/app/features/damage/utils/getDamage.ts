@@ -8,6 +8,7 @@ import { Weapon } from '../types/weapon.type';
 import { Target } from '../types/reductions.type';
 import { FinalMultipliers } from '../types/finalMultipliers.type';
 import { FinalReductions } from '../types/finalReductions.type';
+import { SkillInput } from '../types/skillInput.type';
 
 type SharedParams = {
   readonly finalMultipliers: FinalMultipliers;
@@ -52,6 +53,7 @@ const getAtkDamage = ({
 type Params = SharedParams & {
   readonly atkMultipliers: AtkMultipliers;
   readonly bonusAtk: BonusAtk;
+  readonly skillInput: SkillInput | undefined;
   readonly stats: Stats;
   readonly weapon: Weapon;
 };
@@ -61,6 +63,7 @@ export const getDamage = ({
   bonusAtk,
   finalMultipliers,
   finalReductions,
+  skillInput,
   stats,
   target,
   weapon,
@@ -72,6 +75,31 @@ export const getDamage = ({
     target,
     weapon,
   });
+
+  if (skillInput !== undefined) {
+    const skillMultiplier = skillInput.multiplier;
+
+    const minDamage = getAtkDamage({
+      atk: minAtk * skillMultiplier,
+      finalMultipliers,
+      finalReductions,
+      target,
+      useCritical: false,
+    });
+
+    const maxDamage = getAtkDamage({
+      atk: maxAtk * skillMultiplier,
+      finalMultipliers,
+      finalReductions,
+      target,
+      useCritical: false,
+    });
+
+    return {
+      min: minDamage * skillInput.hits,
+      max: maxDamage * skillInput.hits,
+    };
+  }
 
   const minNonCritDamage = getAtkDamage({
     atk: minAtk,

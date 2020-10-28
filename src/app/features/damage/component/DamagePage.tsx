@@ -19,6 +19,9 @@ import { FinalMultipliersInput } from './FinalMultipliersInput';
 import { FinalReductionsInput } from './FinalReductionsInput';
 import { WeaponType } from '../types/weaponType';
 import { Size } from '../types/size';
+import { SkillInput } from '../types/skillInput.type';
+import { NumberInput } from '../../../components/NumberInput';
+import { CheckBox } from '../../../components/CheckBox';
 
 export const DamagePage: React.FC = () => {
   const [stats, setStats] = useState<Stats>({
@@ -81,6 +84,12 @@ export const DamagePage: React.FC = () => {
     finalDamage: 1,
     ranged: 1,
   });
+  const [skillInput, setSkillInput] = useState<SkillInput>({
+    canCrit: false,
+    multiplier: 1.9,
+    hits: 2,
+  });
+  const [useSkill, setUseSkill] = useState(false);
 
   const {
     max: maxDmg,
@@ -91,6 +100,7 @@ export const DamagePage: React.FC = () => {
     finalMultipliers,
     finalReductions,
     target,
+    skillInput: useSkill ? skillInput : undefined,
     stats,
     weapon,
   }), [
@@ -98,8 +108,10 @@ export const DamagePage: React.FC = () => {
     bonusAtk,
     finalMultipliers,
     finalReductions,
+    skillInput,
     stats,
     target,
+    useSkill,
     weapon,
   ]);
 
@@ -115,10 +127,27 @@ export const DamagePage: React.FC = () => {
           onChange={setStats}
           stats={stats}
         />
-        <WeaponInput
-          onChange={setWeapon}
-          weapon={weapon}
-        />
+        <div>
+          <WeaponInput
+            onChange={setWeapon}
+            weapon={weapon}
+          />
+          <NumberInput
+            label="Skill Multiplier"
+            value={skillInput.multiplier}
+            onChange={newV => setSkillInput({ ...skillInput, multiplier: newV })}
+          />
+          <NumberInput
+            label="Skill Hits"
+            value={skillInput.hits}
+            onChange={newV => setSkillInput({ ...skillInput, hits: newV })}
+          />
+          <CheckBox
+            isChecked={useSkill}
+            onChange={setUseSkill}
+            label="Use Skill"
+          />
+        </div>
         <BonusAtkInput
           bonusAtk={bonusAtk}
           onChange={setBonusAtk}
@@ -139,7 +168,6 @@ export const DamagePage: React.FC = () => {
           finalReductions={finalReductions}
           onChange={setFinalReductions}
         />
-
       </div>
       <div>Min dmg: {minDmg.toFixed(2)}</div>
       <div>Max dmg: {maxDmg.toFixed(2)}</div>
