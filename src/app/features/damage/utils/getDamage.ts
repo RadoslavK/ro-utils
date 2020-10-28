@@ -71,15 +71,16 @@ export const getDamage = ({
   target,
   weapon,
 }: Params): Variance => {
-  const { min: minAtk, max: maxAtk } = getAtk({
-    atkMultipliers,
-    bonusAtk,
-    stats,
-    target,
-    weapon,
-  });
-
   if (skillInput !== undefined) {
+    const { min: minAtk, max: maxAtk } = getAtk({
+      atkMultipliers,
+      bonusAtk,
+      stats,
+      target,
+      useCritical: false,
+      weapon,
+    });
+
     const skillMultiplier = skillInput.multiplier;
 
     const minDamage = getAtkDamage({
@@ -106,8 +107,26 @@ export const getDamage = ({
     };
   }
 
+  const { min: minAtkNonCrit, max: maxAtkNonCrit } = getAtk({
+    atkMultipliers,
+    bonusAtk,
+    stats,
+    target,
+    useCritical: false,
+    weapon,
+  });
+
+  const { min: minAtkCrit, max: maxAtkCrit } = getAtk({
+    atkMultipliers,
+    bonusAtk,
+    stats,
+    target,
+    useCritical: true,
+    weapon,
+  });
+
   const minNonCritDamage = getAtkDamage({
-    atk: minAtk,
+    atk: minAtkNonCrit,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
@@ -116,7 +135,7 @@ export const getDamage = ({
   });
 
   const maxNonCritDamage = getAtkDamage({
-    atk: maxAtk,
+    atk: maxAtkNonCrit,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
@@ -125,7 +144,7 @@ export const getDamage = ({
   });
 
   const minCritDamage = getAtkDamage({
-    atk: minAtk,
+    atk: minAtkCrit,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,
@@ -134,7 +153,7 @@ export const getDamage = ({
   });
 
   const maxCritDamage = getAtkDamage({
-    atk: maxAtk,
+    atk: maxAtkCrit,
     damageType: weapon.damageType,
     finalMultipliers,
     finalReductions,

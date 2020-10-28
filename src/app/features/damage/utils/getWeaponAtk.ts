@@ -12,6 +12,7 @@ type Params = {
   readonly atkMultipliers: AtkMultipliers;
   readonly stats: Stats;
   readonly target: Target;
+  readonly useCritical: boolean;
   readonly weapon: Weapon;
 }
 
@@ -19,6 +20,7 @@ export const getWeaponAtk = ({
   atkMultipliers,
   stats,
   target,
+  useCritical,
   weapon,
 }: Params): Variance => {
   const {
@@ -48,7 +50,7 @@ export const getWeaponAtk = ({
 
   const totalMultiplier = totalAtkMultiplier * totalAtkReductionMultiplier;
 
-  const minVariance = stats.useCritical
+  const minVariance = useCritical
     ? variance
     : -variance;
   const maxVariance = variance;

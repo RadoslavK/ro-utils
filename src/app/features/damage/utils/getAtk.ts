@@ -13,6 +13,7 @@ type Params = {
   readonly bonusAtk: BonusAtk;
   readonly stats: Stats;
   readonly target: Target;
+  readonly useCritical: boolean;
   readonly weapon: Weapon;
 };
 
@@ -21,6 +22,7 @@ export const getAtk = ({
   bonusAtk,
   stats,
   target,
+  useCritical,
   weapon,
 }: Params): Variance => {
   const statusAtk = getStatusAtk(stats, weapon.damageType);
@@ -28,6 +30,7 @@ export const getAtk = ({
     atkMultipliers,
     stats,
     target,
+    useCritical,
     weapon,
   });
   const { extraAtk, buffAtk, masteryAtk } = bonusAtk;
