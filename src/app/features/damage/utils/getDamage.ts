@@ -5,14 +5,14 @@ import { BonusAtk } from '../types/bonusAtk.type';
 import { Stats } from '../types/stats.type';
 import { baseCriticalMultiplier } from '../constants/baseCriticalMultiplier';
 import { Weapon } from '../types/weapon.type';
-import { Reductions } from '../types/reductions.type';
+import { Target } from '../types/reductions.type';
 import { FinalMultipliers } from '../types/finalMultipliers.type';
 import { FinalReductions } from '../types/finalReductions.type';
 
 type SharedParams = {
   readonly finalMultipliers: FinalMultipliers;
   readonly finalReductions: FinalReductions;
-  readonly reductions: Reductions;
+  readonly target: Target;
 };
 
 type CalculateAtkDamageParams = SharedParams & {
@@ -24,10 +24,10 @@ const getAtkDamage = ({
   atk,
   finalMultipliers,
   finalReductions,
-  reductions,
+  target,
   useCritical,
 }: CalculateAtkDamageParams): number => {
-  const { hard: hardDef, soft: softDef } = reductions.def;
+  const { hard: hardDef, soft: softDef } = target.def;
   const hardDefReduction = (4000 + hardDef) / (4000 + hardDef * 10);
 
   return Math.floor(
@@ -52,7 +52,6 @@ const getAtkDamage = ({
 type Params = SharedParams & {
   readonly atkMultipliers: AtkMultipliers;
   readonly bonusAtk: BonusAtk;
-  readonly reductions: Reductions;
   readonly stats: Stats;
   readonly weapon: Weapon;
 };
@@ -62,15 +61,15 @@ export const getDamage = ({
   bonusAtk,
   finalMultipliers,
   finalReductions,
-  reductions,
   stats,
+  target,
   weapon,
 }: Params): Variance => {
   const { min: minAtk, max: maxAtk } = getAtk({
     atkMultipliers,
     bonusAtk,
-    reductions,
     stats,
+    target,
     weapon,
   });
 
@@ -78,7 +77,7 @@ export const getDamage = ({
     atk: minAtk,
     finalMultipliers,
     finalReductions,
-    reductions,
+    target,
     useCritical: stats.useCritical,
   });
 
@@ -86,7 +85,7 @@ export const getDamage = ({
     atk: maxAtk,
     finalMultipliers,
     finalReductions,
-    reductions,
+    target,
     useCritical: stats.useCritical,
   });
 

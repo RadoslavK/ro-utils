@@ -10,13 +10,15 @@ import { AtkMultipliersInput } from './AtkMultipliersInput';
 import { css } from '@emotion/core';
 import { WeaponInput } from './WeaponInput';
 import { Weapon } from '../types/weapon.type';
-import { ReductionsInput } from './ReductionsInput';
+import { TargetInput } from './TargetInput';
 import { PropertyElement } from '../types/propertyElement';
-import { Reductions } from '../types/reductions.type';
+import { Target } from '../types/reductions.type';
 import { FinalMultipliers } from '../types/finalMultipliers.type';
 import { FinalReductions } from '../types/finalReductions.type';
 import { FinalMultipliersInput } from './FinalMultipliersInput';
 import { FinalReductionsInput } from './FinalReductionsInput';
+import { WeaponType } from '../types/weaponType';
+import { Size } from '../types/size';
 
 export const DamagePage: React.FC = () => {
   const [stats, setStats] = useState<Stats>({
@@ -27,19 +29,19 @@ export const DamagePage: React.FC = () => {
     useCritical: true,
   });
   const [weapon, setWeapon] = useState<Weapon>({
-    damageType: DamageType.PhysicalRanged,
     baseDamage: 65,
+    damageType: DamageType.PhysicalRanged,
+    element: PropertyElement.Neutral,
     level: 2,
     refineLevel: 6,
-    element: PropertyElement.Neutral,
+    type: WeaponType.Bow,
   });
-  const [reductions, setReductions] = useState<Reductions>({
+  const [target, setTarget] = useState<Target>({
     def: {
       soft: 13,
       hard: 9,
     },
-    atkMultiplier: {
-      sizePenalty: 1,
+    atkReductionMultiplier: {
       property: 1,
       race: 1,
       size: 1,
@@ -49,6 +51,7 @@ export const DamagePage: React.FC = () => {
       element: PropertyElement.Neutral,
       level: 1,
     },
+    size: Size.Medium,
   })
   const [bonusAtk, setBonusAtk] = useState<BonusAtk>({
     extraAtk: {
@@ -86,7 +89,7 @@ export const DamagePage: React.FC = () => {
     bonusAtk,
     finalMultipliers,
     finalReductions,
-    reductions,
+    target,
     stats,
     weapon,
   }), [
@@ -94,8 +97,8 @@ export const DamagePage: React.FC = () => {
     bonusAtk,
     finalMultipliers,
     finalReductions,
-    reductions,
     stats,
+    target,
     weapon,
   ]);
 
@@ -123,13 +126,13 @@ export const DamagePage: React.FC = () => {
           atkMultipliers={atkMultipliers}
           onChange={setAtkMultipliers}
         />
+        <TargetInput
+          target={target}
+          onChange={setTarget}
+        />
         <FinalMultipliersInput
           finalMultipliers={finalMultipliers}
           onChange={setFinalMultipliers}
-        />
-        <ReductionsInput
-          reductions={reductions}
-          onChange={setReductions}
         />
         <FinalReductionsInput
           finalReductions={finalReductions}
@@ -139,6 +142,7 @@ export const DamagePage: React.FC = () => {
       </div>
       <div>Min dmg: {minDmg}</div>
       <div>Max dmg: {maxDmg}</div>
+      <div>Average dmg: {((minDmg + maxDmg) / 2).toFixed(2)}</div>
     </div>
   );
 };

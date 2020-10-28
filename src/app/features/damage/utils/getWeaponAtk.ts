@@ -4,20 +4,21 @@ import { getRefinementBonus } from './getRefinementBonus';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
 import { getMainStat } from './getMainStat';
 import { Weapon } from '../types/weapon.type';
-import { Reductions } from '../types/reductions.type';
+import { Target } from '../types/reductions.type';
 import { getPropertyMultiplier } from './getPropertyMultiplier';
+import { getSizePenalty } from './getSizePenalty';
 
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
-  readonly reductions: Reductions;
   readonly stats: Stats;
+  readonly target: Target;
   readonly weapon: Weapon;
 }
 
 export const getWeaponAtk = ({
   atkMultipliers,
-  reductions,
   stats,
+  target,
   weapon,
 }: Params): Variance => {
   const {
@@ -30,7 +31,7 @@ export const getWeaponAtk = ({
   const statBonus = baseWeaponDamage * getMainStat(stats, damageType) / 200;
   const refinementBonus = getRefinementBonus({ refineLevel, weaponLevel });
 
-  const propertyMultiplier = getPropertyMultiplier(weapon.element, reductions);
+  const propertyMultiplier = getPropertyMultiplier(weapon.element, target.property);
   const totalAtkMultiplier = atkMultipliers.race
     * atkMultipliers.size
     * atkMultipliers.targetProperty
@@ -38,11 +39,12 @@ export const getWeaponAtk = ({
     * atkMultipliers.atk
     * propertyMultiplier;
 
-  const totalAtkReductionMultiplier = reductions.atkMultiplier.sizePenalty
-    * reductions.atkMultiplier.race
-    * reductions.atkMultiplier.size
-    * reductions.atkMultiplier.property
-    * reductions.atkMultiplier.targetProperty;
+  const sizePenalty = getSizePenalty(weapon.type, target.size);
+  const totalAtkReductionMultiplier = sizePenalty
+    * target.atkReductionMultiplier.race
+    * target.atkReductionMultiplier.size
+    * target.atkReductionMultiplier.property
+    * target.atkReductionMultiplier.targetProperty;
 
   const totalMultiplier = totalAtkMultiplier * totalAtkReductionMultiplier;
 

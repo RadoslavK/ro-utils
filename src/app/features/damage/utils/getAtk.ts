@@ -6,32 +6,37 @@ import { getExtraAtk } from './getExtraAtk';
 import { BonusAtk } from '../types/bonusAtk.type';
 import { AtkMultipliers } from '../types/atkMultipliers.type';
 import { Weapon } from '../types/weapon.type';
-import { Reductions } from '../types/reductions.type';
+import { Target } from '../types/reductions.type';
 
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
-  readonly reductions: Reductions;
   readonly bonusAtk: BonusAtk;
   readonly stats: Stats;
+  readonly target: Target;
   readonly weapon: Weapon;
 };
 
 export const getAtk = ({
   atkMultipliers,
   bonusAtk,
-  reductions,
   stats,
+  target,
   weapon,
 }: Params): Variance => {
   const statusAtk = getStatusAtk(stats, weapon.damageType);
   const weaponAtk = getWeaponAtk({
     atkMultipliers,
-    reductions,
     stats,
+    target,
     weapon,
   });
   const { extraAtk, buffAtk, masteryAtk } = bonusAtk;
-  const totalExtraAtk = getExtraAtk({ atkMultipliers, reductions, extraAtk, weaponElement: weapon.element });
+  const totalExtraAtk = getExtraAtk({
+    atkMultipliers,
+    extraAtk,
+    target,
+    weaponElement: weapon.element,
+  });
 
   return {
     min: statusAtk * 2 + weaponAtk.min + totalExtraAtk + masteryAtk + buffAtk,
