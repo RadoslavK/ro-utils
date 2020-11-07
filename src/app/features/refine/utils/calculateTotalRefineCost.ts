@@ -260,14 +260,19 @@ export const calculateTotalRefineCost = ({
           const correctedResult: RefineParamsResult = {
             ...value2,
             totalCost: value2.totalCost - startingRefineUsedResults.totalCost,
-            totalConsumedMaterials: {
-              items: subtractItems(value2.totalConsumedMaterials.items, startingRefineUsedResults.totalConsumedMaterials.items),
-              bsb: value2.totalConsumedMaterials.bsb - startingRefineUsedResults.totalConsumedMaterials.bsb,
-              enrichedOre: value2.totalConsumedMaterials.enrichedOre - startingRefineUsedResults.totalConsumedMaterials.enrichedOre,
-              hdOre: value2.totalConsumedMaterials.hdOre - startingRefineUsedResults.totalConsumedMaterials.hdOre,
-              normalOre: value2.totalConsumedMaterials.normalOre - startingRefineUsedResults.totalConsumedMaterials.normalOre,
-              refineBox: value2.totalConsumedMaterials.refineBox - startingRefineUsedResults.totalConsumedMaterials.refineBox,
-            },
+            totalConsumedMaterials: value2.refineConsumedMaterials.refineBox
+              ? value2.totalConsumedMaterials
+              : {
+                items: addItems(
+                  subtractItems(value2.totalConsumedMaterials.items, startingRefineUsedResults.totalConsumedMaterials.items),
+                  { amount: 1, refineLevel: value2.totalConsumedMaterials.items.refineLevel },
+                ),
+                bsb: value2.totalConsumedMaterials.bsb - startingRefineUsedResults.totalConsumedMaterials.bsb,
+                enrichedOre: value2.totalConsumedMaterials.enrichedOre - startingRefineUsedResults.totalConsumedMaterials.enrichedOre,
+                hdOre: value2.totalConsumedMaterials.hdOre - startingRefineUsedResults.totalConsumedMaterials.hdOre,
+                normalOre: value2.totalConsumedMaterials.normalOre - startingRefineUsedResults.totalConsumedMaterials.normalOre,
+                refineBox: value2.totalConsumedMaterials.refineBox - startingRefineUsedResults.totalConsumedMaterials.refineBox,
+              },
           };
 
           reduced2.set(key2, correctedResult);
