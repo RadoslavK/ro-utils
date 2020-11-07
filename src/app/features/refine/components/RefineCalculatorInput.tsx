@@ -72,6 +72,7 @@ export const RefineCalculatorInput: React.FC<Props> = ({
           value={targetRefineLevel}
           onChange={onChange('targetRefineLevel')}
           minValue={startingRefineLevel + 1}
+          maxValue={10}
         />
         <DropDown<RefineType>
           label="Refine type"

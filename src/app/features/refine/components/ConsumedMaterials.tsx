@@ -1,5 +1,5 @@
 import React from 'react';
-import { TotalConsumedMaterials } from '../types/consumedMaterials.type';
+import { ConsumedMaterials as ConsumedMaterialsType } from '../types/consumedMaterials.type';
 import { RefineType } from '../types/refineType.type';
 import { css } from '@emotion/core';
 import { refineItemIds } from '../constants/refineItemIds';
@@ -42,7 +42,7 @@ const renderImageWithCount = (count: number, itemId: number, title?: string): JS
 }
 
 type Props = {
-  readonly consumedMaterials: TotalConsumedMaterials;
+  readonly consumedMaterials: ConsumedMaterialsType;
   readonly refineType: RefineType;
 }
 
@@ -51,17 +51,19 @@ export const ConsumedMaterials: React.FC<Props> = ({
   refineType,
 }) => {
   const {
-    refineBox,
-    baseItems,
-    hdOre,
-    enrichedOre,
-    normalOre,
     bsb,
+    enrichedOre,
+    hdOre,
+    items,
+    normalOre,
+    refineBox,
   } = consumedMaterials;
 
   return (
     <div>
-      {renderImageWithCount(baseItems, refineType === RefineType.Armor ? 2306 : 100383, 'Base items')}
+      {!!items?.amount && (
+        <div css={css`display: flex; align-items: center`}>{renderImageWithCount(items.amount, refineType === RefineType.Armor ? 2306 : 100383, 'Base items')} @ +{items.refineLevel}</div>
+      )}
       {renderImageWithCount(normalOre, getOreId(OreType.Normal, refineType))}
       {renderImageWithCount(enrichedOre, getOreId(OreType.Enriched, refineType))}
       {renderImageWithCount(hdOre, getOreId(OreType.HD, refineType))}

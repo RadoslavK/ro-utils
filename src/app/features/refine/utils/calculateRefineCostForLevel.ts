@@ -7,7 +7,7 @@ import { bsbAmountsNeeded } from '../constants/bsbAmountsNeeded';
 import {
   addConsumedMaterials,
   ConsumedMaterials,
-  createConsumedMaterials, multiplyConsumedMaterialsBase,
+  createConsumedMaterials, multiplyConsumedMaterials,
 } from '../types/consumedMaterials.type';
 import { getOreId } from './getOreId';
 import { RefineResult } from '../types/refineResult.type';
@@ -87,7 +87,7 @@ export const calculateRefineCostForLevel = ({
         [usedOreKey]: 1,
         bsb: bsbAmount,
       })
-      const totalConsumedMaterials = multiplyConsumedMaterialsBase(attemptConsumedMaterials, refineAttempts);
+      const totalConsumedMaterials = multiplyConsumedMaterials(attemptConsumedMaterials, refineAttempts);
 
       return {
         attemptConsumedMaterials,
@@ -142,7 +142,7 @@ export const calculateRefineCostForLevel = ({
 
             consumedMaterialsForDowngradedAttempts = addConsumedMaterials(
               consumedMaterialsForDowngradedAttempts,
-              multiplyConsumedMaterialsBase(
+              multiplyConsumedMaterials(
                 previousRefineResult.attemptConsumedMaterials,
                 attemptsNeededToGetToOriginalLevelAgain,
               ),
@@ -155,7 +155,7 @@ export const calculateRefineCostForLevel = ({
           } while (downgradedTimes > 0);
 
           const totalConsumedMaterials = addConsumedMaterials(
-            multiplyConsumedMaterialsBase(attemptConsumedMaterials, refineAttempts),
+            multiplyConsumedMaterials(attemptConsumedMaterials, refineAttempts),
             consumedMaterialsForDowngradedAttempts,
           );
 
@@ -195,7 +195,7 @@ export const calculateRefineCostForLevel = ({
           const totalCost = attemptCost * refineAttempts + lostItemCost * lostItemsCount;
 
           const totalConsumedMaterials = addConsumedMaterials(
-            multiplyConsumedMaterialsBase(attemptConsumedMaterials, refineAttempts),
+            multiplyConsumedMaterials(attemptConsumedMaterials, refineAttempts),
             createConsumedMaterials({
               items: { amount: lostItemsCount, refineLevel: currentRefineLevel },
             }),
@@ -242,7 +242,7 @@ export const calculateRefineCostForLevel = ({
     });
 
     return {
-      totalConsumedMaterials: multiplyConsumedMaterialsBase(
+      totalConsumedMaterials: multiplyConsumedMaterials(
         attemptConsumedMaterials,
         boxAttempts,
       ),

@@ -1,12 +1,12 @@
 import { RefineParameters } from './RefineParameters.type';
-import { TotalConsumedMaterials } from './consumedMaterials.type';
+import { ConsumedMaterials } from './consumedMaterials.type';
 
 export type RefineParamsResult = {
   readonly id: string;
-  readonly refineConsumedMaterials: TotalConsumedMaterials;
+  readonly refineConsumedMaterials: ConsumedMaterials;
   readonly refineCost: number;
   readonly refineParams: RefineParameters;
-  readonly totalConsumedMaterials: TotalConsumedMaterials;
+  readonly totalConsumedMaterials: ConsumedMaterials;
   readonly totalCost: number;
   readonly totalItemCost: number;
 }

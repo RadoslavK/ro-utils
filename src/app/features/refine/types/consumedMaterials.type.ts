@@ -29,11 +29,7 @@ type ConsumedItem = {
 }
 
 export type ConsumedMaterials = ConsumedMaterialsBase & {
-  readonly items?: ConsumedItem;
-};
-
-export type TotalConsumedMaterials = ConsumedMaterialsBase & {
-  readonly baseItems: number;
+  readonly items: ConsumedItem | undefined;
 };
 
 export const createConsumedMaterialsBase = (params: Partial<ConsumedMaterialsBase> = {}): ConsumedMaterialsBase => ({
@@ -58,7 +54,7 @@ export const addConsumedMaterialsBase = (...materials: readonly ConsumedMaterial
     refineBox: total.refineBox + current.refineBox,
   }), createConsumedMaterialsBase());
 
-const addItems = (items: ConsumedItem | undefined, addition: ConsumedItem | undefined): ConsumedItem | undefined => {
+export const addItems = (items: ConsumedItem | undefined, addition: ConsumedItem | undefined): ConsumedItem | undefined => {
   if (!items) {
     return addition;
   }
@@ -77,6 +73,31 @@ const addItems = (items: ConsumedItem | undefined, addition: ConsumedItem | unde
   }
 };
 
+export const subtractItems = (items: ConsumedItem | undefined, subtraction: ConsumedItem | undefined): ConsumedItem | undefined => {
+  if (!items) {
+    return subtraction;
+  }
+
+  if (!subtraction) {
+    return items;
+  }
+
+  if (items.refineLevel !== subtraction.refineLevel) {
+    throw new Error('Subtracting different refine levels');
+  }
+
+  return {
+    refineLevel: items.refineLevel,
+    amount: items.amount - subtraction.amount,
+  }
+};
+
+export const multiplyItems = (items: ConsumedItem | undefined, multiplier: number): ConsumedItem | undefined =>
+  items && ({
+    refineLevel: items.refineLevel,
+    amount: items.amount * multiplier,
+  });
+
 export const addConsumedMaterials = (...materials: readonly ConsumedMaterials[]): ConsumedMaterials =>
   materials.reduce((total, current) => ({
     ...addConsumedMaterialsBase(total, current),
@@ -89,4 +110,9 @@ export const multiplyConsumedMaterialsBase = (materials: ConsumedMaterialsBase, 
   hdOre: materials.hdOre * multiplier,
   normalOre: materials.normalOre * multiplier,
   refineBox: materials.refineBox * multiplier,
+});
+
+export const multiplyConsumedMaterials = (materials: ConsumedMaterials, multiplier: number): ConsumedMaterials => ({
+  ...multiplyConsumedMaterialsBase(materials, multiplier),
+  items: multiplyItems(materials.items, multiplier),
 });
