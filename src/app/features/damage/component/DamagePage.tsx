@@ -1,95 +1,35 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { StatsInput } from './StatsInput';
-import { Stats } from '../types/stats.type';
 import { getDamage } from '../utils/getDamage';
-import { DamageType } from '../types/damageType';
-import { BonusAtk } from '../types/bonusAtk.type';
 import { BonusAtkInput } from './BonusAtkInput';
-import { AtkMultipliers } from '../types/atkMultipliers.type';
 import { AtkMultipliersInput } from './AtkMultipliersInput';
 import { css } from '@emotion/core';
 import { WeaponInput } from './WeaponInput';
-import { Weapon } from '../types/weapon.type';
 import { TargetInput } from './TargetInput';
-import { PropertyElement } from '../types/propertyElement';
-import { Target } from '../types/reductions.type';
-import { FinalMultipliers } from '../types/finalMultipliers.type';
-import { FinalReductions } from '../types/finalReductions.type';
 import { FinalMultipliersInput } from './FinalMultipliersInput';
 import { FinalReductionsInput } from './FinalReductionsInput';
-import { WeaponType } from '../types/weaponType';
-import { Size } from '../types/size';
-import { SkillInput } from '../types/skillInput.type';
 import { NumberInput } from '../../../components/NumberInput';
 import { CheckBox } from '../../../components/CheckBox';
+import { useDamageCalculationInput } from '../hooks/useDamageCalculationInput';
+import { createOnChangeCallback } from '../../../utils/useOnChangeCallback';
 
 export const DamagePage: React.FC = () => {
-  const [stats, setStats] = useState<Stats>({
-    baseLevel: 99,
-    dex: 98,
-    luk: 112,
-    str: 6,
-    crit: 53,
-  });
-  const [weapon, setWeapon] = useState<Weapon>({
-    baseDamage: 120,
-    damageType: DamageType.PhysicalRanged,
-    element: PropertyElement.Holy,
-    level: 3,
-    refineLevel: 9,
-    type: WeaponType.Bow,
-  });
-  const [target, setTarget] = useState<Target>({
-    def: {
-      hard: 279,
-      soft: 114,
-    },
-    critShield: 14.2,
-    atkReductionMultiplier: {
-      property: 1,
-      race: 1,
-      size: 1,
-      targetProperty: 1,
-    },
-    property: {
-      element: PropertyElement.Undead,
-      level: 1,
-    },
-    size: Size.Medium,
-  })
-  const [bonusAtk, setBonusAtk] = useState<BonusAtk>({
-    extraAtk: {
-      pseudoBuff: 0,
-      equip: 85,
-      consumable: 0,
-      ammunition: 25,
-    },
-    masteryAtk: 0,
-    buffAtk: 25,
-  });
-  const [atkMultipliers, setAtkMultipliers] = useState<AtkMultipliers>({
-    atk: 1,
-    monster: 1,
-    race: 1,
-    size: 1,
-    targetProperty: 1,
-  });
-  const [finalMultipliers, setFinalMultipliers] = useState<FinalMultipliers>({
-    damage: 1,
-    finalDamage: 1,
-    ranged: 1.3,
-    critical: 1.1,
-  });
-  const [finalReductions, setFinalReductions] = useState<FinalReductions>({
-    finalDamage: 1,
-    ranged: 1,
-  });
-  const [skillInput, setSkillInput] = useState<SkillInput>({
-    canCrit: true,
-    multiplier: 3,
-    hits: 1,
-  });
-  const [useSkill, setUseSkill] = useState(false);
+  const {
+    damageCalculationInput,
+    onDamageCalculationInputChange,
+  } = useDamageCalculationInput();
+
+  const {
+    atkMultipliers,
+    bonusAtk,
+    finalMultipliers,
+    finalReductions,
+    skillInput,
+    stats,
+    target,
+    useSkill,
+    weapon,
+  } = damageCalculationInput;
 
   const damage = useMemo(() => getDamage({
     atkMultipliers,
@@ -112,63 +52,68 @@ export const DamagePage: React.FC = () => {
     weapon,
   ]);
 
+  const onChange = createOnChangeCallback(damageCalculationInput, onDamageCalculationInputChange);
+  const onChangeSkillInput = createOnChangeCallback(skillInput, v => onChange('skillInput')(v));
+
   return (
     <div>
-      <div css={css`
-      display: flex;
-      > * {
-        margin-right: 32px;
-      }
-    `}>
+      <div
+        css={css`
+          display: flex;
+          > * {
+            margin-right: 32px;
+          }
+        `}
+      >
         <StatsInput
-          onChange={setStats}
+          onChange={onChange('stats')}
           stats={stats}
         />
         <div>
           <WeaponInput
-            onChange={setWeapon}
+            onChange={onChange('weapon')}
             weapon={weapon}
           />
           <NumberInput
             label="Skill Multiplier"
             value={skillInput.multiplier}
-            onChange={newV => setSkillInput({ ...skillInput, multiplier: newV })}
+            onChange={onChangeSkillInput('multiplier')}
           />
           <NumberInput
             label="Skill Hits"
             value={skillInput.hits}
-            onChange={newV => setSkillInput({ ...skillInput, hits: newV })}
+            onChange={onChangeSkillInput('hits')}
           />
           <CheckBox
             isChecked={useSkill}
-            onChange={setUseSkill}
+            onChange={onChange('useSkill')}
             label="Use Skill"
           />
           <CheckBox
             isChecked={skillInput.canCrit}
-            onChange={newV => setSkillInput({ ...skillInput, canCrit: newV })}
+            onChange={onChangeSkillInput('canCrit')}
             label="Can Skill Crit"
           />
         </div>
         <BonusAtkInput
           bonusAtk={bonusAtk}
-          onChange={setBonusAtk}
+          onChange={onChange('bonusAtk')}
         />
         <AtkMultipliersInput
           atkMultipliers={atkMultipliers}
-          onChange={setAtkMultipliers}
+          onChange={onChange('atkMultipliers')}
         />
         <TargetInput
           target={target}
-          onChange={setTarget}
+          onChange={onChange('target')}
         />
         <FinalMultipliersInput
           finalMultipliers={finalMultipliers}
-          onChange={setFinalMultipliers}
+          onChange={onChange('finalMultipliers')}
         />
         <FinalReductionsInput
           finalReductions={finalReductions}
-          onChange={setFinalReductions}
+          onChange={onChange('finalReductions')}
         />
       </div>
       <div>
