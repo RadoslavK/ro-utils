@@ -23,9 +23,9 @@ type Props = {
   readonly onHideLevelsBeforeStartingRefineChange: (value: boolean) => void;
   readonly onItemCostChange: (itemId: number, price: number) => void;
   readonly onRefineInputChange: (value: RefineInput) => void;
-  readonly onShowOnlyBestResultsChange: (value: boolean) => void;
+  readonly onShouldExpandOnlyUsedResultsChange: (value: boolean) => void;
   readonly refineInput: RefineInput;
-  readonly shouldShowOnlyBestResults: boolean;
+  readonly shouldExpandOnlyUsedResults: boolean;
 }
 
 export const RefineCalculatorInput: React.FC<Props> = ({
@@ -34,9 +34,9 @@ export const RefineCalculatorInput: React.FC<Props> = ({
   onHideLevelsBeforeStartingRefineChange,
   onItemCostChange,
   onRefineInputChange,
-  onShowOnlyBestResultsChange,
+  onShouldExpandOnlyUsedResultsChange,
   refineInput,
-  shouldShowOnlyBestResults,
+  shouldExpandOnlyUsedResults,
 }) => {
   const {
     baseItemCost,
@@ -83,9 +83,9 @@ export const RefineCalculatorInput: React.FC<Props> = ({
           getName={refineType => refineTypeLabels[refineType]}
         />
         <CheckBox
-          isChecked={shouldShowOnlyBestResults}
-          label="Show only best methods"
-          onChange={onShowOnlyBestResultsChange}
+          isChecked={shouldExpandOnlyUsedResults}
+          label="Expand mats only for used methods"
+          onChange={onShouldExpandOnlyUsedResultsChange}
         />
         <CheckBox
           isChecked={hideLevelsBeforeStartingRefine}

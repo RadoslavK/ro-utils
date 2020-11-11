@@ -10,7 +10,7 @@ type Props = {
   readonly preferences: Map<number, string>;
   readonly refineType: RefineType;
   readonly result: TotalRefineCostResult;
-  readonly shouldShowOnlyBestResults: boolean;
+  readonly shouldExpandOnlyUsedResults: boolean;
   readonly startingRefineLevel: number;
 }
 
@@ -20,7 +20,7 @@ export const RefineResult: React.FC<Props> = ({
   preferences,
   refineType,
   result,
-  shouldShowOnlyBestResults,
+  shouldExpandOnlyUsedResults,
   startingRefineLevel,
 }) => {
   const setPreference = (refineLevel: number) => (refineParamsId: string | null): void => {
@@ -54,11 +54,11 @@ export const RefineResult: React.FC<Props> = ({
               <RefineLevel
                 isCoveredByStartingRefine={levelResult.refineLevel <= startingRefineLevel}
                 level={levelResult.refineLevel}
-                refineType={refineType}
-                totalRefineResult={levelResult}
                 onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
                 preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
-                shouldShowOnlyBestResults={shouldShowOnlyBestResults}
+                refineType={refineType}
+                shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
+                totalRefineResult={levelResult}
               />
             </React.Fragment>
           );

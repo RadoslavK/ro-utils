@@ -12,7 +12,7 @@ type Props = {
   readonly onPreferredRefineParamsChange: (id: string | null) => void;
   readonly preferredRefineParamsId: string | undefined;
   readonly refineType: RefineType;
-  readonly shouldShowOnlyBestResults: boolean;
+  readonly shouldExpandOnlyUsedResults: boolean;
   readonly totalRefineResult: TotalRefineResult;
 }
 
@@ -22,18 +22,14 @@ export const RefineLevel: React.FC<Props> = ({
   onPreferredRefineParamsChange,
   preferredRefineParamsId,
   refineType,
-  shouldShowOnlyBestResults,
+  shouldExpandOnlyUsedResults,
   totalRefineResult,
 }) => {
-  let sortedRefineParamsResults = useMemo(() => {
+  const sortedRefineParamsResults = useMemo(() => {
     const results = [...totalRefineResult.refineParamsResults.values()];
 
     return results.sort((result, otherResult) => result.totalCost - otherResult.totalCost);
   }, [totalRefineResult]);
-
-  if (shouldShowOnlyBestResults) {
-    sortedRefineParamsResults = sortedRefineParamsResults.slice(0, 1);
-  }
 
   return (
     <div
@@ -48,12 +44,13 @@ export const RefineLevel: React.FC<Props> = ({
         +{level}
       </h3>
 
-      {sortedRefineParamsResults.map(paramsResult => {
+      {sortedRefineParamsResults.map((paramsResult) => {
         const isUsed = paramsResult.id === totalRefineResult.usedRefineParamsId;
-        const shouldBeMarked = !shouldShowOnlyBestResults && isUsed;
         const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
           ? `${paramsResult.refineParams.useBsb ? 'BSB + ' : ''}${getOreLabel(refineType, paramsResult.refineParams.oreType)}`
           : 'Random refine box';
+        const shouldShowMaterials = !shouldExpandOnlyUsedResults
+          || isUsed;
 
         return (
           <div
@@ -61,7 +58,7 @@ export const RefineLevel: React.FC<Props> = ({
             css={css`
               margin: 10px;
               padding: 10px;
-              border: ${shouldBeMarked ? 2.5 : 1}px ${shouldBeMarked ? 'gold' : 'black'} solid;
+              border: ${isUsed ? 2.5 : 1}px ${isUsed ? 'gold' : 'black'} solid;
               width: 220px;
             `}
             onClick={() => {
@@ -75,31 +72,33 @@ export const RefineLevel: React.FC<Props> = ({
           >
             <div><strong>Method</strong>: {refineMethodLabel}</div>
             <div><strong>Total cost</strong>: {Math.round(paramsResult.totalItemCost).toLocaleString()} Z</div>
-            <div css={css`margin-top: 8px`}>
-              <div
-                css={css`
-                  display: flex;
-                  justify-content: space-around;
-                `}
-              >
-                <div>
-                  <h3>Upgrade</h3>
-                  {Math.round(paramsResult.refineCost).toLocaleString()} Z
-                  <ConsumedMaterials
-                    consumedMaterials={paramsResult.refineConsumedMaterials}
-                    refineType={refineType}
-                  />
-                </div>
-                <div>
-                  <h3>Total</h3>
-                  {Math.round(paramsResult.totalCost).toLocaleString()} Z
-                  <ConsumedMaterials
-                    consumedMaterials={paramsResult.totalConsumedMaterials}
-                    refineType={refineType}
-                  />
+            {shouldShowMaterials && (
+              <div css={css`margin-top: 8px`}>
+                <div
+                  css={css`
+                    display: flex;
+                    justify-content: space-around;
+                  `}
+                >
+                  <div>
+                    <h3>Upgrade</h3>
+                    {Math.round(paramsResult.refineCost).toLocaleString()} Z
+                    <ConsumedMaterials
+                      consumedMaterials={paramsResult.refineConsumedMaterials}
+                      refineType={refineType}
+                    />
+                  </div>
+                  <div>
+                    <h3>Total</h3>
+                    {Math.round(paramsResult.totalCost).toLocaleString()} Z
+                    <ConsumedMaterials
+                      consumedMaterials={paramsResult.totalConsumedMaterials}
+                      refineType={refineType}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         );
       })}
