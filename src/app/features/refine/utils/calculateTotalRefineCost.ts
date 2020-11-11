@@ -19,16 +19,11 @@ type Params = {
   readonly refineParamsPreferences: Map<number, string>;
 };
 
-export type TotalRefineCostResult = {
-  readonly refineResults: readonly RefineResult[];
-  readonly totalRefineResults: readonly TotalRefineResult[];
-}
-
 export const calculateTotalRefineCost = ({
   itemCosts,
   refineInput,
   refineParamsPreferences,
-}: Params): TotalRefineCostResult => {
+}: Params): readonly TotalRefineResult[] => {
   const {
     baseItemCost,
     refineType,
@@ -193,37 +188,11 @@ export const calculateTotalRefineCost = ({
   } while (currentRefineLevel < targetRefineLevel);
 
   if (startingRefineLevel === 0) {
-    return {
-      refineResults: [...refineResults.values()],
-      totalRefineResults: [...totalRefineResults.values()],
-    };
+    return [...totalRefineResults.values()];
   }
 
   const startingRefineTotalRefineResults = totalRefineResults.get(startingRefineLevel);
   const startingRefineUsedResults = startingRefineTotalRefineResults.refineParamsResults.get(startingRefineTotalRefineResults.usedRefineParamsId);
-
-  const refineResultsFromStartingRefine = [...refineResults
-    .entries()]
-    .reduce((reduced, [key, value]) => {
-      if (key > startingRefineLevel) {
-        reduced.set(key, value);
-
-        return reduced;
-      }
-
-      reduced.set(key, {
-        ...value,
-        totalConsumedMaterials: {
-          ...value.totalConsumedMaterials,
-          items: {
-            ...value.totalConsumedMaterials.items,
-            refineLevel: 0,
-          },
-        },
-      });
-
-      return reduced;
-    }, new Map<number, RefineResult>());
 
   const totalRefineResultsFromStartingRefine = [...totalRefineResults
     .entries()]
@@ -286,8 +255,5 @@ export const calculateTotalRefineCost = ({
       return reduced;
     }, new Map<number, TotalRefineResult>());
 
-  return {
-    refineResults: [...refineResultsFromStartingRefine.values()],
-    totalRefineResults: [...totalRefineResultsFromStartingRefine.values()],
-  };
+  return [...totalRefineResultsFromStartingRefine.values()];
 };

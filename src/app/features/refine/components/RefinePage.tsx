@@ -12,7 +12,7 @@ export const RefinePage: React.FC = () => {
   const [shouldExpandOnlyUsedResults, setShouldExpandOnlyUsedResults] = useState(true);
   const [hideLevelsBeforeStartingRefine, setHideLevelsBeforeStartingRefine] = useState(false);
 
-  const refineResult = useMemo(() => calculateTotalRefineCost({
+  const totalRefineResults = useMemo(() => calculateTotalRefineCost({
     itemCosts: costs,
     refineInput,
     refineParamsPreferences,
@@ -36,9 +36,9 @@ export const RefinePage: React.FC = () => {
         onPreferencesChange={setRefineParamsPreferences}
         preferences={refineParamsPreferences}
         refineType={refineInput.refineType}
-        result={refineResult}
         shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
         startingRefineLevel={refineInput.startingRefineLevel}
+        totalRefineResults={totalRefineResults}
       />
     </div>
   );

@@ -1,17 +1,17 @@
 import React from 'react';
-import { TotalRefineCostResult } from '../utils/calculateTotalRefineCost';
 import { RefineType } from '../types/refineType.type';
 import { RefineLevel } from './RefineLevel';
 import { css } from '@emotion/core';
+import { TotalRefineResult } from '../types/totalRefineResult.type';
 
 type Props = {
   readonly hideLevelsBeforeStartingRefine: boolean;
   readonly onPreferencesChange: (preferences: Map<number, string>) => void;
   readonly preferences: Map<number, string>;
   readonly refineType: RefineType;
-  readonly result: TotalRefineCostResult;
   readonly shouldExpandOnlyUsedResults: boolean;
   readonly startingRefineLevel: number;
+  readonly totalRefineResults: readonly TotalRefineResult[];
 }
 
 export const RefineResult: React.FC<Props> = ({
@@ -19,9 +19,9 @@ export const RefineResult: React.FC<Props> = ({
   onPreferencesChange,
   preferences,
   refineType,
-  result,
   shouldExpandOnlyUsedResults,
   startingRefineLevel,
+  totalRefineResults,
 }) => {
   const setPreference = (refineLevel: number) => (refineParamsId: string | null): void => {
     const newPreferences = new Map<number, string>(preferences);
@@ -45,7 +45,7 @@ export const RefineResult: React.FC<Props> = ({
         flex-wrap: wrap;
         flex-basis: 500px;
       `}>
-        {result.totalRefineResults.map(levelResult => {
+        {totalRefineResults.map(levelResult => {
           const shouldShowLevel = !hideLevelsBeforeStartingRefine
             || levelResult.refineLevel > startingRefineLevel;
 

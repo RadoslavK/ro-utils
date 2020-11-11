@@ -7,6 +7,7 @@ export type RefineParamsResult = {
   readonly refineCost: number;
   readonly refineParams: RefineParameters;
   readonly totalConsumedMaterials: ConsumedMaterials;
+  //  totalCost is different when starting refine is not 0.
   readonly totalCost: number;
   readonly totalItemCost: number;
 }
