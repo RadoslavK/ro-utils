@@ -2,7 +2,7 @@
   "name": "ro-utils",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "RadoslavK <RadoslavK@kentico.com>",
+  "author": "Buckyx",
   "license": "MIT",
   "scripts": {
     "start": "webpack-dev-server --open --mode development --config webpack.dev.config.js",
