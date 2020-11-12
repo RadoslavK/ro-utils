@@ -73,25 +73,6 @@ export const addItems = (items: ConsumedItem | undefined, addition: ConsumedItem
   }
 };
 
-export const subtractItems = (items: ConsumedItem | undefined, subtraction: ConsumedItem | undefined): ConsumedItem | undefined => {
-  if (!items) {
-    return subtraction;
-  }
-
-  if (!subtraction) {
-    return items;
-  }
-
-  if (items.refineLevel !== subtraction.refineLevel) {
-    throw new Error('Subtracting different refine levels');
-  }
-
-  return {
-    refineLevel: items.refineLevel,
-    amount: items.amount - subtraction.amount,
-  }
-};
-
 export const multiplyItems = (items: ConsumedItem | undefined, multiplier: number): ConsumedItem | undefined =>
   items && ({
     refineLevel: items.refineLevel,

@@ -28,7 +28,7 @@ export const RefineLevel: React.FC<Props> = ({
   const sortedRefineParamsResults = useMemo(() => {
     const results = [...totalRefineResult.refineParamsResults.values()];
 
-    return results.sort((result, otherResult) => result.totalCost - otherResult.totalCost);
+    return results.sort((result, otherResult) => result.totalItemCost - otherResult.totalItemCost);
   }, [totalRefineResult]);
 
   return (

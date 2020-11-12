@@ -3,14 +3,13 @@
     * Save input to local storage  
 
 Bugs:  
-* Fix starting refine level -> mats and probably also costs for refine box
+* Fix starting refine level -> costs for refine box
 * Fix refine box, it requires. min 4 lvl and check if it uses 20k for HD
 
 New features:
 * Add few % buffer for unsuccessful results? If its still worth if we expect bad luck (20%?)
 * Indicate/cut refine levels before the latest one when its worth to do refine box
 * Prefetch images
-* Rework total consumed materials if starting refine level is > 0? Current it shows total cost of the item when it starts at +0.
 * +11-20
 
 Refactor refining formula for HD to be more straightforward to make sense
