@@ -1,6 +1,5 @@
 import { OreType } from '../types/oreType.type';
 import { RefineType } from '../types/refineType.type';
-import { TotalRefineResult } from '../types/totalRefineResult.type';
 import { refineChances } from '../constants/refineChances';
 import { getRefineCost } from './getRefineCost';
 import { bsbAmountsNeeded } from '../constants/bsbAmountsNeeded';
@@ -23,7 +22,7 @@ type Params = {
   readonly refineParams: RefineParameters;
   readonly refineResults: Map<number, RefineResult>;
   readonly refineType: RefineType;
-  readonly totalRefineResults: Map<number, TotalRefineResult>;
+  readonly usedTotalCosts: Map<number, number>;
 }
 
 const getUsedOreKey = (ore: OreType): keyof ConsumedMaterials => {
@@ -42,7 +41,7 @@ export const calculateRefineCostForLevel = ({
   refineParams,
   refineResults,
   refineType,
-  totalRefineResults,
+  usedTotalCosts,
 }: Params): RefineResult => {
   const targetLevel = currentRefineLevel + 1;
 
@@ -62,8 +61,7 @@ export const calculateRefineCostForLevel = ({
 
     const oreId = getOreId(oreType, refineType);
 
-    const allTotalRefineResults = totalRefineResults.get(currentRefineLevel);
-    const totalRefineResult = allTotalRefineResults?.refineParamsResults?.get(allTotalRefineResults.usedRefineParamsId);
+    const usedTotalCost: number | undefined = usedTotalCosts.get(currentRefineLevel);
     const oreCost = getOreCost(oreId, itemCosts);
     const refineCost = getRefineCost(refineType, oreType);
     const chance = refineChances[refineType][oreType][currentRefineLevel];
@@ -122,9 +120,7 @@ export const calculateRefineCostForLevel = ({
           do {
             const previousRefineResult = refineResults.get(downgradedRefineLevel);
             const attemptsNeededToGetToOriginalLevelAgain = downgradedTimes * previousRefineResult.refineAttempts;
-            const allPreviousRefineTotalResults = totalRefineResults.get(downgradedRefineLevel - 1);
-
-            const totalRefineResultOfUsedPreviousRefine = allPreviousRefineTotalResults?.refineParamsResults?.get(allPreviousRefineTotalResults.usedRefineParamsId);
+            const previousRefineUsedTotalCost: number | undefined = usedTotalCosts.get(downgradedRefineLevel - 1);
 
             //  In case they broke
             //  If it downgraded or uses BSB it could not break
@@ -133,7 +129,7 @@ export const calculateRefineCostForLevel = ({
               : attemptsNeededToGetToOriginalLevelAgain - downgradedTimes;
 
             totalCost += attemptsNeededToGetToOriginalLevelAgain * previousRefineResult.attemptCost;
-            totalCost += extraPreviousItemsNeeded * (totalRefineResultOfUsedPreviousRefine ? totalRefineResultOfUsedPreviousRefine.totalCost : baseItemCost);
+            totalCost += extraPreviousItemsNeeded * (previousRefineUsedTotalCost !== undefined ? previousRefineUsedTotalCost : baseItemCost);
 
             downgradedRefineLevel--;
             downgradedTimes = previousRefineResult.attemptConsumedMaterials.hdOre > 0
@@ -190,7 +186,7 @@ export const calculateRefineCostForLevel = ({
         })
 
         if (refineAttempts > 1) {
-          const lostItemCost = totalRefineResult ? totalRefineResult.totalCost : baseItemCost;
+          const lostItemCost = usedTotalCost !== undefined ? usedTotalCost : baseItemCost;
           const lostItemsCount = refineAttempts - 1;
           const totalCost = attemptCost * refineAttempts + lostItemCost * lostItemsCount;
 

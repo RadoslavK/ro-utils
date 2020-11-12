@@ -56,7 +56,12 @@ export const calculateTotalRefineCost = ({
         refineParams,
         refineResults,
         refineType,
-        totalRefineResults,
+        usedTotalCosts: [...totalRefineResults.entries()]
+          .reduce((reduced, [key, result]) => {
+            reduced.set(key, result.refineParamsResults.get(result.usedRefineParamsId).totalCost);
+
+            return reduced;
+          }, new Map<number, number>()),
       });
 
       allRefineResults.set(refineParamsId, refineParamsResult);
