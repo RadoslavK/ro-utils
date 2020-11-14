@@ -42,7 +42,7 @@ const renderImageWithCount = (count: number, itemId: number, title?: string): JS
 }
 
 type Props = {
-  readonly consumedMaterials: ConsumedMaterialsType;
+  readonly consumedMaterials: ConsumedMaterialsType | undefined;
   readonly refineType: RefineType;
 }
 
@@ -50,6 +50,10 @@ export const ConsumedMaterials: React.FC<Props> = ({
   consumedMaterials,
   refineType,
 }) => {
+  if (!consumedMaterials) {
+    return null;
+  }
+
   const {
     bsb,
     enrichedOre,
@@ -62,7 +66,7 @@ export const ConsumedMaterials: React.FC<Props> = ({
   return (
     <div>
       {!!items?.amount && (
-        <div css={css`display: flex; align-items: center`}>{renderImageWithCount(items.amount, refineType === RefineType.Armor ? 2306 : 100383, 'Base items')} @ +{items.refineLevel}</div>
+        <div css={css`display: flex; align-items: center`}>{renderImageWithCount(items.amount, refineType === RefineType.Armor ? 2306 : 100383, 'Base items')}</div>
       )}
       {renderImageWithCount(normalOre, getOreId(OreType.Normal, refineType))}
       {renderImageWithCount(enrichedOre, getOreId(OreType.Enriched, refineType))}

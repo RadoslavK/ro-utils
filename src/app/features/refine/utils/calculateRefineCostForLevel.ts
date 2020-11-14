@@ -22,7 +22,9 @@ type Params = {
   readonly refineParams: RefineParameters;
   readonly refineResults: Map<number, RefineResult>;
   readonly refineType: RefineType;
+  readonly startingRefineLevel: number;
   readonly usedTotalCosts: Map<number, number>;
+  readonly usedTotalItemCosts: Map<number, number>;
 }
 
 const getUsedOreKey = (ore: OreType): keyof ConsumedMaterials => {
@@ -41,7 +43,9 @@ export const calculateRefineCostForLevel = ({
   refineParams,
   refineResults,
   refineType,
+  startingRefineLevel,
   usedTotalCosts,
+  usedTotalItemCosts,
 }: Params): RefineResult => {
   const targetLevel = currentRefineLevel + 1;
 
@@ -61,7 +65,7 @@ export const calculateRefineCostForLevel = ({
 
     const oreId = getOreId(oreType, refineType);
 
-    const usedTotalCost: number | undefined = usedTotalCosts.get(currentRefineLevel);
+    const usedTotalCost: number | undefined = usedTotalItemCosts.get(currentRefineLevel);
     const oreCost = getOreCost(oreId, itemCosts);
     const refineCost = getRefineCost(refineType, oreType);
     const chance = refineChances[refineType][oreType][currentRefineLevel];
@@ -120,7 +124,7 @@ export const calculateRefineCostForLevel = ({
           do {
             const previousRefineResult = refineResults.get(downgradedRefineLevel);
             const attemptsNeededToGetToOriginalLevelAgain = downgradedTimes * previousRefineResult.refineAttempts;
-            const previousRefineUsedTotalCost: number | undefined = usedTotalCosts.get(downgradedRefineLevel - 1);
+            const previousRefineUsedTotalCost: number | undefined = usedTotalItemCosts.get(downgradedRefineLevel - 1);
 
             //  In case they broke
             //  If it downgraded or uses BSB it could not break
@@ -237,13 +241,18 @@ export const calculateRefineCostForLevel = ({
       refineBox: 1,
     });
 
+    // to get item to +4
+    const extraCost = startingRefineLevel >= 4
+      ? 0
+      : usedTotalCosts.get(4);
+
     return {
       totalConsumedMaterials: multiplyConsumedMaterials(
         attemptConsumedMaterials,
         boxAttempts,
       ),
       refineLevel: targetLevel,
-      totalCost: boxAttempts * refineBoxCost,
+      totalCost: boxAttempts * refineBoxCost + extraCost,
       attemptConsumedMaterials,
       attemptCost: refineBoxCost,
       downgradedTimes: 0,

@@ -18,9 +18,7 @@ const refineTypeLabels: Record<RefineType, string> = {
 };
 
 type Props = {
-  readonly hideLevelsBeforeStartingRefine: boolean;
   readonly itemCosts: Map<number, number>;
-  readonly onHideLevelsBeforeStartingRefineChange: (value: boolean) => void;
   readonly onItemCostChange: (itemId: number, price: number) => void;
   readonly onRefineInputChange: (value: RefineInput) => void;
   readonly onShouldExpandOnlyUsedResultsChange: (value: boolean) => void;
@@ -29,9 +27,7 @@ type Props = {
 }
 
 export const RefineCalculatorInput: React.FC<Props> = ({
-  hideLevelsBeforeStartingRefine,
   itemCosts,
-  onHideLevelsBeforeStartingRefineChange,
   onItemCostChange,
   onRefineInputChange,
   onShouldExpandOnlyUsedResultsChange,
@@ -41,7 +37,6 @@ export const RefineCalculatorInput: React.FC<Props> = ({
   const {
     baseItemCost,
     refineType,
-    startingRefineLevel,
     targetRefineLevel,
   } = refineInput;
 
@@ -61,17 +56,10 @@ export const RefineCalculatorInput: React.FC<Props> = ({
       <div>
         <h2>Input</h2>
         <NumberInput
-          label="Starting refine level"
-          value={startingRefineLevel}
-          onChange={onChange('startingRefineLevel')}
-          minValue={0}
-          maxValue={targetRefineLevel - 1}
-        />
-        <NumberInput
           label="Target refine level"
           value={targetRefineLevel}
           onChange={onChange('targetRefineLevel')}
-          minValue={startingRefineLevel + 1}
+          minValue={1}
           maxValue={10}
         />
         <DropDown<RefineType>
@@ -86,11 +74,6 @@ export const RefineCalculatorInput: React.FC<Props> = ({
           isChecked={shouldExpandOnlyUsedResults}
           label="Expand mats only for used methods"
           onChange={onShouldExpandOnlyUsedResultsChange}
-        />
-        <CheckBox
-          isChecked={hideLevelsBeforeStartingRefine}
-          label="Hide levels before starting refine"
-          onChange={onHideLevelsBeforeStartingRefineChange}
         />
       </div>
       <div>

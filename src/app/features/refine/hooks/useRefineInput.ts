@@ -7,7 +7,6 @@ import { RefineInput } from '../types/refineInput.type';
 const defaultRefineItemInput: RefineInput = {
   baseItemCost: 1_500_000,
   refineType: RefineType.Armor,
-  startingRefineLevel: 0,
   targetRefineLevel: 9,
 };
 

@@ -7,7 +7,6 @@ import { getOreLabel } from '../utils/getOreLabel';
 import { ConsumedMaterials } from './ConsumedMaterials';
 
 type Props = {
-  readonly isCoveredByStartingRefine: boolean;
   readonly level: number;
   readonly onPreferredRefineParamsChange: (id: string | null) => void;
   readonly preferredRefineParamsId: string | undefined;
@@ -17,7 +16,6 @@ type Props = {
 }
 
 export const RefineLevel: React.FC<Props> = ({
-  isCoveredByStartingRefine,
   level,
   onPreferredRefineParamsChange,
   preferredRefineParamsId,
@@ -33,12 +31,7 @@ export const RefineLevel: React.FC<Props> = ({
 
   return (
     <div
-      css={css`
-        flex: 0 0 auto;
-        ${isCoveredByStartingRefine && css`
-          background-color: greenyellow;
-        `}
-      `}
+      css={css`flex: 0 0 auto`}
     >
       <h3 css={css`text-align: center`}>
         +{level}
@@ -49,8 +42,8 @@ export const RefineLevel: React.FC<Props> = ({
         const refineMethodLabel = isOreRefineParameters(paramsResult.refineParams)
           ? `${paramsResult.refineParams.useBsb ? 'BSB + ' : ''}${getOreLabel(refineType, paramsResult.refineParams.oreType)}`
           : 'Random refine box';
-        const shouldShowMaterials = !shouldExpandOnlyUsedResults
-          || isUsed;
+        const shouldShowMaterials = (!shouldExpandOnlyUsedResults
+          || isUsed);
 
         return (
           <div
@@ -71,7 +64,7 @@ export const RefineLevel: React.FC<Props> = ({
             }}
           >
             <div><strong>Method</strong>: {refineMethodLabel}</div>
-            <div><strong>Total cost</strong>: {Math.round(paramsResult.totalItemCost).toLocaleString()} Z</div>
+            <div><strong>Total item cost</strong>: {Math.round(paramsResult.totalItemCost).toLocaleString()} Z</div>
             {shouldShowMaterials && (
               <div css={css`margin-top: 8px`}>
                 <div
@@ -81,7 +74,7 @@ export const RefineLevel: React.FC<Props> = ({
                   `}
                 >
                   <div>
-                    <h3>Upgrade</h3>
+                    <h3>For refine</h3>
                     {Math.round(paramsResult.refineCost).toLocaleString()} Z
                     <ConsumedMaterials
                       consumedMaterials={paramsResult.refineConsumedMaterials}

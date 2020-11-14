@@ -1,5 +1,4 @@
 import {
-  addConsumedMaterials,
   addConsumedMaterialsBase, addItems, ConsumedMaterials, createConsumedMaterials,
   multiplyConsumedMaterialsBase, multiplyItems,
 } from '../types/consumedMaterials.type';
@@ -18,17 +17,18 @@ type Params = {
   readonly itemCosts: Map<number, number>;
   readonly refineInput: RefineInput;
   readonly refineParamsPreferences: Map<number, string>;
+  readonly startingRefineLevel?: number;
 };
 
 export const calculateTotalRefineCost = ({
   itemCosts,
   refineInput,
   refineParamsPreferences,
+  startingRefineLevel = 0,
 }: Params): readonly TotalRefineResult[] => {
   const {
     baseItemCost,
     refineType,
-    startingRefineLevel,
     targetRefineLevel,
   } = refineInput;
 
@@ -57,7 +57,14 @@ export const calculateTotalRefineCost = ({
         refineParams,
         refineResults,
         refineType,
+        startingRefineLevel,
         usedTotalCosts: [...totalRefineResults.entries()]
+          .reduce((reduced, [key, result]) => {
+            reduced.set(key, result.refineParamsResults.get(result.usedRefineParamsId).totalCost);
+
+            return reduced;
+          }, new Map<number, number>()),
+        usedTotalItemCosts: [...totalRefineResults.entries()]
           .reduce((reduced, [key, result]) => {
             reduced.set(key, result.refineParamsResults.get(result.usedRefineParamsId).totalItemCost);
 
@@ -69,38 +76,23 @@ export const calculateTotalRefineCost = ({
 
       const previousUsedRefineResult = usedRefineResultsMap.get(currentRefineLevel - 1);
       const previousUsedRefineConsumedMaterials = previousUsedRefineResult?.totalConsumedMaterials
-        ?? createConsumedMaterials({ items: { amount: 1, refineLevel: currentRefineLevel < startingRefineLevel ? 0 : startingRefineLevel } });
-      const previousUsedRefineItemConsumedMaterials = previousUsedRefineResult?.totalItemConsumedMaterials
-        ?? createConsumedMaterials({ items: { amount: 1, refineLevel: currentRefineLevel < startingRefineLevel ? 0 : startingRefineLevel } });
+        ?? createConsumedMaterials({ items: { amount: 1, refineLevel: 0 } });
       const consumedItems = refineParamsResult.totalConsumedMaterials.items;
 
-      let totalConsumedMaterials: ConsumedMaterials;
-      let totalItemConsumedMaterials: ConsumedMaterials;
-      let refineConsumedMaterials: ConsumedMaterials;
+      let totalConsumedMaterials: ConsumedMaterials | undefined = undefined;
+      let refineConsumedMaterials: ConsumedMaterials | undefined = undefined;
       let totalCost: number;
       let totalItemCost: number;
 
       if (consumedItems) {
         const usedRefineResultForConsumedItem = usedRefineResultsMap.get(consumedItems.refineLevel - 1);
 
-        if (startingRefineLevel > 0 && currentRefineLevel === startingRefineLevel) {
+        if (startingRefineLevel === 0) {
           refineConsumedMaterials = {
-            ...refineParamsResult.totalConsumedMaterials,
-          };
-        }
-        else {
-          refineConsumedMaterials = {
-            items: startingRefineLevel === consumedItems.refineLevel
-              ? consumedItems
-              : consumedItems.refineLevel === 6 && currentRefineLevel < 6
-                ? multiplyItems(
-                  consumedItems,
-                  usedRefineResultForConsumedItem.totalConsumedMaterials.items.amount,
-                )
-                : multiplyItems(
-                  usedRefineResultForConsumedItem.totalConsumedMaterials.items,
-                  consumedItems.amount,
-                ),
+            items: multiplyItems(
+              usedRefineResultForConsumedItem.totalConsumedMaterials.items,
+              consumedItems.amount,
+            ),
             ...addConsumedMaterialsBase(
               refineParamsResult.totalConsumedMaterials,
               multiplyConsumedMaterialsBase(
@@ -109,79 +101,40 @@ export const calculateTotalRefineCost = ({
               ),
             ),
           };
+
+          totalConsumedMaterials = {
+            items: consumedItems.refineLevel !== currentRefineLevel
+              ? addItems(
+                previousUsedRefineConsumedMaterials.items,
+                multiplyItems(usedRefineResultForConsumedItem.totalConsumedMaterials.items, consumedItems.amount),
+              )
+              : multiplyItems(usedRefineResultForConsumedItem.totalConsumedMaterials.items, consumedItems.amount + 1),
+            ...addConsumedMaterialsBase(
+              refineParamsResult.totalConsumedMaterials,
+              previousUsedRefineConsumedMaterials,
+              multiplyConsumedMaterialsBase(
+                usedRefineResultForConsumedItem.totalConsumedMaterials,
+                consumedItems.amount,
+              ),
+            ),
+          };
         }
 
-        totalItemCost = (previousUsedRefineResult?.totalItemCost ?? baseItemCost) + refineParamsResult.totalCost;
-        totalItemConsumedMaterials = {
-          items: consumedItems.refineLevel !== currentRefineLevel
-            ? addItems(
-              previousUsedRefineItemConsumedMaterials.items,
-              multiplyItems(usedRefineResultForConsumedItem.totalItemConsumedMaterials.items, consumedItems.amount),
-            )
-            : multiplyItems(usedRefineResultForConsumedItem.totalItemConsumedMaterials.items, consumedItems.amount + 1),
-          ...addConsumedMaterialsBase(
-            refineParamsResult.totalConsumedMaterials,
-            previousUsedRefineItemConsumedMaterials,
-            multiplyConsumedMaterialsBase(
-              usedRefineResultForConsumedItem.totalItemConsumedMaterials,
-              consumedItems.amount,
-            ),
-          ),
-        };
-
         if (startingRefineLevel > 0 && currentRefineLevel === startingRefineLevel) {
-          totalConsumedMaterials = {
-            ...refineParamsResult.totalConsumedMaterials,
-            items: consumedItems.refineLevel !== currentRefineLevel
-              ? consumedItems
-              : { refineLevel: startingRefineLevel < currentRefineLevel ? currentRefineLevel : startingRefineLevel, amount: consumedItems.amount + 1 },
-          };
-
           totalCost = refineParamsResult.totalCost;
         }
         else {
-          try {
-            totalConsumedMaterials = {
-              ...addConsumedMaterials(
-                refineConsumedMaterials,
-                previousUsedRefineConsumedMaterials,
-              ),
-            };
-          } catch (e) {
-            console.log(currentRefineLevel, startingRefineLevel, previousUsedRefineConsumedMaterials.items, consumedItems, refineConsumedMaterials.items);
-            throw e;
-          }
-
-          totalCost = (previousUsedRefineResult?.totalCost ?? baseItemCost) + refineParamsResult.totalCost;
+          totalCost = (previousUsedRefineResult?.totalCost ?? 0) + refineParamsResult.totalCost;
         }
+
+        totalItemCost = (previousUsedRefineResult?.totalItemCost ?? baseItemCost) + refineParamsResult.totalCost;
       }
       else {
         if (isOreRefineParameters(refineParams)) {
-          refineConsumedMaterials = {
-            ...refineParamsResult.totalConsumedMaterials,
-          };
-
-          totalItemCost = (previousUsedRefineResult?.totalItemCost ?? baseItemCost) + refineParamsResult.totalCost;
-          totalItemConsumedMaterials = {
-            items: previousUsedRefineItemConsumedMaterials.items,
-            ...addConsumedMaterialsBase(
-              refineParamsResult.totalConsumedMaterials,
-              previousUsedRefineItemConsumedMaterials,
-            ),
-          }
-
-          if (startingRefineLevel > 0 && currentRefineLevel === startingRefineLevel) {
-            totalConsumedMaterials = {
+          if (startingRefineLevel === 0) {
+            refineConsumedMaterials = {
               ...refineParamsResult.totalConsumedMaterials,
-              items: {
-                refineLevel: startingRefineLevel,
-                amount: previousUsedRefineConsumedMaterials.items.amount,
-              },
             };
-
-            totalCost = refineParamsResult.totalCost;
-          }
-          else {
             totalConsumedMaterials = {
               items: previousUsedRefineConsumedMaterials.items,
               ...addConsumedMaterialsBase(
@@ -189,26 +142,31 @@ export const calculateTotalRefineCost = ({
                 previousUsedRefineConsumedMaterials,
               ),
             };
+          }
 
-            totalCost = (previousUsedRefineResult?.totalCost ?? baseItemCost) + refineParamsResult.totalCost;
+          totalItemCost = (previousUsedRefineResult?.totalItemCost ?? baseItemCost) + refineParamsResult.totalCost;
+
+          if (startingRefineLevel > 0 && currentRefineLevel === startingRefineLevel) {
+            totalCost = refineParamsResult.totalCost;
+          }
+          else {
+            totalCost = (previousUsedRefineResult?.totalCost ?? 0) + refineParamsResult.totalCost;
           }
         }
         else {
-          refineConsumedMaterials = {
-            ...refineParamsResult.totalConsumedMaterials,
-          };
-          totalItemConsumedMaterials = {
-            ...refineConsumedMaterials,
-            items: { amount: 1, refineLevel: startingRefineLevel > currentRefineLevel ? 0 : startingRefineLevel },
-          };
-          totalConsumedMaterials = {
-            ...totalItemConsumedMaterials,
-          };
+          if (startingRefineLevel === 0) {
+            refineConsumedMaterials = {
+              ...refineParamsResult.totalConsumedMaterials,
+            };
+            totalConsumedMaterials = {
+              ...refineConsumedMaterials,
+              items: { amount: 1, refineLevel: startingRefineLevel > currentRefineLevel ? 0 : startingRefineLevel },
+            };
+          }
 
-          //  We need to apply the cost of item at current refine
+          //  We need to apply the cost of item at starting refine
           //  Otherwise it could get misleading results for using refine box for it
-          // Min +4 needed to be used
-          const startingRefineLevelResult = totalRefineResults.get(startingRefineLevel > currentRefineLevel ? 4 : Math.max(startingRefineLevel, 4));
+          const startingRefineLevelResult = totalRefineResults.get(startingRefineLevel);
           const startingRefineLevelTotalItemCost = startingRefineLevelResult?.refineParamsResults
               ?.get(startingRefineLevelResult?.usedRefineParamsId)?.totalItemCost
                 ?? baseItemCost;
@@ -219,14 +177,13 @@ export const calculateTotalRefineCost = ({
       }
 
       allRefineParamsResults.set(refineParamsId, {
-        totalConsumedMaterials,
-        totalItemCost,
-        totalCost,
-        refineConsumedMaterials,
-        totalItemConsumedMaterials,
-        refineCost: refineParamsResult.totalCost,
         id: refineParamsId,
+        refineConsumedMaterials,
+        refineCost: refineParamsResult.totalCost,
         refineParams,
+        totalConsumedMaterials,
+        totalCost,
+        totalItemCost,
       });
 
       if (!bestRefineParamsId || totalItemCost < bestRefineItemTotalCost) {

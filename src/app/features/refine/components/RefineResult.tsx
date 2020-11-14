@@ -5,22 +5,18 @@ import { css } from '@emotion/core';
 import { TotalRefineResult } from '../types/totalRefineResult.type';
 
 type Props = {
-  readonly hideLevelsBeforeStartingRefine: boolean;
   readonly onPreferencesChange: (preferences: Map<number, string>) => void;
   readonly preferences: Map<number, string>;
   readonly refineType: RefineType;
   readonly shouldExpandOnlyUsedResults: boolean;
-  readonly startingRefineLevel: number;
   readonly totalRefineResults: readonly TotalRefineResult[];
 }
 
 export const RefineResult: React.FC<Props> = ({
-  hideLevelsBeforeStartingRefine,
   onPreferencesChange,
   preferences,
   refineType,
   shouldExpandOnlyUsedResults,
-  startingRefineLevel,
   totalRefineResults,
 }) => {
   const setPreference = (refineLevel: number) => (refineParamsId: string | null): void => {
@@ -45,24 +41,18 @@ export const RefineResult: React.FC<Props> = ({
         flex-wrap: wrap;
         flex-basis: 500px;
       `}>
-        {totalRefineResults.map(levelResult => {
-          const shouldShowLevel = !hideLevelsBeforeStartingRefine
-            || levelResult.refineLevel > startingRefineLevel;
-
-          return shouldShowLevel && (
-            <React.Fragment key={levelResult.refineLevel}>
-              <RefineLevel
-                isCoveredByStartingRefine={levelResult.refineLevel <= startingRefineLevel}
-                level={levelResult.refineLevel}
-                onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
-                preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
-                refineType={refineType}
-                shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
-                totalRefineResult={levelResult}
-              />
-            </React.Fragment>
-          );
-        })}
+        {totalRefineResults.map(levelResult => (
+          <React.Fragment key={levelResult.refineLevel}>
+            <RefineLevel
+              level={levelResult.refineLevel}
+              onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
+              preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
+              refineType={refineType}
+              shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
+              totalRefineResult={levelResult}
+            />
+          </React.Fragment>
+        ))}
       </div>
     </div>
   );
