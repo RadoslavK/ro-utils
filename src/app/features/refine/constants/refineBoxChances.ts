@@ -1,4 +1,4 @@
-const refineBoxChances: Record<string, number> = {
+export const refineBoxChances: Record<string, number> = {
   5: 43.9,
   6: 35,
   7: 15,
@@ -9,6 +9,7 @@ const refineBoxChances: Record<string, number> = {
 
 let cumulativeChance = 0;
 
+// undused?
 export const cumulativeRefineBoxChances = Object
   .keys(refineBoxChances)
   .reverse()

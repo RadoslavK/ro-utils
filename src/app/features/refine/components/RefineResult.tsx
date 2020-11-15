@@ -33,27 +33,22 @@ export const RefineResult: React.FC<Props> = ({
   };
 
   return (
-    <div>
-      <h2>Result</h2>
-
-      <div css={css`
+    <div css={css`
         display: flex;
         flex-wrap: wrap;
         flex-basis: 500px;
       `}>
-        {totalRefineResults.map(levelResult => (
-          <React.Fragment key={levelResult.refineLevel}>
-            <RefineLevel
-              level={levelResult.refineLevel}
-              onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
-              preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
-              refineType={refineType}
-              shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
-              totalRefineResult={levelResult}
-            />
-          </React.Fragment>
-        ))}
-      </div>
+      {totalRefineResults.map(levelResult => (
+        <RefineLevel
+          key={levelResult.refineLevel}
+          level={levelResult.refineLevel}
+          onPreferredRefineParamsChange={setPreference(levelResult.refineLevel)}
+          preferredRefineParamsId={preferences.get(levelResult.refineLevel)}
+          refineType={refineType}
+          shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
+          totalRefineResult={levelResult}
+        />
+      ))}
     </div>
   );
 };

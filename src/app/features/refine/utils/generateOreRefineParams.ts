@@ -1,14 +1,14 @@
-import { RefineParameters, useRefineBoxParameters } from '../types/RefineParameters.type';
+import { OreRefineParameters } from '../types/RefineParameters.type';
 import { OreType } from '../types/oreType.type';
 
-export const generateRefineParams = (targetLevel: number): readonly RefineParameters[] => {
-  const refineParams: RefineParameters[] = [];
-
-  if (targetLevel >= 5 && targetLevel <= 10) {
-    refineParams.push(useRefineBoxParameters);
-  }
+export const generateOreRefineParams = (targetLevel: number, startingRefineLevel: number): readonly OreRefineParameters[] => {
+  const refineParams: OreRefineParameters[] = [];
 
   for (const oreType of Object.values(OreType)) {
+    if (oreType === OreType.HD && (targetLevel - startingRefineLevel < 2)) {
+      continue;
+    }
+
     if (targetLevel > 7 || oreType !== OreType.HD) {
       refineParams.push({
         oreType,
