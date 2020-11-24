@@ -6,6 +6,7 @@ type Params = {
   readonly itemCosts: Map<number, number>;
   readonly refineType: RefineType;
   readonly targetRefineLevel: number;
+  readonly maxRefineBoxLevel: number;
 };
 
 export const calculateAllRefineBoxes = (params: Params): Map<number, RefineBoxCalculationResult> => {
@@ -13,7 +14,7 @@ export const calculateAllRefineBoxes = (params: Params): Map<number, RefineBoxCa
 
   let targetRefineBoxLevel = 5;
 
-  while (targetRefineBoxLevel <= params.targetRefineLevel) {
+  while (targetRefineBoxLevel <= Math.min(params.targetRefineLevel, params.maxRefineBoxLevel)) {
     const refineBoxResults = calculateRefineBox({
       ...params,
       refineBoxInput: {

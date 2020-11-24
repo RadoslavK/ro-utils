@@ -38,6 +38,7 @@ export const RefinePage: React.FC = () => {
     const allRefineBoxResults = calculateAllRefineBoxes({
       baseItemCost,
       itemCosts: costs,
+      maxRefineBoxLevel: refineInput.maxRefineBoxLevel,
       refineType,
       targetRefineLevel,
     });
@@ -46,7 +47,7 @@ export const RefinePage: React.FC = () => {
       allRefineBoxResults,
       noRefineBoxResults,
     };
-  }, [refineParamsPreferences, costs,  baseItemCost, refineType, targetRefineLevel]);
+  }, [refineParamsPreferences, costs, refineInput.maxRefineBoxLevel, baseItemCost, refineType, targetRefineLevel]);
 
   return (
     <div>
@@ -62,6 +63,7 @@ export const RefinePage: React.FC = () => {
       <RefineResults
         allRefineBoxesResults={allRefineBoxResults}
         itemCosts={costs}
+        maxRefineBoxLevel={refineInput.maxRefineBoxLevel}
         noRefineBoxResults={noRefineBoxResults}
         onPreferencesChange={setRefineParamsPreferences}
         preferences={refineParamsPreferences}

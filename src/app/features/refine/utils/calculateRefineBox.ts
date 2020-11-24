@@ -17,6 +17,7 @@ type Params = {
   readonly itemCosts: Map<number, number>;
   readonly refineBoxInput: RefineBoxInput;
   readonly refineType: RefineType;
+  readonly maxRefineBoxLevel: number;
   readonly targetRefineLevel: number;
 };
 
@@ -33,6 +34,7 @@ export type RefineBoxCalculationResult = {
 export const calculateRefineBox = ({
   baseItemCost,
   itemCosts,
+  maxRefineBoxLevel,
   refineBoxInput,
   refineType,
   targetRefineLevel,
@@ -51,7 +53,7 @@ export const calculateRefineBox = ({
   const costs: number[] = [];
   let totalUsedChance = 0;
 
-  for (let level = 5; level <= targetRefineLevel; level++) {
+  for (let level = 5; level <= Math.min(targetRefineLevel, maxRefineBoxLevel); level++) {
     let chance = refineBoxChances[level];
 
     if (level === targetRefineLevel && level < 10) {

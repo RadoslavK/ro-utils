@@ -34,7 +34,7 @@ const getInitialSelectedRefineBoxTargetLevel = (
   }
 
   return cheapestRefineBoxLevel;
-}
+};
 
 export const RefineResults: React.FC<Props> = ({
   allRefineBoxesResults,
@@ -50,7 +50,7 @@ export const RefineResults: React.FC<Props> = ({
   });
 
   const prevItemCosts = usePrevious(itemCosts);
-  const prevRefineInput = usePrevious(refineInput)
+  const prevRefineInput = usePrevious(refineInput);
 
   useEffect(() => {
     if (prevItemCosts === itemCosts && prevRefineInput === refineInput) {
@@ -61,6 +61,9 @@ export const RefineResults: React.FC<Props> = ({
 
     setSelectedRefineBoxTargetLevel(newInitialState);
   }, [allRefineBoxesResults, noRefineBoxResults, prevItemCosts, itemCosts, prevRefineInput, refineInput]);
+
+  //  Needed when manipulating with target refine level and max refine box level
+  const correctedSelectedRefineBoxTargetLevel = Math.min(selectedRefineBoxTargetLevel, refineInput.maxRefineBoxLevel, refineInput.targetRefineLevel);
 
   return (
     <div>
@@ -91,7 +94,7 @@ export const RefineResults: React.FC<Props> = ({
       )}
       {selectedRefineBoxTargetLevel !== undefined && (
         <RefineBoxResults
-          refineBoxResults={allRefineBoxesResults.get(selectedRefineBoxTargetLevel)}
+          refineBoxResults={allRefineBoxesResults.get(correctedSelectedRefineBoxTargetLevel)}
           refineType={refineInput.refineType}
           shouldExpandOnlyUsedResults={shouldExpandOnlyUsedResults}
         />

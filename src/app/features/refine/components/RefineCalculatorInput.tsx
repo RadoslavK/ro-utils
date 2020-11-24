@@ -36,6 +36,7 @@ export const RefineCalculatorInput: React.FC<Props> = ({
 }) => {
   const {
     baseItemCost,
+    maxRefineBoxLevel,
     refineType,
     targetRefineLevel,
   } = refineInput;
@@ -60,6 +61,13 @@ export const RefineCalculatorInput: React.FC<Props> = ({
           value={targetRefineLevel}
           onChange={onChange('targetRefineLevel')}
           minValue={1}
+          maxValue={10}
+        />
+        <NumberInput
+          label="Max refine box level"
+          value={maxRefineBoxLevel}
+          onChange={onChange('maxRefineBoxLevel')}
+          minValue={5}
           maxValue={10}
         />
         <DropDown<RefineType>
