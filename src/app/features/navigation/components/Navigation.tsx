@@ -23,7 +23,7 @@ export const Navigation: React.FC = () => {
               ${isActive && css`font-weight: bold`};
             `}
             key={route.path}
-            to={route.path}
+            to={`/${route.path}`}
           >
             {route.label}
           </Link>
