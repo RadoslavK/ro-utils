@@ -70,7 +70,7 @@ export const calculateRefineCostForLevel = ({
   const usedOreKey = getUsedOreKey(oreType);
 
   if (useBsb) {
-    const bsbAmount = bsbAmountsNeeded.get(currentRefineLevel);
+    const bsbAmount = bsbAmountsNeeded.get(targetLevel);
 
     if (bsbAmount === undefined) {
       throw new Error('Unknown amount of BSB required from +' + currentRefineLevel + ' to +' + targetLevel);

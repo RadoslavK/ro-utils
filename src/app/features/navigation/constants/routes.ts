@@ -1,7 +1,7 @@
 import React from 'react';
-import { RefinePage } from '../../refine/v1/components/RefinePage';
 import { AspdPage } from '../../aspd/components/AspdPage';
 import { DamagePage } from '../../damage/component/DamagePage';
+import { MainRefinePage } from '../../refine/MainRefinePage';
 
 type Route = {
   readonly path: string;
@@ -10,7 +10,7 @@ type Route = {
 };
 
 export const routes: readonly Route[] = [
-  { path: 'refine', component: RefinePage, label: 'Refining' },
+  { path: 'refine', component: MainRefinePage, label: 'Refine' },
   { path: 'aspd', component: AspdPage, label: 'ASPD' },
   { path: 'dmg', component: DamagePage, label: 'Damage' },
 ];

@@ -1,6 +1,6 @@
 import { refineItemIds } from '../constants/refineItemIds';
 
-const getBaseOreCost = (costs: Map<number, number>, oreId: number): number => {
+const getBaseOreCost = (costs: ReadonlyMap<number, number>, oreId: number): number => {
   const cost = costs.get(oreId);
 
   if (cost === undefined) {
@@ -10,7 +10,7 @@ const getBaseOreCost = (costs: Map<number, number>, oreId: number): number => {
   return cost;
 }
 
-export const getOreCost = (oreId: number, itemCosts: Map<number, number>): number => {
+export const getOreCost = (oreId: number, itemCosts: ReadonlyMap<number, number>): number => {
   switch (oreId) {
     case refineItemIds.Phracon:
     case refineItemIds.Emveretarcon:
