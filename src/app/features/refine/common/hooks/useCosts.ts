@@ -1,5 +1,5 @@
-import { LocalStorageManager } from '../../../models/localStorageManager';
-import { LocalStorageKeys } from '../../../constants/localStorageKeys';
+import { LocalStorageManager } from '../../../../models/localStorageManager';
+import { LocalStorageKeys } from '../../../../constants/localStorageKeys';
 import { useState } from 'react';
 import { defaultRefineItemsPrices } from '../constants/defaultRefineItemsPrices';
 

@@ -10,7 +10,7 @@ import {
 } from '../types/totalRefineResult.type';
 import { getRefineParamsId } from './getRefineParamsId';
 import { RefineResult } from '../types/refineResult.type';
-import { RefineType } from '../types/refineType.type';
+import { RefineType } from '../../common/types/refineType.type';
 import memoizee from 'memoizee';
 
 const calculateTotalRefineCostMemoized = memoizee((

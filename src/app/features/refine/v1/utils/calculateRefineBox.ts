@@ -1,9 +1,9 @@
-import { refineBoxChances } from '../constants/refineBoxChances';
-import { RefineType } from '../types/refineType.type';
+import { refineBoxChances } from '../../common/constants/refineBoxChances';
+import { RefineType } from '../../common/types/refineType.type';
 import { calculateTotalRefineCost } from './calculateTotalRefineCost';
 import { RefineParamsResult, TotalRefineResult } from '../types/totalRefineResult.type';
-import { defaultRefineItemsPrices } from '../constants/defaultRefineItemsPrices';
-import { refineItemIds } from '../constants/refineItemIds';
+import { defaultRefineItemsPrices } from '../../common/constants/defaultRefineItemsPrices';
+import { refineItemIds } from '../../common/constants/refineItemIds';
 import { createConsumedMaterials } from '../types/consumedMaterials.type';
 import { RefineBoxParameters, useRefineBoxParameters } from '../types/RefineParameters.type';
 import { getRefineParamsId } from './getRefineParamsId';

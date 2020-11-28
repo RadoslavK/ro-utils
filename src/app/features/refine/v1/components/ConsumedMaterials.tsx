@@ -1,12 +1,12 @@
 import React from 'react';
 import { ConsumedMaterials as ConsumedMaterialsType } from '../types/consumedMaterials.type';
-import { RefineType } from '../types/refineType.type';
+import { RefineType } from '../../common/types/refineType.type';
 import { css } from '@emotion/core';
-import { refineItemIds } from '../constants/refineItemIds';
-import { getOreId } from '../utils/getOreId';
-import { OreType } from '../types/oreType.type';
-import { items } from '../../../constants/items';
-import { getItemImageLink } from '../utils/getItemImageLink';
+import { refineItemIds } from '../../common/constants/refineItemIds';
+import { getOreId } from '../../common/utils/getOreId';
+import { OreType } from '../../common/types/oreType.type';
+import { items } from '../../../../constants/items';
+import { getItemImageLink } from '../../common/utils/getItemImageLink';
 
 const renderImageWithCount = (count: number, itemId: number, title?: string): JSX.Element | null => {
   if (!count) {

@@ -5,8 +5,8 @@ import { css } from '@emotion/core';
 import { RefineResultsTab } from './RefineResultsTab';
 import { RefineResult } from './RefineResult';
 import { RefineBoxResults } from './RefineBoxResults';
-import { RefineInput } from '../types/refineInput.type';
-import { usePrevious } from '../../../hooks/usePrevious';
+import { RefineInput } from '../../common/types/refineInput.type';
+import { usePrevious } from '../../../../hooks/usePrevious';
 
 type Props = {
   readonly allRefineBoxesResults: Map<number, RefineBoxCalculationResult>;

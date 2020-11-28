@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefineType } from '../types/refineType.type';
+import { RefineType } from '../../common/types/refineType.type';
 import { RefineBoxCalculationResult } from '../utils/calculateRefineBox';
 import { RefineBoxResult } from './RefineBoxResult';
 

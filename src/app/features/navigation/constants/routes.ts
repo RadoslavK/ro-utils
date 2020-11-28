@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefinePage } from '../../refine/components/RefinePage';
+import { RefinePage } from '../../refine/v1/components/RefinePage';
 import { AspdPage } from '../../aspd/components/AspdPage';
 import { DamagePage } from '../../damage/component/DamagePage';
 

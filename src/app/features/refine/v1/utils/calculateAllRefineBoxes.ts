@@ -1,5 +1,5 @@
 import { calculateRefineBox, RefineBoxCalculationResult } from './calculateRefineBox';
-import { RefineType } from '../types/refineType.type';
+import { RefineType } from '../../common/types/refineType.type';
 
 type Params = {
   readonly baseItemCost: number;

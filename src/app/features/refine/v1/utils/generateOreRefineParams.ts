@@ -1,5 +1,5 @@
 import { OreRefineParameters } from '../types/RefineParameters.type';
-import { OreType } from '../types/oreType.type';
+import { OreType } from '../../common/types/oreType.type';
 
 export const generateOreRefineParams = (targetLevel: number, startingRefineLevel: number): readonly OreRefineParameters[] => {
   const refineParams: OreRefineParameters[] = [];

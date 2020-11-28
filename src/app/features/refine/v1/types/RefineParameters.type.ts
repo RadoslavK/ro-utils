@@ -1,4 +1,4 @@
-import { OreType } from './oreType.type';
+import { OreType } from '../../common/types/oreType.type';
 
 export type OreRefineParameters = {
   readonly oreType: OreType;

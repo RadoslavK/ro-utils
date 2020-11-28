@@ -1,13 +1,13 @@
 import React from 'react';
-import { NumberInput } from '../../../components/NumberInput';
-import { RefineType } from '../types/refineType.type';
-import { DropDown } from '../../../components/DropDown';
-import { RefineInput } from '../types/refineInput.type';
-import { CheckBox } from '../../../components/CheckBox';
+import { NumberInput } from '../../../../components/NumberInput';
+import { RefineType } from '../../common/types/refineType.type';
+import { DropDown } from '../../../../components/DropDown';
+import { RefineInput } from '../../common/types/refineInput.type';
+import { CheckBox } from '../../../../components/CheckBox';
 import { css } from '@emotion/core';
-import { refineItemIds } from '../constants/refineItemIds';
-import { items } from '../../../constants/items';
-import { createOnChangeCallback } from '../../../utils/useOnChangeCallback';
+import { refineItemIds } from '../../common/constants/refineItemIds';
+import { items } from '../../../../constants/items';
+import { createOnChangeCallback } from '../../../../utils/useOnChangeCallback';
 
 const refineTypeLabels: Record<RefineType, string> = {
   [RefineType.Armor]: 'Armor',

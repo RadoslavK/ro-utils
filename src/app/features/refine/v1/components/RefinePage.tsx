@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import { RefineCalculatorInput } from './RefineCalculatorInput';
 import { calculateTotalRefineCost, clearCalculationResults } from '../utils/calculateTotalRefineCost';
-import { useCosts } from '../hooks/useCosts';
-import { useRefineInput } from '../hooks/useRefineInput';
+import { useCosts } from '../../common/hooks/useCosts';
+import { useRefineInput } from '../../common/hooks/useRefineInput';
 import { RefineResults } from './RefineResults';
 import { calculateAllRefineBoxes } from '../utils/calculateAllRefineBoxes';
 
@@ -63,7 +63,6 @@ export const RefinePage: React.FC = () => {
       <RefineResults
         allRefineBoxesResults={allRefineBoxResults}
         itemCosts={costs}
-        maxRefineBoxLevel={refineInput.maxRefineBoxLevel}
         noRefineBoxResults={noRefineBoxResults}
         onPreferencesChange={setRefineParamsPreferences}
         preferences={refineParamsPreferences}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { RefineType } from '../types/refineType.type';
+import { RefineType } from '../../common/types/refineType.type';
 import { RefineLevel } from './RefineLevel';
 import { css } from '@emotion/core';
 import { TotalRefineResult } from '../types/totalRefineResult.type';

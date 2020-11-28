@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { css } from '@emotion/core';
-import { RefineType } from '../types/refineType.type';
+import { RefineType } from '../../common/types/refineType.type';
 import { TotalRefineResult } from '../types/totalRefineResult.type';
 import { isOreRefineParameters } from '../types/RefineParameters.type';
-import { getOreLabel } from '../utils/getOreLabel';
+import { getOreLabel } from '../../common/utils/getOreLabel';
 import { ConsumedMaterials } from './ConsumedMaterials';
 
 type Props = {

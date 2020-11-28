@@ -1,6 +1,6 @@
 import { Variance } from '../types/variance.type';
-import { refineChances } from '../../refine/constants/refineChances';
-import { RefineType } from '../../refine/types/refineType.type';
+import { refineChances } from '../../refine/common/constants/refineChances';
+import { RefineType } from '../../refine/common/types/refineType.type';
 import { refineAtkBonuses } from '../constants/refineAtkBonuses';
 
 type Params = {

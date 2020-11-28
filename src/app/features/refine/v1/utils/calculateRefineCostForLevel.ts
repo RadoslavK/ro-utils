@@ -1,17 +1,17 @@
-import { OreType } from '../types/oreType.type';
-import { RefineType } from '../types/refineType.type';
-import { refineChances } from '../constants/refineChances';
-import { getRefineCost } from './getRefineCost';
-import { bsbAmountsNeeded } from '../constants/bsbAmountsNeeded';
+import { OreType } from '../../common/types/oreType.type';
+import { RefineType } from '../../common/types/refineType.type';
+import { refineChances } from '../../common/constants/refineChances';
+import { getRefineCost } from '../../common/utils/getRefineCost';
+import { bsbAmountsNeeded } from '../../common/constants/bsbAmountsNeeded';
 import {
   addConsumedMaterials,
   ConsumedMaterials,
   createConsumedMaterials, multiplyConsumedMaterials,
 } from '../types/consumedMaterials.type';
-import { getOreId } from './getOreId';
+import { getOreId } from '../../common/utils/getOreId';
 import { RefineResult } from '../types/refineResult.type';
-import { getOreCost } from './getOreCost';
-import { refineItemIds } from '../constants/refineItemIds';
+import { getOreCost } from '../../common/utils/getOreCost';
+import { refineItemIds } from '../../common/constants/refineItemIds';
 import { OreRefineParameters } from '../types/RefineParameters.type';
 
 type Params = {
