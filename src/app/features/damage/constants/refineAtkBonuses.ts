@@ -1,4 +1,4 @@
-import { RefineType } from '../../refine/common/types/refineType.type';
+import { RefineType } from '../../refine/types/refineType.type';
 import { RefineAtkBonus } from '../types/refineAtkBonus.type';
 
 export const refineAtkBonuses: Record<Exclude<RefineType, 'armor'>, RefineAtkBonus> = {
