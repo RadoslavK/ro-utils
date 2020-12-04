@@ -25,7 +25,7 @@ export const getAtk = ({
   useCritical,
   weapon,
 }: Params): Variance => {
-  const statusAtk = getStatusAtk(stats, weapon.damageType);
+  const statusAtk = getStatusAtk(stats, weapon.type);
   const weaponAtk = getWeaponAtk({
     atkMultipliers,
     stats,

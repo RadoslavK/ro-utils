@@ -4,7 +4,7 @@ import { getAspdPenalty } from './getAspdPenalty';
 import { getPotBonus } from './getPotBonus';
 import { getSkillBonus } from './getSkillBonus';
 import { getStatBonus } from './getStatBonus';
-import { isWearingRangedWeapon } from './hasRangedWeapon';
+import { isWearingRangedWeapon } from './isWearingRangedWeapon';
 
 type Result = {
   readonly finalAspd: number;

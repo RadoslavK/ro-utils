@@ -1,5 +1,6 @@
 import { Stats } from '../types/stats.type';
-import { DamageType } from '../types/damageType';
+import { WeaponType } from '../types/weaponType';
+import { isWearingRangedWeapon } from './isWearingRangedWeapon';
 
-export const getMainStat = ({ str, dex }: Stats, damageType: DamageType): number =>
-  damageType === DamageType.PhysicalMelee ? str : dex;
+export const getMainStat = ({ str, dex }: Stats, weaponType: WeaponType): number =>
+  isWearingRangedWeapon(weaponType) ? dex : str;

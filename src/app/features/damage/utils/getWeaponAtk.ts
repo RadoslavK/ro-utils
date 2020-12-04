@@ -25,12 +25,12 @@ export const getWeaponAtk = ({
 }: Params): Variance => {
   const {
     baseDamage: baseWeaponDamage,
-    damageType,
     level: weaponLevel,
     refineLevel,
+    type: weaponType,
   } = weapon;
   const variance = 0.05 * weaponLevel * baseWeaponDamage;
-  const statBonus = baseWeaponDamage * getMainStat(stats, damageType) / 200;
+  const statBonus = baseWeaponDamage * getMainStat(stats, weaponType) / 200;
   const refinementBonus = getRefinementBonus({ refineLevel, weaponLevel });
 
   const propertyMultiplier = getPropertyMultiplier(weapon.element, target.property);

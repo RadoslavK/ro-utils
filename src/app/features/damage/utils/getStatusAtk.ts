@@ -1,15 +1,15 @@
 import { Stats } from '../types/stats.type';
-import { DamageType } from '../types/damageType';
 import { getMainStat } from './getMainStat';
 import { getSecondaryStat } from './getSecondaryStat';
+import { WeaponType } from '../types/weaponType';
 
-export const getStatusAtk = (
-  stats: Stats,
-  damageType: DamageType,
-): number => {
-  const mainStat = getMainStat(stats, damageType);
-  const secondaryStat = getSecondaryStat(stats, damageType);
+export const getStatusAtk = (stats: Stats, weaponType: WeaponType): number => {
+  const mainStat = getMainStat(stats, weaponType);
+  const secondaryStat = getSecondaryStat(stats, weaponType);
   const { baseLevel, luk } = stats;
 
-  return Math.floor((baseLevel / 4) + mainStat + (secondaryStat / 5) + (luk / 3));
+  return Math.floor(baseLevel / 4)
+    + mainStat
+    + Math.floor(secondaryStat / 5)
+    + Math.floor(luk / 3);
 }
