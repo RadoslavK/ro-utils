@@ -12,6 +12,7 @@ type Params = {
   readonly atkMultipliers: AtkMultipliers;
   readonly bonusAtk: BonusAtk;
   readonly ignoreSizePenalty: boolean;
+  readonly removeVariance: boolean;
   readonly stats: Stats;
   readonly target: Target;
   readonly useCritical: boolean;
@@ -22,6 +23,7 @@ export const getAtk = ({
   atkMultipliers,
   bonusAtk,
   ignoreSizePenalty,
+  removeVariance,
   stats,
   target,
   useCritical,
@@ -31,6 +33,7 @@ export const getAtk = ({
   const weaponAtk = getWeaponAtk({
     atkMultipliers,
     ignoreSizePenalty,
+    removeVariance,
     stats,
     target,
     useCritical,

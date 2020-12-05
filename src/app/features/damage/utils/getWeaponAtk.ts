@@ -11,6 +11,7 @@ import { getSizePenalty } from './getSizePenalty';
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
   readonly ignoreSizePenalty: boolean;
+  readonly removeVariance: boolean;
   readonly stats: Stats;
   readonly target: Target;
   readonly useCritical: boolean;
@@ -20,6 +21,7 @@ type Params = {
 export const getWeaponAtk = ({
   atkMultipliers,
   ignoreSizePenalty,
+  removeVariance,
   stats,
   target,
   useCritical,
@@ -54,7 +56,7 @@ export const getWeaponAtk = ({
 
   const totalMultiplier = sizePenalty * totalAtkMultiplier * totalAtkReductionMultiplier;
 
-  const minVariance = useCritical ? variance : -variance;
+  const minVariance = (removeVariance || useCritical) ? variance : -variance;
   const maxVariance = variance;
 
   const min = Math.floor((baseWeaponDamage + minVariance + statBonus + refinementBonus.min) * totalMultiplier);

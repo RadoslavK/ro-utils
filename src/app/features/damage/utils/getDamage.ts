@@ -58,6 +58,7 @@ type Params = SharedParams & {
   readonly atkMultipliers: AtkMultipliers;
   readonly bonusAtk: BonusAtk;
   readonly ignoreSizePenalty: boolean;
+  readonly removeVariance: boolean;
   readonly skillInput: SkillInput | undefined;
   readonly stats: Stats;
   readonly weapon: Weapon;
@@ -69,6 +70,7 @@ export const getDamage = ({
   finalMultipliers,
   finalReductions,
   ignoreSizePenalty,
+  removeVariance,
   skillInput,
   stats,
   target,
@@ -82,6 +84,7 @@ export const getDamage = ({
     atkMultipliers,
     bonusAtk,
     ignoreSizePenalty,
+    removeVariance,
     stats,
     target,
     useCritical: false,
@@ -92,6 +95,7 @@ export const getDamage = ({
     atkMultipliers,
     bonusAtk,
     ignoreSizePenalty,
+    removeVariance,
     stats,
     target,
     useCritical: canCrit,

@@ -25,6 +25,7 @@ export const DamagePage: React.FC = () => {
     finalMultipliers,
     finalReductions,
     ignoreSizePenalty,
+    removeVariance,
     skillInput,
     stats,
     target,
@@ -38,9 +39,10 @@ export const DamagePage: React.FC = () => {
     finalMultipliers,
     finalReductions,
     ignoreSizePenalty,
-    target,
+    removeVariance,
     skillInput: useSkill ? skillInput : undefined,
     stats,
+    target,
     weapon,
   }), [
     atkMultipliers,
@@ -48,6 +50,7 @@ export const DamagePage: React.FC = () => {
     finalMultipliers,
     finalReductions,
     ignoreSizePenalty,
+    removeVariance,
     skillInput,
     stats,
     target,
@@ -81,6 +84,11 @@ export const DamagePage: React.FC = () => {
             isChecked={ignoreSizePenalty}
             label="Ignore size penalty"
             onChange={onChange('ignoreSizePenalty')}
+          />
+          <CheckBox
+            isChecked={removeVariance}
+            label="Remove ATK variance"
+            onChange={onChange('removeVariance')}
           />
           <NumberInput
             label="Skill Multiplier"
