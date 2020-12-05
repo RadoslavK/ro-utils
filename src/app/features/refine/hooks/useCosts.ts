@@ -2,15 +2,16 @@ import { LocalStorageManager } from '../../../models/localStorageManager';
 import { LocalStorageKeys } from '../../../constants/localStorageKeys';
 import { useState } from 'react';
 import { defaultRefineItemsPrices } from '../constants/defaultRefineItemsPrices';
+import { deserializeMap, serializeMap } from '../../../utils/mapParsing';
 
 export const useCosts = () => {
   const localStorageManager = new LocalStorageManager<Map<number, number>>({
     key: LocalStorageKeys.Prices,
-    parseRawObject: pricesRaw => new Map<number, number>(JSON.parse(pricesRaw)),
-    parseValue: prices => JSON.stringify(Array.from(prices.entries())),
+    parseRawObject: deserializeMap,
+    parseValue: serializeMap,
   })
 
-  const [prices, setPrices] = useState<Map<number, number>>(() => {
+  const [prices, setPrices] = useState<ReadonlyMap<number, number>>(() => {
     const loadedPrices = localStorageManager.load(defaultRefineItemsPrices);
 
     [...defaultRefineItemsPrices.entries()]

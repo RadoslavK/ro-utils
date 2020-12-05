@@ -1,23 +1,24 @@
-import React, { useMemo } from 'react';
-import { StatsInput } from './StatsInput';
+import React, { useEffect, useMemo, useState } from 'react';
 import { getDamage } from '../utils/getDamage';
-import { BonusAtkInput } from './BonusAtkInput';
-import { AtkMultipliersInput } from './AtkMultipliersInput';
-import { css } from '@emotion/core';
-import { WeaponInput } from './WeaponInput';
-import { TargetInput } from './TargetInput';
-import { FinalMultipliersInput } from './FinalMultipliersInput';
-import { FinalReductionsInput } from './FinalReductionsInput';
-import { NumberInput } from '../../../components/NumberInput';
-import { CheckBox } from '../../../components/CheckBox';
-import { useDamageCalculationInput } from '../hooks/useDamageCalculationInput';
-import { createOnChangeCallback } from '../../../utils/useOnChangeCallback';
+import { Presets } from './presets/Presets';
+import { DamageCalcPreset, useDamageCalcPresets } from '../hooks/useDamageCalcPresets';
+import { DamageCalculationResult } from './DamageCalculationResult';
+import { DamageCalculationInput } from './DamageCalculationInput';
+import {
+  DamageCalculationInput as DamageCalculationInputModel,
+  defaultDamageCalculationInput,
+} from '../types/damageCalculationInput.type';
+import { generateId } from '../../../utils/generateId';
 
 export const DamagePage: React.FC = () => {
-  const {
-    damageCalculationInput,
-    onDamageCalculationInputChange,
-  } = useDamageCalculationInput();
+  const { deletePreset, presets, updatePreset } = useDamageCalcPresets();
+  const [selectedPreset, setSelectedPreset] = useState<DamageCalcPreset>([...presets.values()][0]);
+
+  useEffect(() => {
+    if (!presets.has(selectedPreset.id)) {
+      setSelectedPreset([...presets.values()][0]);
+    }
+  }, [presets, selectedPreset]);
 
   const {
     atkMultipliers,
@@ -31,7 +32,7 @@ export const DamagePage: React.FC = () => {
     target,
     useSkill,
     weapon,
-  } = damageCalculationInput;
+  } = selectedPreset.input;
 
   const damage = useMemo(() => getDamage({
     atkMultipliers,
@@ -58,103 +59,73 @@ export const DamagePage: React.FC = () => {
     weapon,
   ]);
 
-  const onChange = createOnChangeCallback(damageCalculationInput, onDamageCalculationInputChange);
-  const onChangeSkillInput = createOnChangeCallback(skillInput, v => onChange('skillInput')(v));
+  const changeInput = (input: DamageCalculationInputModel): void => {
+    const updatedPreset: DamageCalcPreset = {
+      ...selectedPreset,
+      input,
+    };
+
+    updatePreset(updatedPreset);
+    setSelectedPreset(updatedPreset)
+  };
+
+  const addPreset = (): string => {
+    const preset: DamageCalcPreset = {
+      id: generateId(),
+      input: defaultDamageCalculationInput,
+      name: 'New preset',
+    }
+
+    updatePreset(preset);
+    setSelectedPreset(preset);
+
+    return preset.id;
+  };
+
+  const changeName = (id: string, name: string): void => {
+    const preset = presets.get(id);
+    const updatedPreset: DamageCalcPreset = {
+      ...preset,
+      name,
+    };
+
+    updatePreset(updatedPreset);
+    setSelectedPreset(preset)
+  };
+
+  const copyPreset = (id: string): string => {
+    const preset = presets.get(id);
+    const newId = generateId();
+    const copiedPreset: DamageCalcPreset = {
+      id: newId,
+      name: `${preset.name} (Copy)`,
+      input: {
+        ...preset.input,
+      }
+    };
+
+    updatePreset(copiedPreset);
+    setSelectedPreset(copiedPreset);
+
+    return newId;
+  };
 
   return (
     <div>
-      <div
-        css={css`
-          display: flex;
-          > * {
-            margin-right: 32px;
-          }
-        `}
-      >
-        <StatsInput
-          onChange={onChange('stats')}
-          stats={stats}
-        />
-        <div>
-          <WeaponInput
-            onChange={onChange('weapon')}
-            weapon={weapon}
-          />
-          <CheckBox
-            isChecked={ignoreSizePenalty}
-            label="Ignore size penalty"
-            onChange={onChange('ignoreSizePenalty')}
-          />
-          <CheckBox
-            isChecked={removeVariance}
-            label="Remove ATK variance"
-            onChange={onChange('removeVariance')}
-          />
-          <NumberInput
-            label="Skill Multiplier"
-            value={skillInput.multiplier}
-            onChange={onChangeSkillInput('multiplier')}
-          />
-          <NumberInput
-            label="Skill Hits"
-            value={skillInput.hits}
-            onChange={onChangeSkillInput('hits')}
-          />
-          <CheckBox
-            isChecked={useSkill}
-            onChange={onChange('useSkill')}
-            label="Use Skill"
-          />
-          <CheckBox
-            isChecked={skillInput.canCrit}
-            onChange={onChangeSkillInput('canCrit')}
-            label="Can Skill Crit"
-          />
-        </div>
-        <BonusAtkInput
-          bonusAtk={bonusAtk}
-          onChange={onChange('bonusAtk')}
-        />
-        <AtkMultipliersInput
-          atkMultipliers={atkMultipliers}
-          onChange={onChange('atkMultipliers')}
-        />
-        <TargetInput
-          target={target}
-          onChange={onChange('target')}
-        />
-        <FinalMultipliersInput
-          finalMultipliers={finalMultipliers}
-          onChange={onChange('finalMultipliers')}
-        />
-        <FinalReductionsInput
-          finalReductions={finalReductions}
-          onChange={onChange('finalReductions')}
-        />
-      </div>
-      <div>
-        <h2>
-          Damage
-        </h2>
-        <div>
-          <h3>Non Crit</h3>
-          <div>Min dmg: {damage.nonCrit.min.toFixed(2)}</div>
-          <div>Max dmg: {damage.nonCrit.max.toFixed(2)}</div>
-          <div>Average dmg: {((damage.nonCrit.min + damage.nonCrit.max) / 2).toFixed(2)}</div>
-        </div>
-        <div>
-          <h3>Crit</h3>
-          <div>Min dmg: {damage.crit.min.toFixed(2)}</div>
-          <div>Max dmg: {damage.crit.max.toFixed(2)}</div>
-          <div>Average dmg: {((damage.crit.min + damage.crit.max) / 2).toFixed(2)}</div>
-        </div>
-        <div>
-          <h3>Averaged</h3>
-          <div>Min dmg: {damage.averaged.min.toFixed(2)}</div>
-          <div>Max dmg: {damage.averaged.max.toFixed(2)}</div>
-          <div>Average dmg: {((damage.averaged.min + damage.averaged.max) / 2).toFixed(2)}</div>
-        </div>
-      </div>
+      <Presets
+        changePresetName={changeName}
+        onAddPreset={addPreset}
+        onCopyPreset={copyPreset}
+        onDeletePreset={presets.size > 1 ? deletePreset : null}
+        onSelectedPresetChange={setSelectedPreset}
+        presets={presets}
+        selectedPresetId={selectedPreset.id}
+      />
+      <DamageCalculationInput
+        damageCalculationInput={selectedPreset.input}
+        onDamageCalculationInputChange={changeInput}
+      />
+      <DamageCalculationResult damage={damage} />
     </div>
   );
 };
