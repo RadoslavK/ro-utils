@@ -33,6 +33,7 @@ const getAtkDamage = ({
 }: CalculateAtkDamageParams): number => {
   const { hard: hardDef, soft: softDef } = target.def;
   const hardDefReduction = (4000 + hardDef) / (4000 + hardDef * 10);
+  const isRanged = damageType === DamageType.PhysicalRanged;
 
   return Math.floor(
     Math.floor(
@@ -43,8 +44,8 @@ const getAtkDamage = ({
               Math.floor(
                 Math.floor(
                   Math.floor(atk * (useCritical ? finalMultipliers.critical : 1))
-                  * (damageType === DamageType.PhysicalRanged ? finalMultipliers.ranged : 1))
-                * finalReductions.ranged)
+                  * (isRanged ? finalMultipliers.ranged : 1))
+                * (isRanged ? finalReductions.ranged : 1))
               * finalMultipliers.damage)
             * hardDefReduction)
           - softDef)
