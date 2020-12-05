@@ -57,6 +57,7 @@ const getAtkDamage = ({
 type Params = SharedParams & {
   readonly atkMultipliers: AtkMultipliers;
   readonly bonusAtk: BonusAtk;
+  readonly ignoreSizePenalty: boolean;
   readonly skillInput: SkillInput | undefined;
   readonly stats: Stats;
   readonly weapon: Weapon;
@@ -67,6 +68,7 @@ export const getDamage = ({
   bonusAtk,
   finalMultipliers,
   finalReductions,
+  ignoreSizePenalty,
   skillInput,
   stats,
   target,
@@ -79,6 +81,7 @@ export const getDamage = ({
   const { min: minAtkNonCrit, max: maxAtkNonCrit } = getAtk({
     atkMultipliers,
     bonusAtk,
+    ignoreSizePenalty,
     stats,
     target,
     useCritical: false,
@@ -88,6 +91,7 @@ export const getDamage = ({
   const { min: minAtkCrit, max: maxAtkCrit } = getAtk({
     atkMultipliers,
     bonusAtk,
+    ignoreSizePenalty,
     stats,
     target,
     useCritical: canCrit,

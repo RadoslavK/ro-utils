@@ -10,6 +10,7 @@ import { getSizePenalty } from './getSizePenalty';
 
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
+  readonly ignoreSizePenalty: boolean;
   readonly stats: Stats;
   readonly target: Target;
   readonly useCritical: boolean;
@@ -18,6 +19,7 @@ type Params = {
 
 export const getWeaponAtk = ({
   atkMultipliers,
+  ignoreSizePenalty,
   stats,
   target,
   useCritical,
@@ -35,7 +37,7 @@ export const getWeaponAtk = ({
   const statBonus = baseWeaponDamage * mainStat / 200; // TODO: Make it pseudo-elemental
   const refinementBonus = getRefinementBonus({ refineLevel, weaponLevel });
 
-  const sizePenalty = getSizePenalty(weapon.type, target.size);
+  const sizePenalty = ignoreSizePenalty ? 1 : getSizePenalty(weapon.type, target.size);
 
   const propertyMultiplier = getPropertyMultiplier(weapon.element, target.property);
   const totalAtkMultiplier = atkMultipliers.race

@@ -12,6 +12,7 @@ export type DamageCalculationInput = {
   readonly bonusAtk: BonusAtk;
   readonly finalMultipliers: FinalMultipliers;
   readonly finalReductions: FinalReductions;
+  readonly ignoreSizePenalty: boolean;
   readonly skillInput: SkillInput;
   readonly stats: Stats;
   readonly target: Target;

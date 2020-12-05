@@ -68,6 +68,7 @@ const defaultValues: DamageCalculationInput = {
     finalDamage: 1,
     ranged: 1,
   },
+  ignoreSizePenalty: false,
   skillInput: {
     canCrit: true,
     multiplier: 3,

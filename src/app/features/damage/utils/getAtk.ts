@@ -11,6 +11,7 @@ import { Target } from '../types/reductions.type';
 type Params = {
   readonly atkMultipliers: AtkMultipliers;
   readonly bonusAtk: BonusAtk;
+  readonly ignoreSizePenalty: boolean;
   readonly stats: Stats;
   readonly target: Target;
   readonly useCritical: boolean;
@@ -20,6 +21,7 @@ type Params = {
 export const getAtk = ({
   atkMultipliers,
   bonusAtk,
+  ignoreSizePenalty,
   stats,
   target,
   useCritical,
@@ -28,6 +30,7 @@ export const getAtk = ({
   const statusAtk = getStatusAtk(stats, weapon.type);
   const weaponAtk = getWeaponAtk({
     atkMultipliers,
+    ignoreSizePenalty,
     stats,
     target,
     useCritical,
