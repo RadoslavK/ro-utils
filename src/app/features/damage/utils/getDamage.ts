@@ -71,9 +71,9 @@ export const getDamage = ({
   target,
   weapon,
 }: Params): Damage => {
-  const canCrit = skillInput?.canCrit ?? true;
-  const skillMultiplier = skillInput?.multiplier ?? 1;
-  const numberOfHits = skillInput?.hits ?? 1;
+  const canCrit = skillInput ? skillInput.canCrit : true;
+  const skillMultiplier = skillInput ? skillInput.multiplier : 1;
+  const numberOfHits = skillInput ? skillInput.hits : 1;
 
   const { min: minAtkNonCrit, max: maxAtkNonCrit } = getAtk({
     atkMultipliers,
@@ -134,6 +134,8 @@ export const getDamage = ({
 
   const minAveragedDamage = minNonCritDamage * nonCritChance + minCritDamage * critChance;
   const maxAveragedDamage = maxNonCritDamage * nonCritChance + maxCritDamage * critChance;
+
+  // TODO: is number of hits multiplying the ATK or its multiplying the final damage of 1 hit?
 
   return {
     averaged: {

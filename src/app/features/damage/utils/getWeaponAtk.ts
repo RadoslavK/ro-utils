@@ -29,9 +29,13 @@ export const getWeaponAtk = ({
     refineLevel,
     type: weaponType,
   } = weapon;
+
+  const mainStat = getMainStat(stats, weaponType);
   const variance = 0.05 * weaponLevel * baseWeaponDamage;
-  const statBonus = baseWeaponDamage * getMainStat(stats, weaponType) / 200;
+  const statBonus = baseWeaponDamage * mainStat / 200; // TODO: Make it pseudo-elemental
   const refinementBonus = getRefinementBonus({ refineLevel, weaponLevel });
+
+  const sizePenalty = getSizePenalty(weapon.type, target.size);
 
   const propertyMultiplier = getPropertyMultiplier(weapon.element, target.property);
   const totalAtkMultiplier = atkMultipliers.race
@@ -41,18 +45,14 @@ export const getWeaponAtk = ({
     * atkMultipliers.atk
     * propertyMultiplier;
 
-  const sizePenalty = getSizePenalty(weapon.type, target.size);
-  const totalAtkReductionMultiplier = sizePenalty
-    * target.atkReductionMultiplier.race
+  const totalAtkReductionMultiplier = target.atkReductionMultiplier.race
     * target.atkReductionMultiplier.size
     * target.atkReductionMultiplier.property
     * target.atkReductionMultiplier.targetProperty;
 
-  const totalMultiplier = totalAtkMultiplier * totalAtkReductionMultiplier;
+  const totalMultiplier = sizePenalty * totalAtkMultiplier * totalAtkReductionMultiplier;
 
-  const minVariance = useCritical
-    ? variance
-    : -variance;
+  const minVariance = useCritical ? variance : -variance;
   const maxVariance = variance;
 
   const min = Math.floor((baseWeaponDamage + minVariance + statBonus + refinementBonus.min) * totalMultiplier);

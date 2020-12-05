@@ -31,9 +31,9 @@ export const getExtraAtk = ({
     * target.atkReductionMultiplier.targetProperty;
 
   const totalMultipliers = totalAtkMultiplier * totalAtkReductionMultiplier;
-  const totalExtraAtk = extraAtk.ammunition
+  const totalExtraAtk = extraAtk.equip
     + extraAtk.consumable
-    + extraAtk.equip
+    + extraAtk.ammunition
     + extraAtk.pseudoBuff;
 
   return totalExtraAtk * totalMultipliers;

@@ -9,6 +9,7 @@ export enum WeaponType {
   TwoHandSword = 'Two-Hand Sword',
   Axe = 'Axe',
   Spear = 'Spear',
+  SpearPeco = 'Spear (Peco Peco)',
   Staff = 'Staff',
   Book = 'Book',
   Knuckle = 'Knuckle',

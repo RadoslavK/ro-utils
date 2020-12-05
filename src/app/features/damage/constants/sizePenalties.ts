@@ -32,6 +32,12 @@ export const sizePenalties: Record<WeaponType, Record<Size, number>> = {
     [Size.Large]: 100,
   },
 
+  [WeaponType.SpearPeco]: {
+    [Size.Small]: 75,
+    [Size.Medium]: 100,
+    [Size.Large]: 100,
+  },
+
   [WeaponType.Axe]: {
     [Size.Small]: 50,
     [Size.Medium]: 75,

@@ -1,21 +1,21 @@
 import { RefineType } from '../../refine/types/refineType.type';
 import { RefineAtkBonus } from '../types/refineAtkBonus.type';
 
-export const refineAtkBonuses: Record<Exclude<RefineType, 'armor'>, RefineAtkBonus> = {
+export const refineAtkBonuses: Record<Exclude<RefineType, RefineType.Armor>, RefineAtkBonus> = {
   [RefineType.Weapon1]: {
-    standard: 2,
-    overUpgrade: { min: 0, max: 3 },
+    upgrade: 2,
+    overUpgradeMax: 3,
   },
   [RefineType.Weapon2]: {
-    standard: 3,
-    overUpgrade: { min: 0, max: 5 },
+    upgrade: 3,
+    overUpgradeMax: 5,
   },
   [RefineType.Weapon3]: {
-    standard: 5,
-    overUpgrade: { min: 0, max: 8 },
+    upgrade: 5,
+    overUpgradeMax: 8,
   },
   [RefineType.Weapon4]: {
-    standard: 7,
-    overUpgrade: { min: 0, max: 14 },
+    upgrade: 7,
+    overUpgradeMax: 14,
   },
 };
