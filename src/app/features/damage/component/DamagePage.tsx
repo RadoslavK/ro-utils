@@ -15,7 +15,7 @@ export const DamagePage: React.FC = () => {
   const [selectedPreset, setSelectedPreset] = useState<DamageCalcPreset>([...presets.values()][0]);
 
   useEffect(() => {
-    if (!presets.has(selectedPreset.id)) {
+    if (!presets.has(sselectedPreset.id)) {
       setSelectedPreset([...presets.values()][0]);
     }
   }, [presets, selectedPreset]);

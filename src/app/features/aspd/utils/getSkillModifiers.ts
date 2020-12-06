@@ -35,8 +35,27 @@ const getClassBasedModifiers = (characterClass: Class, equip: Equip[]): readonly
         : [];
     }
 
-    default:
+    case Class.Acolyte:
+    case Class.Alchemist:
+    case Class.Archer:
+    case Class.Assassin:
+    case Class.Bard:
+    case Class.Dancer:
+    case Class.Hunter:
+    case Class.Mage:
+    case Class.Merchant:
+    case Class.Monk:
+    case Class.Novice:
+    case Class.Priest:
+    case Class.Rogue:
+    case Class.Sage:
+    case Class.Swordman:
+    case Class.Thief:
+    case Class.Wizard:
       return [];
+
+    default:
+      throw new Error(`Invalid class: ${characterClass}`);
   }
 }
 

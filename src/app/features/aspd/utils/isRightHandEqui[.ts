@@ -14,7 +14,20 @@ export const isRightHandEquip = (equip: Equip): boolean => {
     case Equip.Knuckle:
       return true;
 
-    default:
+    case Equip.TwoHandSword:
+    case Equip.TwoHandStaff:
+    case Equip.TwoHandSpear:
+    case Equip.TwoHandAxe:
+    case Equip.Katar:
+    case Equip.Bow:
+    case Equip.BareHand:
+    case Equip.Shield:
+    case Equip.OneHandSwordLeft:
+    case Equip.OneHandAxeLeft:
+    case Equip.DaggerLeft:
       return false;
+
+    default:
+      throw new Error(`Invalid equip ${equip}`);
   }
 };

@@ -7,7 +7,21 @@ export const isWearingRangedWeapon = (weaponType: WeaponType): boolean => {
     case WeaponType.Whip:
       return true;
 
-    default:
+    case WeaponType.Axe:
+    case WeaponType.BareHand:
+    case WeaponType.Book:
+    case WeaponType.Dagger:
+    case WeaponType.Katar:
+    case WeaponType.Knuckle:
+    case WeaponType.Mace:
+    case WeaponType.OneHandSword:
+    case WeaponType.Spear:
+    case WeaponType.SpearPeco:
+    case WeaponType.Staff:
+    case WeaponType.TwoHandSword:
       return false;
+
+    default:
+      throw new Error(`Invalid weapon ${weaponType}`);
   }
 }
