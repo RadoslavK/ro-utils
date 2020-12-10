@@ -42,10 +42,11 @@ export const getRefinementBonus = ({
   const refineBonus = refineAtkBonuses[refineType];
 
   const standardRefineBonus = refineBonus.upgrade * refineLevel;
+  const overUpgradeRefineBonusMin = refineBonus.overUpgradeMin * refinesOverSafeLevel;
   const overUpgradeRefineBonusMax = refineBonus.overUpgradeMax * refinesOverSafeLevel;
 
   return {
-    min: standardRefineBonus,
+    min: standardRefineBonus + overUpgradeRefineBonusMin,
     max: standardRefineBonus + overUpgradeRefineBonusMax,
   };
 };
