@@ -17,7 +17,7 @@ const refineTypeLabels: Record<RefineType, string> = {
 };
 
 type Props = {
-  readonly itemCosts: Map<number, number>;
+  readonly itemCosts: ReadonlyMap<number, number>;
   readonly onItemCostChange: (itemId: number, price: number) => void;
   readonly onRefineInputChange: (value: RefineInput) => void;
   readonly refineInput: RefineInput;
