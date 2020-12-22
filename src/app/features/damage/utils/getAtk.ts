@@ -43,12 +43,15 @@ export const getAtk = ({
   const totalExtraAtk = getExtraAtk({
     atkMultipliers,
     extraAtk,
+    removeVariance,
+    stats,
     target,
-    weaponElement: weapon.element,
+    useCritical,
+    weapon,
   });
 
   return {
-    min: statusAtk * 2 + weaponAtk.min + totalExtraAtk + masteryAtk + buffAtk,
-    max: statusAtk * 2 + weaponAtk.max + totalExtraAtk + masteryAtk + buffAtk,
+    min: statusAtk * 2 + weaponAtk.min + totalExtraAtk.min + masteryAtk + buffAtk,
+    max: statusAtk * 2 + weaponAtk.max + totalExtraAtk.max + masteryAtk + buffAtk,
   };
 };

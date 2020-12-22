@@ -8,8 +8,8 @@ export const getStatusAtk = (stats: Stats, weaponType: WeaponType): number => {
   const secondaryStat = getSecondaryStat(stats, weaponType);
   const { baseLevel, luk } = stats;
 
-  return Math.floor(baseLevel / 4)
+  return Math.floor(baseLevel / 4
     + mainStat
-    + Math.floor(secondaryStat / 5)
-    + Math.floor(luk / 3);
+    + secondaryStat / 5
+    + luk / 3);
 }
