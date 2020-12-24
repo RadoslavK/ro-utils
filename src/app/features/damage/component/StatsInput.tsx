@@ -28,7 +28,7 @@ export const StatsInput: React.FC<Props> = ({ onChange, stats }) => {
         label="Base level"
         value={baseLevel}
         onChange={onChangeCb('baseLevel')}
-        maxValue={99}
+        maxValue={130}
         minValue={1}
       />
       <NumberInput
