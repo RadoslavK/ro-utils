@@ -128,7 +128,7 @@ export const aspdPenalties: Record<Class, AspdPenalties> = {
     [Equip.Knuckle]: 20,
   },
   [Class.Monk]: {
-    [Equip.Shield]: 5,
+    [Equip.Shield]: 3,
     [Equip.Mace]: 3,
     [Equip.OneHandStaff]: 20,
     [Equip.TwoHandStaff]: 18,

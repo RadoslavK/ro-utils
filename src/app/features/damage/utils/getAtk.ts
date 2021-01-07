@@ -39,6 +39,7 @@ export const getAtk = ({
     useCritical,
     weapon,
   });
+
   const { extraAtk, buffAtk, masteryAtk } = bonusAtk;
   const totalExtraAtk = getExtraAtk({
     atkMultipliers,

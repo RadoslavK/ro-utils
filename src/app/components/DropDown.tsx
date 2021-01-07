@@ -2,12 +2,13 @@ import React from 'react';
 import { css } from '@emotion/core';
 
 type Props<T> = {
-  readonly selectedValue: T;
-  readonly values: readonly T[];
-  readonly onChange: (value: T) => void;
   readonly getId: (value: T) => string;
   readonly getName: (value: T) => string;
   readonly label: string;
+  readonly onChange: (value: T) => void;
+  readonly placeholder?: string;
+  readonly selectedValue: T;
+  readonly values: readonly T[];
 }
 
 export const DropDown = <T extends unknown>({
@@ -15,6 +16,7 @@ export const DropDown = <T extends unknown>({
   getName,
   label,
   onChange,
+  placeholder,
   selectedValue,
   values,
 }: Props<T>) => {
@@ -28,8 +30,9 @@ export const DropDown = <T extends unknown>({
     <div css={css`margin-top: 8px; margin-bottom: 8px`}>
       <div>{label}</div>
       <select
-        value={getId(selectedValue)}
         onChange={changeValue}
+        placeholder={placeholder}
+        value={selectedValue ? getId(selectedValue) : undefined}
       >
         {values.map(value => (
           <option

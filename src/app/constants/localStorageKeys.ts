@@ -3,4 +3,5 @@ export enum LocalStorageKeys {
   RefineInput = 'refine-input',
   RefineBoxInput = 'refine-box-input',
   DamageCalculationPresets = 'damage-calculation-presets',
+  DamageCalculationEffects = 'damage-calculation-effects',
 }

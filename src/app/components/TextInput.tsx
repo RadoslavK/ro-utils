@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from 'react';
+import { css } from '@emotion/core';
 
 type Props = {
   readonly autoFocus?: boolean;
+  readonly label?: string;
   readonly onChange: (value: string) => void;
   readonly value: string;
 }
 
 export const TextInput: React.FC<Props> = (props) => {
-  const { autoFocus, onChange, value } = props;
+  const { autoFocus, label, onChange, value } = props;
 
   const inputRef = useRef<HTMLInputElement>();
 
@@ -18,11 +20,14 @@ export const TextInput: React.FC<Props> = (props) => {
   }, [autoFocus]);
 
   return (
-    <input
-      ref={inputRef}
-      onChange={e => onChange(e.currentTarget.value)}
-      value={value}
-    />
+    <div css={css`margin-top: 8px; margin-bottom: 8px`}>
+      <div>{label}</div>
+      <input
+        ref={inputRef}
+        onChange={e => onChange(e.currentTarget.value)}
+        value={value}
+      />
+    </div>
   );
 };
 

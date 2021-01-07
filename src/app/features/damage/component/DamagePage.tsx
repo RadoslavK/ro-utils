@@ -9,8 +9,10 @@ import {
   defaultDamageCalculationInput,
 } from '../types/damageCalculationInput.type';
 import { generateId } from '../../../utils/generateId';
+import { EffectBuilder } from './effectBuilder/EffectBuilder';
 
 export const DamagePage: React.FC = () => {
+
   const { deletePreset, presets, updatePreset } = useDamageCalcPresets();
   const [selectedPreset, setSelectedPreset] = useState<DamageCalcPreset>([...presets.values()][0]);
 
@@ -112,6 +114,7 @@ export const DamagePage: React.FC = () => {
 
   return (
     <div>
+      <EffectBuilder />
       <Presets
         changePresetName={changeName}
         onAddPreset={addPreset}

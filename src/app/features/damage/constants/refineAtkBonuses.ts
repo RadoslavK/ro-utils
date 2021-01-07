@@ -1,6 +1,7 @@
 import { RefineType } from '../../refine/types/refineType.type';
 import { RefineAtkBonus } from '../types/refineAtkBonus.type';
 
+//  TODO: this was bugged and seemed to not add any in the game
 export const refineAtkBonuses: Record<Exclude<RefineType, RefineType.Armor>, RefineAtkBonus> = {
   [RefineType.Weapon1]: {
     upgrade: 2,
@@ -14,8 +15,8 @@ export const refineAtkBonuses: Record<Exclude<RefineType, RefineType.Armor>, Ref
   },
   [RefineType.Weapon3]: {
     upgrade: 5,
-    overUpgradeMin: 1,
-    overUpgradeMax: 8,
+    overUpgradeMin: 0,
+    overUpgradeMax: 0,
   },
   [RefineType.Weapon4]: {
     upgrade: 7,
